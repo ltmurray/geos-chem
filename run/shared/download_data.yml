@@ -38,9 +38,9 @@ portals:
   nested+http:
     short_name: nh
     s3_bucket: False
-    remote: https://gcgrid.s3.amazonaws.com/
-    command: 'aws s3 cp '
-    quote: ""
+    remote: https://gcgrid.s3.amazonaws.com
+    command: 'wget -r -np -nH -R "*.html" -N -P @PATH@ '
+    quote: '"'
 
   # GCAP 2.0 @ U. Rochester data portal, download via HTTP/wget
   rochester:
