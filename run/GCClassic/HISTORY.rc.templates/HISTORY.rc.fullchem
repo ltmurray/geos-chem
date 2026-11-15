@@ -55,6 +55,7 @@ COLLECTIONS: 'Restart',
              ##'UVFlux',
              #'WetLossConv',
              #'WetLossLS',
+             #'WetLoss',
              ##'BoundaryConditions',
 ::
 ###############################################################################
@@ -1271,6 +1272,7 @@ COLLECTIONS: 'Restart',
   WetLossConv.duration:       ${RUNDIR_HIST_TIME_AVG_DUR}
   WetLossConv.mode:           'time-averaged'
   WetLossConv.fields:         'WetLossConv_?WET?             ',
+                              'WetLossConvCol_?WET?          ',
                               'WetLossConvFrac_?WET?         ',
 ::
 #==============================================================================
@@ -1283,6 +1285,19 @@ COLLECTIONS: 'Restart',
   WetLossLS.duration:         ${RUNDIR_HIST_TIME_AVG_DUR}
   WetLossLS.mode:             'time-averaged'
   WetLossLS.fields:           'WetLossLS_?WET?               ',
+                              'WetLossLSCol_?WET?            ',
+::
+#==============================================================================
+# %%%%% THE WetLoss COLLECTION %%%%%
+#
+# Total loss from convective and large-scale wet deposition
+#==============================================================================
+  WetLoss.template:           '%y4%m2%d2_%h2%n2z.nc4',
+  WetLoss.frequency:          ${RUNDIR_HIST_TIME_AVG_FREQ}
+  WetLoss.duration:           ${RUNDIR_HIST_TIME_AVG_DUR}
+  WetLoss.mode:               'time-averaged'
+  WetLoss.fields:             'WetLoss_?WET?                 ',
+                              'WetLossCol_?WET?              ',
 ::
 #==============================================================================
 # %%%%% THE BoundaryConditions COLLECTION %%%%%

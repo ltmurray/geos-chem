@@ -707,6 +707,10 @@ MODULE State_Diag_Mod
      TYPE(DgnMap),       POINTER :: Map_WetLossConv
      LOGICAL                     :: Archive_WetLossConv
 
+     REAL(f4),           POINTER :: WetLossConvCol(:,:,:)
+     TYPE(DgnMap),       POINTER :: Map_WetLossConvCol
+     LOGICAL                     :: Archive_WetLossConvCol
+
      REAL(f4),           POINTER :: SatDiagnWetLossConv(:,:,:,:)
      TYPE(DgnMap),       POINTER :: Map_SatDiagnWetLossConv
      LOGICAL                     :: Archive_SatDiagnWetLossConv
@@ -714,6 +718,18 @@ MODULE State_Diag_Mod
      REAL(f4),           POINTER :: WetLossLS(:,:,:,:)
      TYPE(DgnMap),       POINTER :: Map_WetLossLS
      LOGICAL                     :: Archive_WetLossLS
+
+     REAL(f4),           POINTER :: WetLossLSCol(:,:,:)
+     TYPE(DgnMap),       POINTER :: Map_WetLossLSCol
+     LOGICAL                     :: Archive_WetLossLSCol
+
+     REAL(f4),           POINTER :: WetLoss(:,:,:,:)
+     TYPE(DgnMap),       POINTER :: Map_WetLoss
+     LOGICAL                     :: Archive_WetLoss
+
+     REAL(f4),           POINTER :: WetLossCol(:,:,:)
+     TYPE(DgnMap),       POINTER :: Map_WetLossCol
+     LOGICAL                     :: Archive_WetLossCol
 
      REAL(f4),           POINTER :: SatDiagnWetLossLS(:,:,:,:)
      TYPE(DgnMap),       POINTER :: Map_SatDiagnWetLossLS
@@ -2154,6 +2170,10 @@ CONTAINS
     State_Diag%Map_WetLossConv                     => NULL()
     State_Diag%Archive_WetLossConv                 = .FALSE.
 
+    State_Diag%WetLossConvCol                      => NULL()
+    State_Diag%Map_WetLossConvCol                  => NULL()
+    State_Diag%Archive_WetLossConvCol              = .FALSE.
+
     State_Diag%SatDiagnWetLossConv                 => NULL()
     State_Diag%Map_SatDiagnWetLossConv             => NULL()
     State_Diag%Archive_SatDiagnWetLossConv         = .FALSE.
@@ -2165,6 +2185,18 @@ CONTAINS
     State_Diag%WetLossLS                           => NULL()
     State_Diag%Map_WetLossLS                       => NULL()
     State_Diag%Archive_WetLossLS                   = .FALSE.
+
+    State_Diag%WetLossLSCol                        => NULL()
+    State_Diag%Map_WetLossLSCol                    => NULL()
+    State_Diag%Archive_WetLossLSCol                = .FALSE.
+
+    State_Diag%WetLoss                             => NULL()
+    State_Diag%Map_WetLoss                         => NULL()
+    State_Diag%Archive_WetLoss                     = .FALSE.
+
+    State_Diag%WetLossCol                          => NULL()
+    State_Diag%Map_WetLossCol                      => NULL()
+    State_Diag%Archive_WetLossCol                  = .FALSE.
 
     State_Diag%SatDiagnWetLossLS                   => NULL()
     State_Diag%Map_SatDiagnWetLossLS               => NULL()
@@ -4464,6 +4496,30 @@ CONTAINS
     ENDIF
 
     !-----------------------------------------------------------------------
+    ! Column-integrated loss of soluble species in convective updrafts
+    !-----------------------------------------------------------------------
+    diagID  = 'WetLossConvCol'
+    CALL Init_and_Register(                                                  &
+         Input_Opt      = Input_Opt,                                         &
+         State_Chm      = State_Chm,                                         &
+         State_Diag     = State_Diag,                                        &
+         State_Grid     = State_Grid,                                        &
+         DiagList       = Diag_List,                                         &
+         TaggedDiagList = TaggedDiag_List,                                   &
+         Ptr2Data       = State_Diag%WetLossConvCol,                         &
+         archiveData    = State_Diag%Archive_WetLossConvCol,                 &
+         mapData        = State_Diag%Map_WetLossConvCol,                     &
+         diagId         = diagId,                                            &
+         diagFlag       = 'W',                                               &
+         RC             = RC                                                )
+
+    IF ( RC /= GC_SUCCESS ) THEN
+       errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+       CALL GC_Error( errMsg, RC, thisLoc )
+       RETURN
+    ENDIF
+
+    !-----------------------------------------------------------------------
     ! Satellite Diagnostics: Loss of soluble species in convective updrafts
     !-----------------------------------------------------------------------
     diagID  = 'SatDiagnWetLossConv'
@@ -4501,6 +4557,78 @@ CONTAINS
          Ptr2Data       = State_Diag%WetLossLS,                              &
          archiveData    = State_Diag%Archive_WetLossLS,                      &
          mapData        = State_Diag%Map_WetLossLS,                          &
+         diagId         = diagId,                                            &
+         diagFlag       = 'W',                                               &
+         RC             = RC                                                )
+
+    IF ( RC /= GC_SUCCESS ) THEN
+       errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+       CALL GC_Error( errMsg, RC, thisLoc )
+       RETURN
+    ENDIF
+
+    !-----------------------------------------------------------------------
+    ! Column-integrated loss in large-scale rainout/washout
+    !-----------------------------------------------------------------------
+    diagID  = 'WetLossLSCol'
+    CALL Init_and_Register(                                                  &
+         Input_Opt      = Input_Opt,                                         &
+         State_Chm      = State_Chm,                                         &
+         State_Diag     = State_Diag,                                        &
+         State_Grid     = State_Grid,                                        &
+         DiagList       = Diag_List,                                         &
+         TaggedDiagList = TaggedDiag_List,                                   &
+         Ptr2Data       = State_Diag%WetLossLSCol,                           &
+         archiveData    = State_Diag%Archive_WetLossLSCol,                   &
+         mapData        = State_Diag%Map_WetLossLSCol,                       &
+         diagId         = diagId,                                            &
+         diagFlag       = 'W',                                               &
+         RC             = RC                                                )
+
+    IF ( RC /= GC_SUCCESS ) THEN
+       errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+       CALL GC_Error( errMsg, RC, thisLoc )
+       RETURN
+    ENDIF
+
+    !-----------------------------------------------------------------------
+    ! Total loss of soluble species from all wet deposition processes
+    !-----------------------------------------------------------------------
+    diagID  = 'WetLoss'
+    CALL Init_and_Register(                                                  &
+         Input_Opt      = Input_Opt,                                         &
+         State_Chm      = State_Chm,                                         &
+         State_Diag     = State_Diag,                                        &
+         State_Grid     = State_Grid,                                        &
+         DiagList       = Diag_List,                                         &
+         TaggedDiagList = TaggedDiag_List,                                   &
+         Ptr2Data       = State_Diag%WetLoss,                                &
+         archiveData    = State_Diag%Archive_WetLoss,                        &
+         mapData        = State_Diag%Map_WetLoss,                            &
+         diagId         = diagId,                                            &
+         diagFlag       = 'W',                                               &
+         RC             = RC                                                )
+
+    IF ( RC /= GC_SUCCESS ) THEN
+       errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+       CALL GC_Error( errMsg, RC, thisLoc )
+       RETURN
+    ENDIF
+
+    !-----------------------------------------------------------------------
+    ! Column-integrated total loss from all wet deposition processes
+    !-----------------------------------------------------------------------
+    diagID  = 'WetLossCol'
+    CALL Init_and_Register(                                                  &
+         Input_Opt      = Input_Opt,                                         &
+         State_Chm      = State_Chm,                                         &
+         State_Diag     = State_Diag,                                        &
+         State_Grid     = State_Grid,                                        &
+         DiagList       = Diag_List,                                         &
+         TaggedDiagList = TaggedDiag_List,                                   &
+         Ptr2Data       = State_Diag%WetLossCol,                             &
+         archiveData    = State_Diag%Archive_WetLossCol,                     &
+         mapData        = State_Diag%Map_WetLossCol,                         &
          diagId         = diagId,                                            &
          diagFlag       = 'W',                                               &
          RC             = RC                                                )
@@ -12947,6 +13075,12 @@ CONTAINS
                    RC       = RC                                            )
     IF ( RC /= GC_SUCCESS ) RETURN
 
+    CALL Finalize( diagId   = 'WetLossConvCol',                              &
+                   Ptr2Data = State_Diag%WetLossConvCol,                     &
+                   mapData  = State_Diag%Map_WetLossConvCol,                 &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
     CALL Finalize( diagId   = 'SatDiagnWetLossConv',                         &
                    Ptr2Data = State_Diag%SatDiagnWetLossConv,                &
                    mapData  = State_Diag%Map_SatDiagnWetLossConv,            &
@@ -12961,6 +13095,24 @@ CONTAINS
     CALL Finalize( diagId   = 'WetLossLS',                                   &
                    Ptr2Data = State_Diag%WetLossLS,                          &
                    mapData  = State_Diag%Map_WetLossLS,                      &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'WetLossLSCol',                                &
+                   Ptr2Data = State_Diag%WetLossLSCol,                       &
+                   mapData  = State_Diag%Map_WetLossLSCol,                   &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'WetLoss',                                     &
+                   Ptr2Data = State_Diag%WetLoss,                            &
+                   mapData  = State_Diag%Map_WetLoss,                        &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'WetLossCol',                                  &
+                   Ptr2Data = State_Diag%WetLossCol,                         &
+                   mapData  = State_Diag%Map_WetLossCol,                     &
                    RC       = RC                                            )
     IF ( RC /= GC_SUCCESS ) RETURN
 
@@ -15056,6 +15208,17 @@ CONTAINS
        IF ( isRank    ) Rank  = 3
        IF ( isTagged  ) TagId = 'WET'
 
+    ELSE IF ( TRIM( Name_AllCaps ) == 'WETLOSSCONVCOL' ) THEN
+       IF ( isDesc    ) Desc  = &
+            'Column-integrated loss of soluble species in convective updrafts'
+#ifdef MODEL_GEOS
+       IF ( isUnits   ) Units = 'kg m-2 s-1'
+#else
+       IF ( isUnits   ) Units = 'kg s-1'
+#endif
+       IF ( isRank    ) Rank  = 2
+       IF ( isTagged  ) TagId = 'WET'
+
     ELSE IF ( TRIM( Name_AllCaps ) == 'SATDIAGNWETLOSSCONV' ) THEN
        IF ( isDesc    ) Desc  = &
             'Loss of soluble species in convective updrafts'
@@ -15088,6 +15251,27 @@ CONTAINS
                                 'precipitation'
        IF ( isUnits   ) Units = 'kg s-1'
        IF ( isRank    ) Rank  = 3
+       IF ( isTagged  ) TagId = 'WET'
+
+    ELSE IF ( TRIM( Name_AllCaps ) == 'WETLOSSLSCOL' ) THEN
+       IF ( isDesc    ) Desc  = 'Column-integrated loss of soluble species ' // &
+                                'in large-scale precipitation'
+       IF ( isUnits   ) Units = 'kg s-1'
+       IF ( isRank    ) Rank  = 2
+       IF ( isTagged  ) TagId = 'WET'
+
+    ELSE IF ( TRIM( Name_AllCaps ) == 'WETLOSS' ) THEN
+       IF ( isDesc    ) Desc  = &
+            'Loss of soluble species from all wet deposition processes'
+       IF ( isUnits   ) Units = 'kg s-1'
+       IF ( isRank    ) Rank  = 3
+       IF ( isTagged  ) TagId = 'WET'
+
+    ELSE IF ( TRIM( Name_AllCaps ) == 'WETLOSSCOL' ) THEN
+       IF ( isDesc    ) Desc  = 'Column-integrated loss of soluble species ' // &
+                                'from all wet deposition processes'
+       IF ( isUnits   ) Units = 'kg s-1'
+       IF ( isRank    ) Rank  = 2
        IF ( isTagged  ) TagId = 'WET'
 
     ELSE IF ( TRIM( Name_AllCaps ) == 'SATDIAGNWETLOSSLS' ) THEN
