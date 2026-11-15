@@ -174,6 +174,9 @@ CONTAINS
     FSOL       = 0e+0_fp                                ! Zero the FSOL array
     DoConvFlux = State_Diag%Archive_CloudConvFlux       ! Save mass flux?
     DoWetLoss  = ( State_Diag%Archive_WetLossConv                       .or. &
+                   State_Diag%Archive_WetLossConvCol                    .or. &
+                   State_Diag%Archive_WetLoss                           .or. &
+                   State_Diag%Archive_WetLossCol                        .or. &
                    State_Diag%Archive_SatDiagnWetLossConv )
 
     ! Number of advected species
@@ -334,6 +337,39 @@ CONTAINS
                 State_Diag%WetLossConv(I,J,L,S) = Diag38(L,NW)
 #endif
              ENDDO
+          ENDDO
+       ENDIF
+
+       ! Column-integrated loss in convective updrafts [kg/s]
+       IF ( State_Diag%Archive_WetLossConvCol ) THEN
+          DO S = 1, State_Diag%Map_WetLossConvCol%nSlots
+             NW = State_Diag%Map_WetLossConvCol%slot2id(S)
+#ifdef MODEL_GEOS
+             State_Diag%WetLossConvCol(I,J,S) =                             &
+                  SUM( Diag38(:,NW) ) / AREA_M2
+#else
+             State_Diag%WetLossConvCol(I,J,S) = SUM( Diag38(:,NW) )
+#endif
+          ENDDO
+       ENDIF
+
+       ! Total wet loss from convective and large-scale processes [kg/s]
+       IF ( State_Diag%Archive_WetLoss ) THEN
+          DO S = 1, State_Diag%Map_WetLoss%nSlots
+             NW = State_Diag%Map_WetLoss%slot2id(S)
+             DO L = 1, State_Grid%NZ
+                State_Diag%WetLoss(I,J,L,S) =                               &
+                State_Diag%WetLoss(I,J,L,S) + Diag38(L,NW)
+             ENDDO
+          ENDDO
+       ENDIF
+
+       ! Column-integrated total wet loss [kg/s]
+       IF ( State_Diag%Archive_WetLossCol ) THEN
+          DO S = 1, State_Diag%Map_WetLossCol%nSlots
+             NW = State_Diag%Map_WetLossCol%slot2id(S)
+             State_Diag%WetLossCol(I,J,S) =                                 &
+             State_Diag%WetLossCol(I,J,S) + SUM( Diag38(:,NW) )
           ENDDO
        ENDIF
 

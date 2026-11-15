@@ -1363,6 +1363,16 @@ PROGRAM GEOS_Chem
        !---------------------------------------------------------------------
        IF ( ITS_TIME_FOR_CONV() .and. notDryRun ) THEN
 
+          ! Reset aggregate wet-deposition diagnostics before convection.
+          ! Large-scale wet deposition runs later in this dynamics step and
+          ! adds its contributions to these same arrays.
+          IF ( State_Diag%Archive_WetLoss ) THEN
+             State_Diag%WetLoss = 0.0_f4
+          ENDIF
+          IF ( State_Diag%Archive_WetLossCol ) THEN
+             State_Diag%WetLossCol = 0.0_f4
+          ENDIF
+
           !==================================================================
           !         ***** M I X E D   L A Y E R   M I X I N G *****
           !==================================================================

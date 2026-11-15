@@ -238,6 +238,9 @@ CONTAINS
     IF ( State_Diag%Archive_WetLossLS  ) THEN
        State_Diag%WetLossLS = 0.0_f4
     ENDIF
+    IF ( State_Diag%Archive_WetLossLSCol ) THEN
+       State_Diag%WetLossLSCol = 0.0_f4
+    ENDIF
     IF ( State_Diag%Archive_SatDiagnWetLossLS  ) THEN
        State_Diag%SatDiagnWetLossLS = 0.0_f4
     ENDIF
@@ -4332,6 +4335,36 @@ END FUNCTION WASHFRAC_DUSTBIN
           ENDIF
        ENDIF
 
+       ! Column-integrated wet loss [kg/s]
+       IF ( State_Diag%Archive_WetLossLSCol ) THEN
+          S = State_Diag%Map_WetLossLSCol%id2slot(NW)
+          IF ( S > 0 ) THEN
+             State_Diag%WetLossLSCol(I,J,S) =                                &
+             State_Diag%WetLossLSCol(I,J,S) + ( WetLoss / DT )               &
+                                             * State_Grid%Area_M2(I,J)
+          ENDIF
+       ENDIF
+
+       ! Total wet loss from convective and large-scale processes [kg/s]
+       IF ( State_Diag%Archive_WetLoss ) THEN
+          S = State_Diag%Map_WetLoss%id2slot(NW)
+          IF ( S > 0 ) THEN
+             State_Diag%WetLoss(I,J,L,S) =                                   &
+             State_Diag%WetLoss(I,J,L,S) + ( WetLoss / DT )                  &
+                                         * State_Grid%Area_M2(I,J)
+          ENDIF
+       ENDIF
+
+       ! Column-integrated total wet loss [kg/s]
+       IF ( State_Diag%Archive_WetLossCol ) THEN
+          S = State_Diag%Map_WetLossCol%id2slot(NW)
+          IF ( S > 0 ) THEN
+             State_Diag%WetLossCol(I,J,S) =                                  &
+             State_Diag%WetLossCol(I,J,S) + ( WetLoss / DT )                 &
+                                         * State_Grid%Area_M2(I,J)
+          ENDIF
+       ENDIF
+
        ! Satellite diagnostic collection
        ! Units: [kg/s], but eventually consider changing to [kg/m2/s]
        IF ( State_Diag%Archive_SatDiagnWetLossLS ) THEN
@@ -4896,6 +4929,36 @@ END FUNCTION WASHFRAC_DUSTBIN
           ENDIF
        ENDIF
 
+       ! Column-integrated wet loss [kg/s]
+       IF ( State_Diag%Archive_WetLossLSCol ) THEN
+          S = State_Diag%Map_WetLossLSCol%id2slot(NW)
+          IF ( S > 0 ) THEN
+             State_Diag%WetLossLSCol(I,J,S) =                                &
+             State_Diag%WetLossLSCol(I,J,S) + ( WetLoss / DT )               &
+                                             * State_Grid%Area_M2(I,J)
+          ENDIF
+       ENDIF
+
+       ! Total wet loss from convective and large-scale processes [kg/s]
+       IF ( State_Diag%Archive_WetLoss ) THEN
+          S = State_Diag%Map_WetLoss%id2slot(NW)
+          IF ( S > 0 ) THEN
+             State_Diag%WetLoss(I,J,L,S) =                                   &
+             State_Diag%WetLoss(I,J,L,S) + ( WetLoss / DT )                  &
+                                         * State_Grid%Area_M2(I,J)
+          ENDIF
+       ENDIF
+
+       ! Column-integrated total wet loss [kg/s]
+       IF ( State_Diag%Archive_WetLossCol ) THEN
+          S = State_Diag%Map_WetLossCol%id2slot(NW)
+          IF ( S > 0 ) THEN
+             State_Diag%WetLossCol(I,J,S) =                                  &
+             State_Diag%WetLossCol(I,J,S) + ( WetLoss / DT )                 &
+                                         * State_Grid%Area_M2(I,J)
+          ENDIF
+       ENDIF
+
        ! Satellite diagnostic collection
        ! Units: [kg/s], but eventually consider changing to [kg/m2/s]
        IF ( State_Diag%Archive_SatDiagnWetLossLS ) THEN
@@ -5167,6 +5230,36 @@ END FUNCTION WASHFRAC_DUSTBIN
              State_Diag%WetLossLs(I,J,L,S) =                                 &
              State_Diag%WetLossLs(I,J,L,S) + ( WetLoss / DT )                &
                                            * State_Grid%Area_M2(I,J)
+          ENDIF
+       ENDIF
+
+       ! Column-integrated wet loss [kg/s]
+       IF ( State_Diag%Archive_WetLossLSCol ) THEN
+          S = State_Diag%Map_WetLossLSCol%id2slot(NW)
+          IF ( S > 0 ) THEN
+             State_Diag%WetLossLSCol(I,J,S) =                                &
+             State_Diag%WetLossLSCol(I,J,S) + ( WetLoss / DT )               &
+                                             * State_Grid%Area_M2(I,J)
+          ENDIF
+       ENDIF
+
+       ! Total wet loss from convective and large-scale processes [kg/s]
+       IF ( State_Diag%Archive_WetLoss ) THEN
+          S = State_Diag%Map_WetLoss%id2slot(NW)
+          IF ( S > 0 ) THEN
+             State_Diag%WetLoss(I,J,L,S) =                                   &
+             State_Diag%WetLoss(I,J,L,S) + ( WetLoss / DT )                  &
+                                         * State_Grid%Area_M2(I,J)
+          ENDIF
+       ENDIF
+
+       ! Column-integrated total wet loss [kg/s]
+       IF ( State_Diag%Archive_WetLossCol ) THEN
+          S = State_Diag%Map_WetLossCol%id2slot(NW)
+          IF ( S > 0 ) THEN
+             State_Diag%WetLossCol(I,J,S) =                                  &
+             State_Diag%WetLossCol(I,J,S) + ( WetLoss / DT )                 &
+                                         * State_Grid%Area_M2(I,J)
           ENDIF
        ENDIF
 
@@ -5452,6 +5545,36 @@ END FUNCTION WASHFRAC_DUSTBIN
              State_Diag%WetLossLS(I,J,L,S) =                                 &
              State_Diag%WetLossLS(I,J,L,S) + ( WetLoss / DT )                &
                                            * State_Grid%Area_M2(I,J)
+          ENDIF
+       ENDIF
+
+       ! Column-integrated wet loss [kg/s]
+       IF ( State_Diag%Archive_WetLossLSCol ) THEN
+          S = State_Diag%Map_WetLossLSCol%id2slot(NW)
+          IF ( S > 0 ) THEN
+             State_Diag%WetLossLSCol(I,J,S) =                                &
+             State_Diag%WetLossLSCol(I,J,S) + ( WetLoss / DT )               &
+                                             * State_Grid%Area_M2(I,J)
+          ENDIF
+       ENDIF
+
+       ! Total wet loss from convective and large-scale processes [kg/s]
+       IF ( State_Diag%Archive_WetLoss ) THEN
+          S = State_Diag%Map_WetLoss%id2slot(NW)
+          IF ( S > 0 ) THEN
+             State_Diag%WetLoss(I,J,L,S) =                                   &
+             State_Diag%WetLoss(I,J,L,S) + ( WetLoss / DT )                  &
+                                         * State_Grid%Area_M2(I,J)
+          ENDIF
+       ENDIF
+
+       ! Column-integrated total wet loss [kg/s]
+       IF ( State_Diag%Archive_WetLossCol ) THEN
+          S = State_Diag%Map_WetLossCol%id2slot(NW)
+          IF ( S > 0 ) THEN
+             State_Diag%WetLossCol(I,J,S) =                                  &
+             State_Diag%WetLossCol(I,J,S) + ( WetLoss / DT )                 &
+                                         * State_Grid%Area_M2(I,J)
           ENDIF
        ENDIF
 
