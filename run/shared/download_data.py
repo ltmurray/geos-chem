@@ -295,7 +295,7 @@ def get_remote_restart_filename(local_prefix, run_info, rst_info):
     GEOS-Chem Classic simulation type.
 
     Args
-    local_prefix : str  : Root data folder (ExtData is a subdir of this)
+    local_prefix : str  : Root data folder, optionally ending in ExtData
     run_info     : dict : Information read from geoschem_config.yml
     rst_info     : dict : Restart file paths (local and remote), as read
                           from the download_data.yml configuration file
@@ -306,8 +306,14 @@ def get_remote_restart_filename(local_prefix, run_info, rst_info):
     # Simulation type
     simulation = run_info["sim"].lower()
 
-    # Remote restart file directory
-    root = os.path.join(local_prefix, "ExtData", rst_info["root"])
+    # Remote restart file directory.  HTTP portals put downloaded files
+    # directly beneath an ExtData destination, whereas S3 portals use the
+    # directory above ExtData as the local prefix.  Normalize both forms so
+    # that ExtData is present exactly once.
+    root = os.path.normpath(local_prefix)
+    if os.path.basename(root) != "ExtData":
+        root = os.path.join(root, "ExtData")
+    root = os.path.join(root, rst_info["root"])
 
     # Special handling for fullchem
     if "fullchem" in simulation:
