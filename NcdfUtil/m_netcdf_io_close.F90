@@ -46,6 +46,7 @@ CONTAINS
 ! !USES:
 !
     use m_do_err_out
+    use m_netcdf_io_create, only: Ncdo_Memory_Close
 !
     implicit none
 !
@@ -70,8 +71,11 @@ CONTAINS
 ! !LOCAL VARIABLES:
     character (len=512) :: err_msg
     integer             :: ierr
+    logical             :: memory_handled  ! True for a memory-file close
 !
-    ierr = Nf_Close (ncid)
+    ! Persist memory files; otherwise use the existing netCDF close
+    call Ncdo_Memory_Close (ncid, memory_handled, ierr)
+    if (.not. memory_handled) ierr = Nf_Close (ncid)
 
     if (ierr /= NF_NOERR) then
        err_msg = 'In Nccl:  ' // Nf_Strerror (ierr)
@@ -92,6 +96,10 @@ CONTAINS
 ! !INTERFACE:
 !
   subroutine Nccl_Noerr (ncid)
+!
+! !USES:
+!
+    use m_netcdf_io_create, only: Ncdo_Memory_Close
 !
     implicit none
 !
@@ -116,8 +124,11 @@ CONTAINS
 !
 ! !LOCAL VARIABLES:
     integer             :: ierr
+    logical             :: memory_handled  ! True for a memory-file close
 !
-    ierr = Nf_Close (ncid)
+    ! Persist memory files; otherwise use the existing netCDF close
+    call Ncdo_Memory_Close (ncid, memory_handled, ierr)
+    if (.not. memory_handled) ierr = Nf_Close (ncid)
 
     return
 

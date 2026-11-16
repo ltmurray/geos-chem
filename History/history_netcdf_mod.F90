@@ -375,7 +375,8 @@ CONTAINS
           ENDIF
 
           ! Create the file
-          CALL Nc_Create( Create_Nc4     = .TRUE.,                           &
+          CALL Nc_Create( MemoryFile     = .NOT. isRestart,                  &
+                          Create_Nc4     = .TRUE.,                           &
                           NcFile         = fileName,                         &
                           nLon           = Container%nX,                     &
                           nLat           = Container%nY,                     &
@@ -1061,6 +1062,10 @@ CONTAINS
        Current => Current%Next
        Item    => NULL()
     ENDDO
+
+    ! Non-restart collections keep archive records in the netCDF memory
+    ! image. The file is saved on close at its configured duration, or
+    ! during normal cleanup if the simulation ends before that boundary.
 
     !========================================================================
     ! Cleanup and quit

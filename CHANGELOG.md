@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added the EPA NEI2022 (2022v2 platform) monthly-mean anthropogenic emissions for the CONUS as the `NEI2022_MONMEAN` option (off by default); scaled to 2002-2024 with state-level annual scale factors
 
 ### Changed
+- Buffered non-restart GC-Classic HISTORY output in memory until file-duration closure or normal cleanup, preserving the existing restart output behavior.
 - Activated `WetLossConv` and `WetLossLS` collections in fullchem benchmark simulations
 - Updated the multiphase SO4 formation via HMS: Use literature values of aerosol-phase OH, remove OH from the LHS of the equation in KPP, and compensate SO2 concentration in KaqHMS2 calculation
 - Replaced product PH2SO4 by PSO4AQ in HOBr + SO2 and HOCl + SO2 reactions (`KPP/fullchem/fullchem.eqn`, `KPP/custom/custom.eqn`)
