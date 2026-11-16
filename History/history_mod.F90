@@ -3212,13 +3212,24 @@ CONTAINS
                                    + Container%FileWriteIvalSec
 
           !-----------------------------------------------------------------
-          ! SPECIAL HANDLING FOR RESTART COLLECTION
-          ! Make sure to close the restart file after writing, to avoid
-          ! incompletly-flushed files.  Need to implement a more general
-          ! way of doing this for other types of collections later.
-          !  -- Bob Yantosca (17 Nov 2022)
+          ! CLOSE COMPLETED FILES
+          ! Close restart files after writing. Other collections close
+          ! after their final archive record for the configured duration.
           !-----------------------------------------------------------------
           IF ( isRestart ) THEN
+             CALL History_Netcdf_Close( Container = Container,               &
+                                        RC        = RC                      )
+             IF ( RC /= GC_SUCCESS ) THEN
+                ErrMsg = 'Error returned from "History_Netcdf_Close"!'
+                CALL GC_Error( ErrMsg, RC, ThisLoc )
+                RETURN
+             ENDIF
+          ELSEIF ( ( Container%FileCloseAlarm -                              &
+                     Container%FileWriteAlarm ) < EPS ) THEN
+
+             ! The next archive period belongs to the next file.  The
+             ! completed netCDF memory image is persisted to disk by
+             ! History_Netcdf_Close after the final record, then released.
              CALL History_Netcdf_Close( Container = Container,               &
                                         RC        = RC                      )
              IF ( RC /= GC_SUCCESS ) THEN

@@ -3522,7 +3522,7 @@ CONTAINS
                         Conventions, History,        ProdDateTime,           &
                         Reference,   Contact,        nIlev,                  &
                         iLevId,      StartTimeStamp, EndTimeStamp,           &
-                        nBounds,     boundsId                               )
+                        nBounds,     boundsId,       MemoryFile              )
 !
 ! !USES:
 !
@@ -3542,6 +3542,7 @@ CONTAINS
     INTEGER,          OPTIONAL       :: nILev          ! # of level interfaces
 
     ! Optional arguments (mostly global attributes)
+    LOGICAL,          OPTIONAL       :: MemoryFile     ! Buffer file in RAM
     LOGICAL,          OPTIONAL       :: Create_Nc4     ! Save as netCDF-4
     LOGICAL,          OPTIONAL       :: KeepDefMode    ! If = T, then don't
                                                        !  exit define mode
@@ -3678,7 +3679,7 @@ CONTAINS
     !=======================================================================
 
     ! Open filename.  Save file in netCDF-4 format if requested by user.
-    CALL NcCr_Wr( fId, TRIM( ncFile ), Save_As_Nc4 )
+    CALL NcCr_Wr( fId, TRIM( ncFile ), Save_As_Nc4, MemoryFile )
 
     ! Turn filling off
     CALL NcSetFill( fId, NF90_NOFILL, omode )
