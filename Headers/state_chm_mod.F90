@@ -7271,10 +7271,11 @@ CONTAINS
     !=======================================================================
     ! Get the number of prod and loss species depending on the simulation
     !=======================================================================
-    IF ( Input_Opt%ITS_A_FULLCHEM_SIM .or. Input_Opt%ITS_A_MERCURY_SIM ) THEN
+    IF ( Input_Opt%ITS_A_FULLCHEM_SIM .or. Input_Opt%ITS_A_MERCURY_SIM .or.  &
+         Input_Opt%ITS_A_CARBON_SIM ) THEN
 
        !------------------------------
-       ! Full-chemistry simulations
+       ! Full-chemistry, mercury, or carbon simulations
        !------------------------------
 
        ! Get the # of prod/loss species by querying the first leter of
@@ -7284,11 +7285,10 @@ CONTAINS
           IF ( Fam_Names(N)(1:1) == 'P' ) State_Chm%nProd = State_Chm%nProd + 1
        ENDDO
 
-    ELSE IF ( Input_Opt%ITS_A_TAGO3_SIM         .or.                         &
-              Input_Opt%ITS_A_CARBON_SIM      ) THEN
+    ELSE IF ( Input_Opt%ITS_A_TAGO3_SIM ) THEN
 
        !------------------------------
-       ! Tagged O3 or carbon simulation
+       ! Tagged O3 simulation
        !-----------------------------
 
        ! Each advected species can have a prod and loss diagnostic attached
@@ -7385,10 +7385,11 @@ CONTAINS
     !=======================================================================
     ! Get the number of prod and loss species depending on the simulation
     !=======================================================================
-    IF ( Input_Opt%ITS_A_FULLCHEM_SIM .or. Input_Opt%ITS_A_MERCURY_SIM ) THEN
+    IF ( Input_Opt%ITS_A_FULLCHEM_SIM .or. Input_Opt%ITS_A_MERCURY_SIM .or.  &
+         Input_Opt%ITS_A_CARBON_SIM ) THEN
 
        !--------------------------------------------------------------------
-       ! Full-chemistry simulations
+       ! Full-chemistry, mercury, or carbon simulations
        !--------------------------------------------------------------------
 
        ! Loop over the number of prod/loss species
@@ -7516,8 +7517,7 @@ CONTAINS
 
 
 
-    ELSE IF ( Input_Opt%ITS_A_TAGO3_SIM         .or.                         &
-              Input_Opt%ITS_A_CARBON_SIM      ) THEN
+    ELSE IF ( Input_Opt%ITS_A_TAGO3_SIM ) THEN
 
        !--------------------------------------------------------------------
        ! Tagged O3 simulations
