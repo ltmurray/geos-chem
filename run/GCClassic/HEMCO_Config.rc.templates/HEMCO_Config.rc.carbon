@@ -82,8 +82,8 @@ Mask fractions:              false
     --> CMIP6_SHIP             :       false    # 1850-2100
     --> BB4MIPS                :       false    # 1850-2100
 # ..... Non-Emissions Data ...........
-    --> CH4_LOSS_FREQ          :       true     # 1985
     --> GLOBAL_CL              :       true     # 2010-2019
+    --> GLOBAL_O1D             :       true     # 2010-2019
 # ----- CO and CO2-only INVENTORIES AND DATA ----------------------------------
 # ..... Global inventories ...........
     --> AEIC2019_DAILY         :       false    # 2019 (daily data)
@@ -108,7 +108,6 @@ Mask fractions:              false
     --> CO2_COPROD             :       true     # 2004-2009
     --> PROD_CO_CH4            :       true     # 2010-2019
     --> PROD_CO_NMVOC          :       true     # 2010-2019
-    --> GMI_PROD_LOSS          :       true     # 2005
     --> GMD_SFC_CH4            :       true     # 1979-2020
     --> CMIP6_SFC_CH4          :       false    # 1750-1978
 # ..... Ship emissions ...............
@@ -548,14 +547,15 @@ Mask fractions:              false
 #==============================================================================
 # --- CH4: Soil absorption from MeMo model (Murguia-Flores et al. 2018, GMD) ---
 #
-# - Multiply soil absorption by -1 to get a "negative" flux
+# The positive uptake magnitude is imported as a non-emissions field.
+# GEOS-Chem converts it to a surface-only first-order KPP loss.
 #==============================================================================
 (((MeMo_SOIL_ABSORPTION
 # Climatology
-0 CH4_SOILABSORB $ROOT/CH4/v2019-10/MeMo_SoilAbs/MeMo_CH4uptake_Climatology.nc CH4uptake 2009/1-12/1/0 C xy kg/m2/s CH4 1 14 2
+* CH4_SOIL_UPTAKE $ROOT/CH4/v2019-10/MeMo_SoilAbs/MeMo_CH4uptake_Climatology.nc CH4uptake 2009/1-12/1/0 C xy kg/m2/s * - 18 1
 
 # 1990-2009
-#0 CH4_SOILABSORB $ROOT/CH4/v2019-10/MeMo_SoilAbs/MeMo_CH4uptake_1990-2009.nc CH4uptake 1990-2009/1-12/1/0 C xy kg/m2/s CH4 1 14 2
+#* CH4_SOIL_UPTAKE $ROOT/CH4/v2019-10/MeMo_SoilAbs/MeMo_CH4uptake_1990-2009.nc CH4uptake 1990-2009/1-12/1/0 C xy kg/m2/s * - 18 1
 )))MeMo_SOIL_ABSORPTION
 
 #==============================================================================
@@ -1260,20 +1260,20 @@ ${RUNDIR_GLOBAL_OH}
 )))USE_CH4_DATA.or.USE_CO_DATA
 
 #------------------------------------------------------------------------------
-# --- Quantities needed for CH4 chemistry ---
+# --- Prescribed oxidants needed for CH4 chemistry ---
 #------------------------------------------------------------------------------
 
 (((USE_CH4_DATA
-
-# --- Global CH4 loss frequencies [1/s] -----------
-(((CH4_LOSS_FREQ
-${RUNDIR_CH4_LOSS}
-)))CH4_LOSS_FREQ
 
 # --- Global Cl [mol/mol dry air] ---
 (((GLOBAL_CL
 ${RUNDIR_GLOBAL_Cl}
 )))GLOBAL_CL
+
+# --- Global O(1D) [mol/mol dry air] ---
+(((GLOBAL_O1D
+${RUNDIR_GLOBAL_O1D}
+)))GLOBAL_O1D
 
 )))USE_CH4_DATA
 
@@ -1289,13 +1289,6 @@ ${RUNDIR_PCO_CH4}
 (((PROD_CO_NMVOC
 ${RUNDIR_PCO_NMVOC}
 )))PROD_CO_NMVOC
-
-# --- GMI chemistry: prod/loss rates (for strato-/mesosphere) ---
-# --- Units: prod [v/v/s]; loss [1/s]                         ---
-(((GMI_PROD_LOSS
-* GMI_LOSS_CO    $ROOT/GMI/v2022-11/gmi.clim.CO.geos5.2x25.nc  loss  2005/1-12/1/0 C xyz s-1     CO - 1 1
-* GMI_PROD_CO    $ROOT/GMI/v2022-11/gmi.clim.CO.geos5.2x25.nc  prod  2005/1-12/1/0 C xyz v/v/s   CO - 1 1
-)))GMI_PROD_LOSS
 
 )))USE_CO_DATA
 

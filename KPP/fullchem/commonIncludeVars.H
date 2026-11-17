@@ -235,17 +235,9 @@
   ! Variables specific to the carbon mechanism
   !==========================================================================
 
-  ! Array for strat CH4/CO/CO2 rates [1/s]
-  REAL(dp) :: K_STRAT(5)
-  !$OMP THREADPRIVATE( K_STRAT )
-
-  ! Array for trop CH4/CO/CO2 rates [1/s]
-  REAL(dp) :: K_TROP(5)
-  !$OMP THREADPRIVATE( K_TROP )
-
-  ! Are we in the tropopshere (1=yes, 0=no)
-  REAL(dp) :: TROP
-  !$OMP THREADPRIVATE( TROP )
+  ! Rates used by the unified, all-atmosphere carbon mechanism
+  REAL(dp) :: K_CARBON(5)
+  !$OMP THREADPRIVATE( K_CARBON )
 
   LOGICAL :: debugBox
   !$OMP THREADPRIVATE( debugBox )

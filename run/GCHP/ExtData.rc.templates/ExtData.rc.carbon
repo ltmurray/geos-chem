@@ -264,10 +264,10 @@ CH4_TERMITES kg/m2/s Y Y F2000-%m2-01T00:00:00 none none  CH4  ./HcoDir/CH4/v202
 # --- Soil absorption fro MeMo model (Murguia-Flores et al. 2018, GMD) ---
 #
 # Note: Use climatology by default
-CH4_SOILABSORB kg/m2/s  2009 Y F%y4-%m2-01T00:00:00 none none  CH4uptake  ./HcoDir/CH4/v2019-10/MeMo_SoilAbs/MeMo_CH4uptake_Climatology.nc
+CH4_SOIL_UPTAKE kg/m2/s 2009 Y F%y4-%m2-01T00:00:00 none none CH4uptake ./HcoDir/CH4/v2019-10/MeMo_SoilAbs/MeMo_CH4uptake_Climatology.nc
 #
 # Annual emissions are disabled by default
-#CH4_SOILABSORB kg/m2/s N    Y F%y4-%m2-01T00:00:00 none none  CH4uptake  ./HcoDir/CH4/v2019-10/MeMo_SoilAbs/MeMo_CH4uptake_1990-2009.nc
+#CH4_SOIL_UPTAKE kg/m2/s N Y F%y4-%m2-01T00:00:00 none none CH4uptake ./HcoDir/CH4/v2019-10/MeMo_SoilAbs/MeMo_CH4uptake_1990-2009.nc
 
 #==============================================================================
 # %%%%% CO emissions %%%%%

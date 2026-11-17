@@ -1001,14 +1001,19 @@ MODULE State_Diag_Mod
      REAL(f4),           POINTER :: ProdCO2fromCO(:,:,:)
      LOGICAL                     :: Archive_ProdCO2fromCO
 
-     REAL(f4),           POINTER :: LossCH4byClinTrop(:,:,:)
-     LOGICAL                     :: Archive_LossCH4byClinTrop
+     REAL(f4),           POINTER :: LossCH4byCl(:,:,:)
+     LOGICAL                     :: Archive_LossCH4byCl
 
-     REAL(f4),           POINTER :: LossCH4byOHinTrop(:,:,:)
-     LOGICAL                     :: Archive_LossCH4byOHinTrop
+     REAL(f4),           POINTER :: LossCH4byOH(:,:,:)
+     LOGICAL                     :: Archive_LossCH4byOH
 
-     REAL(f4),           POINTER :: LossCH4inStrat(:,:,:)
-     LOGICAL                     :: Archive_LossCH4inStrat
+     REAL(f4),           POINTER :: LossCH4byO1D(:,:,:)
+     LOGICAL                     :: Archive_LossCH4byO1D
+     REAL(f4),           POINTER :: LossCH4bySoil(:,:)
+     LOGICAL                     :: Archive_LossCH4bySoil
+
+     REAL(f4),           POINTER :: LossCObyOH(:,:,:)
+     LOGICAL                     :: Archive_LossCObyOH
 
      REAL(f4),           POINTER :: ProdCOfromCH4(:,:,:)
      LOGICAL                     :: Archive_ProdCOfromCH4
@@ -2572,14 +2577,19 @@ CONTAINS
     State_Diag%ProdCO2fromCO                       => NULL()
     State_Diag%Archive_ProdCO2fromCO               = .FALSE.
 
-    State_Diag%LossCH4byClinTrop                   => NULL()
-    State_Diag%Archive_LossCH4byClinTrop           = .FALSE.
+    State_Diag%LossCH4byCl                   => NULL()
+    State_Diag%Archive_LossCH4byCl           = .FALSE.
 
-    State_Diag%LossCH4byOHinTrop                   => NULL()
-    State_Diag%Archive_LossCH4byOHinTrop           = .FALSE.
+    State_Diag%LossCH4byOH                   => NULL()
+    State_Diag%Archive_LossCH4byOH           = .FALSE.
 
-    State_Diag%LossCH4inStrat                      => NULL()
-    State_Diag%Archive_LossCH4inStrat              = .FALSE.
+    State_Diag%LossCH4byO1D                      => NULL()
+    State_Diag%Archive_LossCH4byO1D              = .FALSE.
+    State_Diag%LossCH4bySoil                     => NULL()
+    State_Diag%Archive_LossCH4bySoil             = .FALSE.
+
+    State_Diag%LossCObyOH                        => NULL()
+    State_Diag%Archive_LossCObyOH                = .FALSE.
 
     State_Diag%ProdCOfromCH4                          => NULL()
     State_Diag%Archive_ProdCOfromCH4                  = .FALSE.
@@ -3846,7 +3856,6 @@ CONTAINS
           CALL GC_Error( errMsg, RC, thisLoc )
           RETURN
        ENDIF
-
     ELSE
 
        ! If "DryDep" is registered but "DryDepChm" is not, then initialize
@@ -3891,7 +3900,6 @@ CONTAINS
           CALL GC_Error( errMsg, RC, thisLoc )
           RETURN
        ENDIF
-
     ELSE
 
        ! If "DryDep" is registered but "DryDepMix" is not, then initialize
@@ -4642,6 +4650,7 @@ CONTAINS
           CALL GC_Error( errMsg, RC, thisLoc )
           RETURN
        ENDIF
+
     ELSE
 
        !-------------------------------------------------------------------
@@ -9916,6 +9925,7 @@ CONTAINS
           CALL GC_Error( errMsg, RC, thisLoc )
           RETURN
        ENDIF
+
     ELSE
 
        !-------------------------------------------------------------------
@@ -10815,9 +10825,9 @@ CONTAINS
     IF ( Input_Opt%ITS_A_CARBON_SIM ) THEN
 
        !--------------------------------------------------------------------
-       ! Loss of CH4 by Cl in troposphere
+       ! Loss of CH4 by Cl
        !--------------------------------------------------------------------
-       diagID  = 'LossCH4byClinTrop'
+       diagID  = 'LossCH4byCl'
        CALL Init_and_Register(                                               &
             Input_Opt      = Input_Opt,                                      &
             State_Chm      = State_Chm,                                      &
@@ -10825,8 +10835,8 @@ CONTAINS
             State_Grid     = State_Grid,                                     &
             DiagList       = Diag_List,                                      &
             TaggedDiagList = TaggedDiag_List,                                &
-            Ptr2Data       = State_Diag%LossCH4byClinTrop,                   &
-            archiveData    = State_Diag%Archive_LossCH4byClinTrop,           &
+            Ptr2Data       = State_Diag%LossCH4byCl,                   &
+            archiveData    = State_Diag%Archive_LossCH4byCl,           &
             diagId         = diagId,                                         &
             RC             = RC                                             )
 
@@ -10837,9 +10847,9 @@ CONTAINS
        ENDIF
 
        !--------------------------------------------------------------------
-       ! Loss of CH4 by OH in troposphere
+       ! Loss of CH4 by OH
        !--------------------------------------------------------------------
-       diagID  = 'LossCH4byOHinTrop'
+       diagID  = 'LossCH4byOH'
        CALL Init_and_Register(                                               &
             Input_Opt      = Input_Opt,                                      &
             State_Chm      = State_Chm,                                      &
@@ -10847,8 +10857,8 @@ CONTAINS
             State_Grid     = State_Grid,                                     &
             DiagList       = Diag_List,                                      &
             TaggedDiagList = TaggedDiag_List,                                &
-            Ptr2Data       = State_Diag%LossCH4byOHinTrop,                   &
-            archiveData    = State_Diag%Archive_LossCH4byOHinTrop,           &
+            Ptr2Data       = State_Diag%LossCH4byOH,                   &
+            archiveData    = State_Diag%Archive_LossCH4byOH,           &
             diagId         = diagId,                                         &
             RC             = RC                                             )
 
@@ -10859,9 +10869,9 @@ CONTAINS
        ENDIF
 
        !--------------------------------------------------------------------
-       ! Loss of CH4 in the stratosphere
+       ! Loss of CH4 by O(1D)
        !--------------------------------------------------------------------
-       diagID  = 'LossCH4inStrat'
+       diagID  = 'LossCH4byO1D'
        CALL Init_and_Register(                                               &
             Input_Opt      = Input_Opt,                                      &
             State_Chm      = State_Chm,                                      &
@@ -10869,8 +10879,52 @@ CONTAINS
             State_Grid     = State_Grid,                                     &
             DiagList       = Diag_List,                                      &
             TaggedDiagList = TaggedDiag_List,                                &
-            Ptr2Data       = State_Diag%LossCH4inStrat,                      &
-            archiveData    = State_Diag%Archive_LossCH4inStrat,              &
+            Ptr2Data       = State_Diag%LossCH4byO1D,                      &
+            archiveData    = State_Diag%Archive_LossCH4byO1D,              &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Loss of CH4 by soil uptake
+       !--------------------------------------------------------------------
+       diagID  = 'LossCH4bySoil'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossCH4bySoil,                       &
+            archiveData    = State_Diag%Archive_LossCH4bySoil,               &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Loss of CO by OH
+       !--------------------------------------------------------------------
+       diagID  = 'LossCObyOH'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossCObyOH,                          &
+            archiveData    = State_Diag%Archive_LossCObyOH,                  &
             diagId         = diagId,                                         &
             RC             = RC                                             )
 
@@ -10890,15 +10944,19 @@ CONTAINS
        ! being requested as diagnostic output when the corresponding
        ! array has not been allocated.
        !-------------------------------------------------------------------
-       DO N = 1, 3
+       DO N = 1, 5
 
           SELECT CASE( N )
              CASE( 1  )
-                diagID = 'LossCH4byClinTrop'
+                diagID = 'LossCH4byCl'
              CASE( 2  )
-                diagID = 'LossCH4byOHinTrop'
+                diagID = 'LossCH4byOH'
              CASE( 3  )
-                diagID = 'LossCH4inStrat'
+                diagID = 'LossCH4byO1D'
+             CASE( 4  )
+                diagID = 'LossCH4bySoil'
+             CASE( 5  )
+                diagID = 'LossCObyOH'
           END SELECT
 
           ! Exit if any of the above are in the diagnostic list
@@ -13907,18 +13965,28 @@ CONTAINS
                    RC       = RC                                            )
     IF ( RC /= GC_SUCCESS ) RETURN
 
-    CALL Finalize( diagId   = 'LossCH4byClinTrop',                           &
-                   Ptr2Data = State_Diag%LossCH4byClinTrop,                  &
+    CALL Finalize( diagId   = 'LossCH4byCl',                           &
+                   Ptr2Data = State_Diag%LossCH4byCl,                  &
                    RC       = RC                                            )
     IF ( RC /= GC_SUCCESS ) RETURN
 
-    CALL Finalize( diagId   = 'LossCH4byOHinTrop',                           &
-                   Ptr2Data = State_Diag%LossCH4byOHinTrop,                  &
+    CALL Finalize( diagId   = 'LossCH4byOH',                           &
+                   Ptr2Data = State_Diag%LossCH4byOH,                  &
                    RC       = RC                                            )
     IF ( RC /= GC_SUCCESS ) RETURN
 
-    CALL Finalize( diagId   = 'LossCH4inStrat',                              &
-                   Ptr2Data = State_Diag%LossCH4inStrat,                     &
+    CALL Finalize( diagId   = 'LossCH4byO1D',                              &
+                   Ptr2Data = State_Diag%LossCH4byO1D,                     &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'LossCH4bySoil',                              &
+                   Ptr2Data = State_Diag%LossCH4bySoil,                     &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'LossCObyOH',                                  &
+                   Ptr2Data = State_Diag%LossCObyOH,                         &
                    RC       = RC                                            )
     IF ( RC /= GC_SUCCESS ) RETURN
 
@@ -16344,28 +16412,32 @@ CONTAINS
     ELSE IF ( TRIM( Name_AllCaps ) == 'PRODCO2FROMCO' ) THEN
        IF ( isDesc    ) Desc  = 'Prod of CO2 from CO oxidation'
        IF ( isRank    ) Rank  =  3
-       IF ( isUnits   ) THEN
-          IF ( isCarbon ) THEN
-             Units = 'molec cm-3 s-1'
-          ELSE
-             Units = 'kg m-2 s-1'
-          ENDIF
-       ENDIF
+       IF ( isUnits   ) Units = 'kg m-2 s-1'
 
-    ELSE IF ( TRIM( Name_AllCaps ) == 'LOSSCH4BYCLINTROP' ) THEN
+    ELSE IF ( TRIM( Name_AllCaps ) == 'LOSSCH4BYCL' ) THEN
        IF ( isDesc    ) Desc  = &
-            'Loss of CH4 by reaction with Cl in troposphere'
+            'Loss of CH4 by reaction with Cl'
        IF ( isUnits   ) Units = 'kg s-1'
        IF ( isRank    ) Rank  =  3
 
-    ELSE IF ( TRIM( Name_AllCaps ) == 'LOSSCH4BYOHINTROP' ) THEN
+    ELSE IF ( TRIM( Name_AllCaps ) == 'LOSSCH4BYOH' ) THEN
        IF ( isDesc    ) Desc  = &
-            'Loss of CH4 by reaction with OH in troposphere'
+            'Loss of CH4 by reaction with OH'
        IF ( isUnits   ) Units = 'kg s-1'
        IF ( isRank    ) Rank  =  3
 
-    ELSE IF ( TRIM( Name_AllCaps ) == 'LOSSCH4INSTRAT' ) THEN
-       IF ( isDesc    ) Desc  = 'Loss of CH4 in the stratosphere'
+    ELSE IF ( TRIM( Name_AllCaps ) == 'LOSSCH4BYO1D' ) THEN
+       IF ( isDesc    ) Desc  = 'Loss of CH4 by O(1D)'
+       IF ( isUnits   ) Units = 'kg s-1'
+       IF ( isRank    ) Rank  =  3
+
+    ELSE IF ( TRIM( Name_AllCaps ) == 'LOSSCH4BYSOIL' ) THEN
+       IF ( isDesc    ) Desc  = 'Loss of CH4 by soil uptake'
+       IF ( isUnits   ) Units = 'kg s-1'
+       IF ( isRank    ) Rank  =  2
+
+    ELSE IF ( TRIM( Name_AllCaps ) == 'LOSSCOBYOH' ) THEN
+       IF ( isDesc    ) Desc  = 'Loss of CO by reaction with OH'
        IF ( isUnits   ) Units = 'kg s-1'
        IF ( isRank    ) Rank  =  3
 

@@ -31,6 +31,7 @@ RUNDIR_GLOBAL_NO2='* GLOBAL_NO2     $ROOT/GCClassic_Output/14.0.0/$YYYY/GEOSChem
 RUNDIR_GLOBAL_NO3='* GLOBAL_NO3     $ROOT/GCClassic_Output/14.0.0/$YYYY/GEOSChem.SpeciesConc.$YYYY$MM01_0000z.nc4      SpeciesConc_NO3   2010-2019/1-12/1/0 C xyz 1        * - 1 1'
 RUNDIR_GLOBAL_O3='* GLOBAL_O3      $ROOT/GCClassic_Output/14.0.0/$YYYY/GEOSChem.SpeciesConc.$YYYY$MM01_0000z.nc4      SpeciesConc_O3    2010-2019/1-12/1/0 C xyz 1        * - 1 1'
 RUNDIR_GLOBAL_OH='* GLOBAL_OH      $ROOT/CH4/v2024-01/GCC_14_Output/$YYYY/GEOSChem.SpeciesConc.$YYYY$MM01_0000z.nc4      SpeciesConc_OH    2010-2019/1-12/1/0 C xyz 1        * - 1 1'
+RUNDIR_GLOBAL_O1D='* GLOBAL_O1D     $ROOT/GMI/v2015-02/gmi.clim.O1D.geos5.2x25.nc                                           species           2005/1-12/1/0 C xyz v/v      * - 1 1'
 RUNDIR_GLOBAL_PM25='* GLOBAL_PM25    $ROOT/GCClassic_Output/14.0.0/$YYYY/GEOSChem.AerosolMass.$YYYY$MM01_0000z.nc4      PM25              2010-2019/1-12/1/0 C xyz 1        * - 1 1'
 RUNDIR_AERO_SO4='* AERO_SO4       $ROOT/GCClassic_Output/14.0.0/$YYYY/GEOSChem.SpeciesConc.$YYYY$MM01_0000z.nc4      SpeciesConc_SO4   2010-2019/1-12/1/0 C xyz 1        * - 1 1'
 RUNDIR_AERO_NH4='* AERO_NH4       $ROOT/GCClassic_Output/14.0.0/$YYYY/GEOSChem.SpeciesConc.$YYYY$MM01_0000z.nc4      SpeciesConc_NH4   2010-2019/1-12/1/0 C xyz 1        * - 1 1'
