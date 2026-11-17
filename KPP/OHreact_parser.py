@@ -43,10 +43,7 @@ def writeHeader(fo, mechName):
     fo.write('! OHreact - OH reactivity [s-1]\n')
     fo.write('  REAL(kind=dp) :: OHreact\n')
     fo.write('\n')
-    if "carbon" in mechName:
-        fo.write('  OHreact = 0.0_dp') # carbon mech has no OH reactivity
-    else:
-        fo.write('  OHreact = ')
+    fo.write('  OHreact = ')
 
 
 def writeFooter(fo):
@@ -183,6 +180,11 @@ def writeReactivity(mechName):
             nn   += 1
             ntot += 1
             fo.write(istr)
+
+    # A mechanism with no OH-reactivity terms still needs a valid Fortran
+    # assignment.  KPP 3.1.1 otherwise leaves a bare ``OHreact =`` line.
+    if ntot == 0:
+        fo.write('0.0_dp')
 
     # Close the subroutine and the module
     writeFooter(fo)
