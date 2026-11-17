@@ -89,6 +89,12 @@ add_library(GeosCore
   # exchange_mod : TODO
 )
 
+# The carbon mechanism is generated with KPP 3.1.1 and uses Forward Euler.
+# Its Initialize routine predates the KPP 3.5 passive-species threshold argument.
+if("${MECH}" STREQUAL carbon)
+  target_compile_definitions(GeosCore PRIVATE KPP_NO_PASSIVE_SPC_THRESHOLD)
+endif()
+
 # Fixes #64: If GCC>=8.0.0 then ocean_mercury_mod.F90 
 # should be compiled with -O1
 if(("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU") AND NOT (CMAKE_Fortran_COMPILER_VERSION VERSION_LESS "8.0.0") AND NOT("${CMAKE_BUILD_TYPE}" STREQUAL "Debug"))
