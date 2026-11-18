@@ -228,6 +228,72 @@ function updateHistory() {
     if [[ $? == 1 ]]; then
 	sed -i -e "s/'Emissions/#'Emissions/" "${file}"
     fi
+
+    # Retain ProdLoss diagnostics only when the diagnostic target species
+    # (the X in ProdXfromY or LossXbyY) is advected.  These diagnostics are
+    # ordinary HISTORY fields, so filtering the generated HISTORY.rc is more
+    # robust than relying on KPP family membership.  Do not replace these
+    # explicit names with Prod_?PRD? or Loss_?LOS?: those wildcards expand all
+    # compiled KPP families, even when the target species is not advected.
+    firstProdLoss=""
+    case "${3}" in
+        CH4)
+            sed -i "/Prod_CO/d"          "${file}"
+            sed -i "/Loss_CO/d"          "${file}"
+            sed -i "/ProdCOfromCH4/d"   "${file}"
+            sed -i "/ProdCOfromNMVOC/d" "${file}"
+            sed -i "/ProdCO2fromCO/d"    "${file}"
+            sed -i "/LossCObyOH/d"       "${file}"
+            firstProdLoss="Loss_CH4"
+            ;;
+        CO)
+            sed -i "/Loss_CH4/d"       "${file}"
+            sed -i "/ProdCO2fromCO/d"  "${file}"
+            sed -i "/LossCH4byOH/d"    "${file}"
+            sed -i "/LossCH4byCl/d"    "${file}"
+            sed -i "/LossCH4byO1D/d"   "${file}"
+            sed -i "/LossCH4bySoil/d"  "${file}"
+            firstProdLoss="Prod_CO"
+            ;;
+        CO2)
+            sed -i "/Prod_CO/d"          "${file}"
+            sed -i "/Loss_CO/d"          "${file}"
+            sed -i "/Loss_CH4/d"         "${file}"
+            sed -i "/ProdCOfromCH4/d"   "${file}"
+            sed -i "/ProdCOfromNMVOC/d" "${file}"
+            sed -i "/LossCH4byOH/d"      "${file}"
+            sed -i "/LossCH4byCl/d"      "${file}"
+            sed -i "/LossCH4byO1D/d"     "${file}"
+            sed -i "/LossCH4bySoil/d"    "${file}"
+            sed -i "/LossCObyOH/d"       "${file}"
+            firstProdLoss="ProdCO2fromCO"
+            ;;
+        OCS)
+            sed -i "/Prod_CO/d"          "${file}"
+            sed -i "/Loss_CO/d"          "${file}"
+            sed -i "/Loss_CH4/d"         "${file}"
+            sed -i "/ProdCOfromCH4/d"   "${file}"
+            sed -i "/ProdCOfromNMVOC/d" "${file}"
+            sed -i "/ProdCO2fromCO/d"    "${file}"
+            sed -i "/LossCH4byOH/d"      "${file}"
+            sed -i "/LossCH4byCl/d"      "${file}"
+            sed -i "/LossCH4byO1D/d"     "${file}"
+            sed -i "/LossCH4bySoil/d"    "${file}"
+            sed -i "/LossCObyOH/d"       "${file}"
+            sed -i -E "s/^([[:space:]]*)'ProdLoss',/\1#'ProdLoss',/" "${file}"
+            firstProdLoss=""
+            ;;
+    esac
+
+    # If deletion removed the original ProdLoss.fields line, promote the
+    # first retained diagnostic so that both GCClassic and GCHP syntax remain
+    # valid.  Preserve everything after the diagnostic name (including the
+    # GCHP component label).
+    if [[ -n "${firstProdLoss}" ]]; then
+        sed -i -E \
+            "s/^[[:space:]]*'${firstProdLoss}/  ProdLoss.fields:          '${firstProdLoss}/" \
+            "${file}"
+    fi
 }
 
 
@@ -263,7 +329,7 @@ function updateExtData() {
         sed -i "/^CH4_RES_DAM/d"        "${file}"
         sed -i "/^CH4_RES_SFC/d"        "${file}"
         sed -i "/^CH4_TERMITES/d"       "${file}"
-        sed -i "/^CH4_SOILABSORB/d"     "${file}"
+        sed -i "/^CH4_SOIL_UPTAKE/d"    "${file}"
         sed -i "/^\#CH4_/d"             "${file}"
         sed -i "/RCP3PD_CH4/d"          "${file}"
         sed -i "/RCP45_CH4/d"           "${file}"
