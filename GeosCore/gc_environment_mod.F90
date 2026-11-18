@@ -402,7 +402,11 @@ CONTAINS
 !
     USE Aerosol_Mod,        ONLY : Init_Aerosol
     USE Carbon_Mod,         ONLY : Init_Carbon
-    USE Carbon_Gases_Mod,   ONLY : Init_Carbon_Gases
+#ifdef IS_OXIDANTS_MECH
+    USE Offline_Oxidants_Mod, ONLY : Init_Offline_Gases => Init_Offline_Oxidants
+#else
+    USE Carbon_Gases_Mod,   ONLY : Init_Offline_Gases => Init_Carbon_Gases
+#endif
     USE Depo_Mercury_Mod,   ONLY : Init_Depo_Mercury
     USE DiagList_Mod,       ONLY : DgnList
     USE Drydep_Mod,         ONLY : Init_Drydep
@@ -647,8 +651,8 @@ CONTAINS
     !-----------------------------------------------------------------
     ! Carbon gases via KPP
     !-----------------------------------------------------------------
-    IF ( Input_Opt%ITS_A_CARBON_SIM ) THEN
-       CALL Init_Carbon_Gases( Input_Opt,  State_Chm, State_Diag,            &
+    IF ( Input_Opt%ITS_AN_OFFLINE_GAS_SIM ) THEN
+       CALL Init_Offline_Gases( Input_Opt,  State_Chm, State_Diag,            &
                                State_Grid, RC                               )
        IF ( RC /= GC_SUCCESS ) THEN
           ErrMsg = 'Error encountered in "Init_Carbon_Gases"!'

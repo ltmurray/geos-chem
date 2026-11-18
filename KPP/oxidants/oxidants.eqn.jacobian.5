@@ -69,14 +69,14 @@ CH4_jac0003 + FixedO1D = LCH4byO1D          : 1.75d-10;
 CH4_jac0004 + FixedO1D = LCH4byO1D          : 1.75d-10;
 CH4_jac0005 + FixedO1D = LCH4byO1D          : 1.75d-10;
 //
-// Rate k_Carbon(1) is the HEMCO-supplied P(CO) from CH4.
-DummyCH4             = CO + PCOfromCH4         : k_Carbon(1);
+// Rate k_Oxidants(1) is the HEMCO-supplied P(CO) from CH4.
+DummyCH4             = CO + PCOfromCH4         : k_Oxidants(1);
 //
-// Rate k_Carbon(2) is the output of rate law function GC_OHCO.
-CO + FixedOH         = LCObyOH                 : k_Carbon(2);
+// Rate k_Oxidants(2) is the output of rate law function GC_OHCO.
+CO + FixedOH         = LCObyOH                 : k_Oxidants(2);
 //
 // DummyNMVOC is a placeholder species set to 1 molec/cm3.
 // This is a KPP "trick" in order to set the final CO concentration
-// to k_Carbon(3) [molec/cm3/s] * dt [s], where dt is the chemistry
-// timestep.  k_Carbon(3) contains externally-supplied P(CO) from NMVOC.
-DummyNMVOC           = CO + PCOfromNMVOC       : k_Carbon(3);
+// to k_Oxidants(3) [molec/cm3/s] * dt [s], where dt is the chemistry
+// timestep.  k_Oxidants(3) contains externally-supplied P(CO) from NMVOC.
+DummyNMVOC           = CO + PCOfromNMVOC       : k_Oxidants(3);

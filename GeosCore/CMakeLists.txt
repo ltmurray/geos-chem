@@ -15,6 +15,12 @@ endif()
 #-----------------------------------------------------------------------------
 # Define libGeosCore.a
 #-----------------------------------------------------------------------------
+if("${MECH}" STREQUAL "oxidants")
+  set(OFFLINE_GASES_SOURCE offline_oxidants_mod.F90)
+else()
+  set(OFFLINE_GASES_SOURCE carbon_gases_mod.F90)
+endif()
+
 add_library(GeosCore
   STATIC EXCLUDE_FROM_ALL
   aero_drydep.F90
@@ -23,7 +29,7 @@ add_library(GeosCore
   airs_ch4_mod.F90
   calc_met_mod.F90
   carbon_mod.F90
-  carbon_gases_mod.F90
+  ${OFFLINE_GASES_SOURCE}
   chemistry_mod.F90
   cldice_HBrHOBr_rxn.F90
   cldj_interface_mod.F90
@@ -88,6 +94,10 @@ add_library(GeosCore
   $<$<BOOL:${APM}>:apm_driv_mod.F90>
   # exchange_mod : TODO
 )
+
+if("${MECH}" STREQUAL "oxidants")
+  target_compile_definitions(GeosCore PRIVATE IS_OXIDANTS_MECH)
+endif()
 
 # Fixes #64: If GCC>=8.0.0 then ocean_mercury_mod.F90 
 # should be compiled with -O1

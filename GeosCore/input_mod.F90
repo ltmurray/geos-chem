@@ -233,7 +233,7 @@ CONTAINS
     !========================================================================
 
     ! Carbon simulation settings
-    IF ( Input_Opt%Its_A_Carbon_Sim ) THEN
+    IF ( Input_Opt%Its_An_Offline_Gas_Sim ) THEN
        CALL Config_CH4( Config, Input_Opt, RC )
        IF ( RC /= GC_SUCCESS ) THEN
           errMsg = 'Error in "Config_CH4"!'
@@ -437,8 +437,10 @@ CONTAINS
 
     ! Set simulation type flags in Input_Opt
     Input_Opt%ITS_AN_AEROSOL_SIM   = ( TRIM(Sim) == 'AEROSOL'               )
-    Input_Opt%ITS_A_CARBON_SIM     = ( TRIM(Sim) == 'CARBON'          .or.  &
-                                       TRIM(Sim) == 'OXIDANTS'              )
+    Input_Opt%ITS_A_CARBON_SIM     = ( TRIM(Sim) == 'CARBON'                )
+    Input_Opt%ITS_AN_OXIDANTS_SIM  = ( TRIM(Sim) == 'OXIDANTS'              )
+    Input_Opt%ITS_AN_OFFLINE_GAS_SIM =                                 &
+       ( Input_Opt%ITS_A_CARBON_SIM .or. Input_Opt%ITS_AN_OXIDANTS_SIM )
     Input_Opt%ITS_A_FULLCHEM_SIM   = ( TRIM(Sim) == 'FULLCHEM'              )
     Input_Opt%ITS_A_MERCURY_SIM    = ( TRIM(Sim) == 'HG'                    )
     Input_Opt%ITS_A_TRACEMETAL_SIM = ( TRIM(Sim) == 'METALS'                )
@@ -1309,7 +1311,7 @@ CONTAINS
 
     IF ( TRIM( Input_Opt%MetField ) == 'MERRA2'                        .and. &
          TRIM( State_Grid%GridRes ) == '0.5x0.625' )                   THEN
-       IF ( Input_Opt%ITS_A_CARBON_SIM )   THEN
+       IF ( Input_Opt%ITS_AN_OFFLINE_GAS_SIM ) THEN
           IF ( Input_Opt%TS_DYN > 300 .or. Input_Opt%TS_CHEM > 600 )   THEN
              IF ( Input_Opt%amIRoot ) THEN
                 WRITE( 6,'(a)' ) ''

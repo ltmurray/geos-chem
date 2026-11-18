@@ -16,7 +16,11 @@ SUBROUTINE CLEANUP( Input_Opt, State_Grid, ERROR, RC )
 ! !USES:
 !
   USE CARBON_MOD,              ONLY : CLEANUP_CARBON
-  USE Carbon_Gases_Mod,        ONLY : Cleanup_Carbon_Gases
+#ifdef IS_OXIDANTS_MECH
+  USE Offline_Oxidants_Mod, ONLY : Cleanup_Offline_Gases => Cleanup_Offline_Oxidants
+#else
+  USE Carbon_Gases_Mod,     ONLY : Cleanup_Offline_Gases => Cleanup_Carbon_Gases
+#endif
   USE DEPO_MERCURY_MOD,        ONLY : CLEANUP_DEPO_MERCURY
   USE DRYDEP_MOD,              ONLY : CLEANUP_DRYDEP
   USE ErrCode_Mod
@@ -134,7 +138,7 @@ SUBROUTINE CLEANUP( Input_Opt, State_Grid, ERROR, RC )
      RETURN
   ENDIF
 
-  CALL Cleanup_Carbon_Gases( RC )
+  CALL Cleanup_Offline_Gases( RC )
   IF ( RC /= GC_SUCCESS ) THEN
      ErrMsg = 'Error encountered in "Cleanup_Carbon_Gases"!'
      CALL GC_Error( ErrMsg, RC, ThisLoc )

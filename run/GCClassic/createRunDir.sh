@@ -45,6 +45,7 @@ cd ${srcrundir}
 . ${gcdir}/run/GCClassic/setupForRestarts.sh   # Functions for restart files
 . ${gcdir}/run/shared/newUserRegistration.sh   # 1st-time user registration
 . ${gcdir}/run/shared/singleCarbonSpecies.sh   # Single carbon species setup
+. ${gcdir}/run/shared/singleOxidantsSpecies.sh # Single oxidants species setup
 
 # Initialize run directory variables
 RUNDIR_VARS=""
@@ -1296,7 +1297,11 @@ fi
 if [[ "x${sim_name}" == "xcarbon"   ||
       "x${sim_name}" == "xoxidants" ]]; then
     if [[ "x${sim_extra_option}" != "xnone" ]]; then
-	singleCarbonSpecies "${sim_extra_option}" "${rundir}"
+	if [[ "x${sim_name}" == "xoxidants" ]]; then
+	    singleOxidantsSpecies "${sim_extra_option}" "${rundir}"
+	else
+	    singleCarbonSpecies "${sim_extra_option}" "${rundir}"
+	fi
     fi
 fi
 

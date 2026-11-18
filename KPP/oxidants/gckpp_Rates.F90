@@ -422,10 +422,10 @@ SUBROUTINE Update_RCONST ( )
   RCONST(1) = (2.45d-12*EXP(-1775.0d0/TEMP))
   RCONST(2) = (9.60d-12*EXP(-1360.0d0/TEMP))
   RCONST(3) = (1.75d-10)
-  RCONST(4) = (k_Carbon(4))
-  RCONST(5) = (k_Carbon(1))
-  RCONST(6) = (k_Carbon(2))
-  RCONST(7) = (k_Carbon(3))
+  RCONST(4) = (k_Oxidants(4))
+  RCONST(5) = (k_Oxidants(1))
+  RCONST(6) = (k_Oxidants(2))
+  RCONST(7) = (k_Oxidants(3))
 
 END SUBROUTINE Update_RCONST
 

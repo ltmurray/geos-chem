@@ -57,7 +57,11 @@ CONTAINS
     USE AEROSOL_MOD,      ONLY : AEROSOL_CONC
     USE AEROSOL_MOD,      ONLY : RDAER
     USE CARBON_MOD,       ONLY : CHEMCARBON
-    USE Carbon_Gases_Mod, ONLY : Chem_Carbon_Gases
+#ifdef IS_OXIDANTS_MECH
+    USE Offline_Oxidants_Mod, ONLY : Run_Offline_Gases => Run_Offline_Oxidants
+#else
+    USE Carbon_Gases_Mod, ONLY : Run_Offline_Gases => Chem_Carbon_Gases
+#endif
     USE Diagnostics_Mod,  ONLY : Compute_Budget_Diagnostics
     USE DUST_MOD,         ONLY : CHEMDUST
     USE DUST_MOD,         ONLY : RDUST_ONLINE
@@ -946,14 +950,14 @@ CONTAINS
        !=====================================================================
        ! Carbon gases (configure with -DMECH=carbon)
        !=====================================================================
-       ELSE IF ( Input_Opt%ITS_A_CARBON_SIM ) THEN
+       ELSE IF ( Input_Opt%ITS_AN_OFFLINE_GAS_SIM ) THEN
 
           IF ( Input_Opt%useTimers ) THEN
              CALL Timer_Start( "=> Gas-phase chem", RC )
           ENDIF
 
           ! Do carbon chemistry
-          CALL Chem_Carbon_Gases( Input_Opt  = Input_Opt,                    &
+          CALL Run_Offline_Gases( Input_Opt  = Input_Opt,                    &
                                   State_Met  = State_Met,                    &
                                   State_Chm  = State_Chm,                    &
                                   State_Grid = State_Grid,                   &

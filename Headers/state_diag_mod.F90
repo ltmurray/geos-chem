@@ -5968,7 +5968,7 @@ CONTAINS
     !=======================================================================
     IF ( Input_Opt%ITS_A_FULLCHEM_SIM .or.                                   &
          Input_Opt%ITS_A_MERCURY_SIM  .or.                                   &
-         Input_Opt%ITS_A_CARBON_SIM        ) THEN
+         Input_Opt%ITS_AN_OFFLINE_GAS_SIM        ) THEN
 
        !--------------------------------------------------------------------
        ! KPP Reaction Rates
@@ -7466,7 +7466,7 @@ CONTAINS
     ! THE CARBON SIMULATION
     !=======================================================================
     IF ( Input_Opt%ITS_A_FULLCHEM_SIM                                   .or. &
-         Input_Opt%ITS_A_CARBON_SIM                                     ) THEN
+         Input_Opt%ITS_AN_OFFLINE_GAS_SIM                                     ) THEN
 
        !--------------------------------------------------------------------
        ! OH concentration upon exiting the FlexChem solver
@@ -10176,7 +10176,7 @@ CONTAINS
     ! (3) The Tagged O3 specialty simulation
     !=======================================================================
     IF ( Input_Opt%ITS_A_FULLCHEM_SIM                                   .or. &
-         Input_Opt%ITS_A_CARBON_SIM                                     .or. &
+         Input_Opt%ITS_AN_OFFLINE_GAS_SIM                                     .or. &
          Input_Opt%ITS_A_MERCURY_SIM                                    .or. &
          Input_Opt%ITS_A_TAGO3_SIM                                    ) THEN
 
@@ -10769,7 +10769,7 @@ CONTAINS
     !
     ! CO2 IN THE CARBON SIMULATION
     !=======================================================================
-    IF ( Input_Opt%ITS_A_CARBON_SIM ) THEN
+    IF ( Input_Opt%ITS_AN_OFFLINE_GAS_SIM ) THEN
 
        !--------------------------------------------------------------------
        ! Prod of CO2 from CO oxidation
@@ -10822,7 +10822,7 @@ CONTAINS
     !
     ! CH4 IN THE CARBON SIMULATION
     !=======================================================================
-    IF ( Input_Opt%ITS_A_CARBON_SIM ) THEN
+    IF ( Input_Opt%ITS_AN_OFFLINE_GAS_SIM ) THEN
 
        !--------------------------------------------------------------------
        ! Loss of CH4 by Cl
@@ -10979,7 +10979,7 @@ CONTAINS
     ! THE FULL-CHEMISTRY SIMULATIONS (for archiving output for CO in carbon sim)
     !=======================================================================
     IF ( Input_Opt%ITS_A_FULLCHEM_SIM                                   .or. &
-         Input_Opt%ITS_A_CARBON_SIM                                   ) THEN
+         Input_Opt%ITS_AN_OFFLINE_GAS_SIM                                   ) THEN
 
        !--------------------------------------------------------------------
        ! Production of CO from CH4
@@ -14536,7 +14536,7 @@ CONTAINS
 ! !USES:
 !
     USE Charpak_Mod,         ONLY : StrSplit,   To_UpperCase
-    USE DiagList_Mod,        ONLY : IsFullChem, IsCarbon, IsHg
+    USE DiagList_Mod,        ONLY : IsFullChem, IsOfflineGas, IsHg
     USE DiagList_Mod,        ONLY : budgetTopLev_str, budgetBotLev_str
     USE Registry_Params_Mod
 !
@@ -16034,7 +16034,7 @@ CONTAINS
        ! and are currently kg/s for other specialty simulations.
        ! This will need to be cleaned up later (Bob Yantosca, 22 Aug 2020).
        IF ( isUnits   ) THEN
-          IF ( IsFullChem .or. IsHg .or. IsCarbon ) THEN
+          IF ( IsFullChem .or. IsHg .or. IsOfflineGas ) THEN
              Units = 'molec cm-3 s-1'
           ELSE
              Units = 'kg s-1'
@@ -16066,7 +16066,7 @@ CONTAINS
        ! and are currently kg/s for other specialty simulations.
        ! This will need to be cleaned up later (Bob Yantosca, 22 Aug 2020).
        IF ( isUnits   ) THEN
-          IF ( IsFullChem .or. IsHg .or. IsCarbon ) THEN
+          IF ( IsFullChem .or. IsHg .or. IsOfflineGas ) THEN
              Units = 'molec cm-3 s-1'
           ELSE
              Units = 'kg s-1'
@@ -16445,7 +16445,7 @@ CONTAINS
        IF ( isDesc    ) Desc  = 'Production of CO by CH4'
        IF ( isRank    ) Rank  =  3
        IF ( isUnits   ) THEN
-          IF ( isFullChem .or. isCarbon ) THEN
+          IF ( isFullChem .or. isOfflineGas ) THEN
              Units = 'molec cm-3 s-1'
           ELSE
              Units = 'kg s-1'
@@ -16456,7 +16456,7 @@ CONTAINS
        IF ( isDesc    ) Desc  = 'Porduction of CO by NMVOC'
        IF ( isRank    ) Rank  =  3
        IF ( isUnits   ) THEN
-          IF ( isFullChem .or. isCarbon ) THEN
+          IF ( isFullChem .or. isOfflineGas ) THEN
              Units = 'molec cm-3 s-1'
           ELSE
              Units = 'kg s-1'

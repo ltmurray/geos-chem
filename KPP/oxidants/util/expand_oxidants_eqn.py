@@ -6,7 +6,7 @@ import sys
 import re
 
 if len(sys.argv) < 3:
-    print("Usage: expand_carbon_eqn.py carbon.eqn.template Njac", file=sys.stderr)
+    print("Usage: expand_carbon_eqn.py oxidants.eqn.template Njac", file=sys.stderr)
     sys.exit(1)
 
 infile = sys.argv[1]

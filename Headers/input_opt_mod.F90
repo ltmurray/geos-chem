@@ -76,6 +76,8 @@ MODULE Input_Opt_Mod
      CHARACTER(LEN=255)          :: SpcMetaDataOutFile
      LOGICAL                     :: ITS_AN_AEROSOL_SIM
      LOGICAL                     :: ITS_A_CARBON_SIM
+     LOGICAL                     :: ITS_AN_OXIDANTS_SIM
+     LOGICAL                     :: ITS_AN_OFFLINE_GAS_SIM
      LOGICAL                     :: ITS_A_FULLCHEM_SIM
      LOGICAL                     :: ITS_A_MERCURY_SIM
      LOGICAL                     :: ITS_A_POPS_SIM
@@ -571,6 +573,8 @@ CONTAINS
     Input_Opt%SpcMetaDataOutFile     = ''
     Input_Opt%ITS_AN_AEROSOL_SIM     = .FALSE.
     Input_Opt%ITS_A_CARBON_SIM       = .FALSE.
+    Input_Opt%ITS_AN_OXIDANTS_SIM    = .FALSE.
+    Input_Opt%ITS_AN_OFFLINE_GAS_SIM = .FALSE.
     Input_Opt%ITS_A_FULLCHEM_SIM     = .FALSE.
     Input_Opt%ITS_A_MERCURY_SIM      = .FALSE.
     Input_Opt%ITS_A_POPS_SIM         = .FALSE.

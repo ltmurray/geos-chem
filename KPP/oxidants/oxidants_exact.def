@@ -1,3 +1,3 @@
 #JACOBIAN OFF
-#INTFILE ./carbon_exact
+#INTFILE ./oxidants_exact
 #FUNCTION SPLIT

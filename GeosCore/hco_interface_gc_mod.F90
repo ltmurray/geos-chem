@@ -3734,7 +3734,7 @@ CONTAINS
     !-----------------------------------------------------------------
     IF ( Input_Opt%ITS_A_FULLCHEM_SIM                                   .or. &
          Input_Opt%ITS_AN_AEROSOL_SIM                                   .or. &
-         Input_Opt%ITS_A_CARBON_SIM                                     .or. &
+         Input_Opt%ITS_AN_OFFLINE_GAS_SIM                                     .or. &
          Input_Opt%ITS_A_MERCURY_SIM                                    .or. &
          Input_Opt%ITS_A_POPS_SIM                                       .or. &
          Input_Opt%ITS_A_TAGO3_SIM                                      .or. &

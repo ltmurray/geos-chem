@@ -89,6 +89,8 @@ MODULE DiagList_Mod
   LOGICAL,           PUBLIC  :: IsFullChem       ! Is it a fullchem simulation?
   LOGICAL,           PUBLIC  :: IsHg             ! Is it a Hg simulation?
   LOGICAL,           PUBLIC  :: IsCarbon         ! Is it a carbon sim?
+  LOGICAL,           PUBLIC  :: IsOxidants       ! Is it an oxidants sim?
+  LOGICAL,           PUBLIC  :: IsOfflineGas     ! Carbon or oxidants?
   CHARACTER(LEN=10), PUBLIC  :: AltAboveSfc      ! Alt for O3, HNO3 diagnostics
 
   !=========================================================================
@@ -238,6 +240,8 @@ CONTAINS
     IsFullChem      = .FALSE.
     IsHg            = .FALSE.
     IsCarbon        = .FALSE.
+    IsOxidants      = .FALSE.
+    IsOfflineGas    = .FALSE.
     InDefSection    = .FALSE.
     InFieldsSection = .FALSE.
     doPrintCollList = .FALSE.
@@ -279,8 +283,9 @@ CONTAINS
     ENDIF
     IsFullChem  = ( To_UpperCase( v_str ) == "FULLCHEM"    )
     IsHg        = ( To_UpperCase( v_str ) == "HG"          )
-    IsCarbon    = ( To_UpperCase( v_str ) == "CARBON"   .or. &
-                    To_UpperCase( v_str ) == "OXIDANTS"       )
+    IsCarbon    = ( To_UpperCase( v_str ) == "CARBON"         )
+    IsOxidants  = ( To_UpperCase( v_str ) == "OXIDANTS"       )
+    IsOfflineGas = IsCarbon .or. IsOxidants
 
     ! Read the altitude above the surface in meters for drydep diags
     key   = "operations%dry_deposition%diag_alt_above_sfc_in_m"

@@ -1,5 +1,5 @@
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~!
-! Exact analytical integrator for the linear GEOS-Chem carbon mechanism. !
+! Exact analytical integrator for the linear GEOS-Chem prescribed oxidants mechanism. !
 ! Rates are held fixed over one chemistry operator timestep.              !
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~!
 MODULE KPP_ROOT_Integrator
@@ -13,7 +13,7 @@ MODULE KPP_ROOT_Integrator
   PRIVATE
 
   PUBLIC :: Integrate
-  PUBLIC :: ValidateCarbonAnalyticalMechanism
+  PUBLIC :: ValidateOxidantsAnalyticalMechanism
 
   LOGICAL, PRIVATE :: Do_Update_RCONST
   LOGICAL, PRIVATE :: Do_Update_PHOTO
@@ -63,7 +63,7 @@ CONTAINS
     IF ( dt < 0.0_dp ) THEN
        IERR = -1
     ELSE IF ( dt > 0.0_dp ) THEN
-       CALL CarbonAnalyticalStep( dt )
+       CALL OxidantsAnalyticalStep( dt )
        ISTATUS(1) = 1 ! One analytical function evaluation
        ISTATUS(3) = 1 ! One total step
        ISTATUS(4) = 1 ! One accepted step
@@ -78,7 +78,7 @@ CONTAINS
 
   END SUBROUTINE Integrate
 
-  SUBROUTINE CarbonAnalyticalStep( dt )
+  SUBROUTINE OxidantsAnalyticalStep( dt )
 
     REAL(dp), INTENT(IN) :: dt
 
@@ -145,7 +145,7 @@ CONTAINS
     C(ind_LCObyOH)       = C(ind_LCObyOH) + coLoss
     C(ind_LCO)           = C(ind_LCO) + coLoss
 
-  END SUBROUTINE CarbonAnalyticalStep
+  END SUBROUTINE OxidantsAnalyticalStep
 
   PURE FUNCTION OneMinusExpNeg( x ) RESULT( value )
 
@@ -177,7 +177,7 @@ CONTAINS
 
   END FUNCTION ProductionLossIntegral
 
-  SUBROUTINE ValidateCarbonAnalyticalMechanism( isValid, message )
+  SUBROUTINE ValidateOxidantsAnalyticalMechanism( isValid, message )
 
     LOGICAL,          INTENT(OUT) :: isValid
     CHARACTER(LEN=*), INTENT(OUT) :: message
@@ -187,7 +187,7 @@ CONTAINS
 
     IF ( NSPEC /= 17 .or. NVAR /= 12 .or. NVARACT /= 2 .or.              &
          NREACT /= 7 .or. NFAM /= 3 ) THEN
-       message = 'Unexpected carbon KPP dimensions or reaction count'
+       message = 'Unexpected oxidants KPP dimensions or reaction count'
        RETURN
     ENDIF
 
@@ -208,14 +208,14 @@ CONTAINS
          TRIM( SPC_NAMES(ind_FixedO1D)     ) /= 'FixedO1D'     .or.       &
          TRIM( SPC_NAMES(ind_DummyCH4)     ) /= 'DummyCH4'     .or.       &
          TRIM( SPC_NAMES(ind_DummyNMVOC)   ) /= 'DummyNMVOC' ) THEN
-       message = 'Unexpected carbon KPP species ordering'
+       message = 'Unexpected oxidants KPP species ordering'
        RETURN
     ENDIF
 
     IF ( TRIM( FAM_NAMES(1) ) /= 'PCO'  .or.                              &
          TRIM( FAM_NAMES(2) ) /= 'LCO'  .or.                              &
          TRIM( FAM_NAMES(3) ) /= 'LCH4' ) THEN
-       message = 'Unexpected carbon KPP family ordering'
+       message = 'Unexpected oxidants KPP family ordering'
        RETURN
     ENDIF
 
@@ -230,13 +230,13 @@ CONTAINS
          INDEX( EQN_NAMES(6), 'CO + FixedOH'   ) == 0 .or.                 &
          INDEX( EQN_NAMES(6), 'LCObyOH'        ) == 0 .or.                 &
          INDEX( EQN_NAMES(7), 'DummyNMVOC --> CO' ) == 0 ) THEN
-       message = 'Carbon equations changed; analytical solver requires review'
+       message = 'Oxidants equations changed; analytical solver requires review'
        RETURN
     ENDIF
 
     isValid = .TRUE.
-    message = 'Carbon analytical mechanism signature validated'
+    message = 'Oxidants analytical mechanism signature validated'
 
-  END SUBROUTINE ValidateCarbonAnalyticalMechanism
+  END SUBROUTINE ValidateOxidantsAnalyticalMechanism
 
 END MODULE KPP_ROOT_Integrator

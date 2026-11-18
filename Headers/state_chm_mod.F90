@@ -7272,7 +7272,7 @@ CONTAINS
     ! Get the number of prod and loss species depending on the simulation
     !=======================================================================
     IF ( Input_Opt%ITS_A_FULLCHEM_SIM .or. Input_Opt%ITS_A_MERCURY_SIM .or.  &
-         Input_Opt%ITS_A_CARBON_SIM ) THEN
+         Input_Opt%ITS_AN_OFFLINE_GAS_SIM ) THEN
 
        !------------------------------
        ! Full-chemistry, mercury, or carbon simulations
@@ -7386,7 +7386,7 @@ CONTAINS
     ! Get the number of prod and loss species depending on the simulation
     !=======================================================================
     IF ( Input_Opt%ITS_A_FULLCHEM_SIM .or. Input_Opt%ITS_A_MERCURY_SIM .or.  &
-         Input_Opt%ITS_A_CARBON_SIM ) THEN
+         Input_Opt%ITS_AN_OFFLINE_GAS_SIM ) THEN
 
        !--------------------------------------------------------------------
        ! Full-chemistry, mercury, or carbon simulations

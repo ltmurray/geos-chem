@@ -3,15 +3,15 @@
 !------------------------------------------------------------------------------
 !BOP
 !
-! !MODULE: carbon_Funcs
+! !MODULE: oxidants_Funcs
 !
 ! !DESCRIPTION: Module containing routines for passing data from GEOS-Chem
-!  to the carbon chemical mechanism solver code.
+!  to the prescribed oxidants mechanism solver code.
 !\\
 !\\
 ! !INTERFACE:
 !
-MODULE carbon_Funcs
+MODULE oxidants_Funcs
 !
 ! !USES:
 !
@@ -26,19 +26,19 @@ MODULE carbon_Funcs
 !
 ! !PUBLIC MEMBER FUNCTIONS:
 !
-  PUBLIC :: carbon_ConvertKgToMolecCm3
-  PUBLIC :: carbon_ComputeRateConstants
-  PUBLIC :: carbon_ConvertMolecCm3ToKg
-  PUBLIC :: carbon_InitCarbonKPPFuncs
-  PUBLIC :: carbon_CleanupCarbonKPPFuncs
-  PUBLIC :: carbon_Get_COfromCH4_Flux
-  PUBLIC :: carbon_Get_COfromNMVOC_Flux
-  PUBLIC :: carbon_Get_CH4byOH_Loss
-  PUBLIC :: carbon_Get_CH4byCl_Loss
-  PUBLIC :: carbon_Get_CH4byO1D_Loss
-  PUBLIC :: carbon_Get_CH4bySoil_Loss
-  PUBLIC :: carbon_Get_CH4SoilUptakeRate
-  PUBLIC :: carbon_Get_CObyOH_Loss
+  PUBLIC :: oxidants_ConvertKgToMolecCm3
+  PUBLIC :: oxidants_ComputeRateConstants
+  PUBLIC :: oxidants_ConvertMolecCm3ToKg
+  PUBLIC :: oxidants_InitKPPFuncs
+  PUBLIC :: oxidants_CleanupCarbonKPPFuncs
+  PUBLIC :: oxidants_Get_COfromCH4_Flux
+  PUBLIC :: oxidants_Get_COfromNMVOC_Flux
+  PUBLIC :: oxidants_Get_CH4byOH_Loss
+  PUBLIC :: oxidants_Get_CH4byCl_Loss
+  PUBLIC :: oxidants_Get_CH4byO1D_Loss
+  PUBLIC :: oxidants_Get_CH4bySoil_Loss
+  PUBLIC :: oxidants_Get_CH4SoilUptakeRate
+  PUBLIC :: oxidants_Get_CObyOH_Loss
   PUBLIC :: GC_OHCO
 !
 ! !PUBLIC TYPES:
@@ -66,7 +66,7 @@ CONTAINS
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: carbon_ConvertKgToMolecCm3
+! !IROUTINE: oxidants_ConvertKgToMolecCm3
 !
 ! !DESCRIPTION: Converts species from kg to molec/cm3 and stores into
 !  the "C" concentration array used by the KPP-generated solver code.
@@ -74,7 +74,7 @@ CONTAINS
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE carbon_ConvertKgToMolecCm3( I, J, L, State_Chm, State_Met )
+  SUBROUTINE oxidants_ConvertKgToMolecCm3( I, J, L, State_Chm, State_Met )
 !
 ! !USES:
 !
@@ -101,7 +101,7 @@ CONTAINS
     TYPE(SpcConc), POINTER :: Spc(:)
 
     !========================================================================
-    ! carbon_ConvertKgToMolecCm3 begins here!
+    ! oxidants_ConvertKgToMolecCm3 begins here!
     !========================================================================
 
     ! Point to species array
@@ -121,7 +121,7 @@ CONTAINS
     ENDIF
 
     ! Comment out for now - CO2 chemistry is done explicitly in
-    ! carbon_gases_mod.F90
+    ! oxidants_gases_mod.F90
     !IF ( id_CO2 > 0 ) THEN
     !   C(ind_CO2) = Spc(id_CO2)%Conc(I,J,L) * xnumol_CO2 / airvol_cm3
     !ENDIF
@@ -148,14 +148,14 @@ CONTAINS
     ! Free pointer
     Spc => NULL()
 
-  END SUBROUTINE carbon_ConvertKgToMolecCm3
+  END SUBROUTINE oxidants_ConvertKgToMolecCm3
 !EOC
 !------------------------------------------------------------------------------
 !                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: carbon_ComputeRateConstants
+! !IROUTINE: oxidants_ComputeRateConstants
 !
 ! !DESCRIPTION: Computes the rate constants used in the carbon chemical
 !  mechanism.
@@ -163,7 +163,7 @@ CONTAINS
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE carbon_ComputeRateConstants(                                    &
+  SUBROUTINE oxidants_ComputeRateConstants(                                    &
              I,             J,                 L,                            &
              ConcClMnd,     ConcOHMnd,         ConcO1Dmnd,                   &
              OHdiurnalFac,  PCO_fr_CH4_use,                                   &
@@ -202,11 +202,11 @@ CONTAINS
 ! !LOCAL VARIABLES:
 !
     !========================================================================
-    ! carbon_ComputeRateConstants begins here!
+    ! oxidants_ComputeRateConstants begins here!
     !========================================================================
 
     ! Initialize
-    K_CARBON = 0.0_dp
+    K_OXIDANTS = 0.0_dp
 
     ! Prescribed oxidants are applied at every model level.  Preserve the
     ! supplied OH, Cl, and O(1D) concentrations without regional masking.
@@ -215,33 +215,33 @@ CONTAINS
     C(ind_FixedO1D) = ConcO1Dmnd
 
     IF ( PCO_fr_CH4_use ) THEN
-       K_CARBON(1) = PCO_fr_CH4 * OHdiurnalFac
+       K_OXIDANTS(1) = PCO_fr_CH4 * OHdiurnalFac
     ENDIF
 
-    K_CARBON(2) = GC_OHCO()
+    K_OXIDANTS(2) = GC_OHCO()
 
     IF ( PCO_fr_NMVOC_use ) THEN
-       K_CARBON(3) = PCO_fr_NMVOC * OHdiurnalFac
+       K_OXIDANTS(3) = PCO_fr_NMVOC * OHdiurnalFac
     ENDIF
 
     ! Surface-only first-order CH4 uptake by soils
-    K_CARBON(4) = CH4_soil_k
+    K_OXIDANTS(4) = CH4_soil_k
 
-  END SUBROUTINE carbon_ComputeRateConstants
+  END SUBROUTINE oxidants_ComputeRateConstants
 !EOC
 !------------------------------------------------------------------------------
 !                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: carbon_ConvertMolecCm3ToKg
+! !IROUTINE: oxidants_ConvertMolecCm3ToKg
 !
 ! !DESCRIPTION: Converts species concentrations (after chemistry) from kg to
 !  molec/cm3 and stores into the State_Chm%Species concentration array.
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE carbon_ConvertMolecCm3ToKg( I, J, L, State_Chm, State_Met )
+  SUBROUTINE oxidants_ConvertMolecCm3ToKg( I, J, L, State_Chm, State_Met )
 !
 ! !USES:
 !
@@ -271,7 +271,7 @@ CONTAINS
     TYPE(SpcConc), POINTER :: Spc(:)
 
     !========================================================================
-    ! carbon__ConvertMolecCm3ToKg begins here!
+    ! oxidants__ConvertMolecCm3ToKg begins here!
     !========================================================================
 
     ! Point to species array
@@ -291,7 +291,7 @@ CONTAINS
     ENDIF
 
     ! Comment out for now - CO2 chemistry is done explicitly in
-    ! carbon_gases_mod.F90
+    ! oxidants_gases_mod.F90
     !IF ( id_CO2 > 0 ) THEN
     !   Spc(id_CO2)%Conc(I,J,L) = C(ind_CO2) * airvol_cm3 / xnumol_CO2
     !ENDIF
@@ -308,21 +308,21 @@ CONTAINS
     ! Free pointer
     Spc => NULL()
 
-  END SUBROUTINE carbon_ConvertMolecCm3ToKg
+  END SUBROUTINE oxidants_ConvertMolecCm3ToKg
 !EOC
 !------------------------------------------------------------------------------
 !                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: carbon_get_co_ch4_flux
+! !IROUTINE: oxidants_get_co_ch4_flux
 !
 ! !DESCRIPTION: Returns the flux of CO_CH4 in molec/cm3/s for diagnostics.
 !\\
 !\\
 ! !INTERFACE:
 !
-  FUNCTION carbon_Get_COfromCH4_Flux( dtChem ) RESULT ( flux )
+  FUNCTION oxidants_Get_COfromCH4_Flux( dtChem ) RESULT ( flux )
 !
 ! !INPUT PARAMETERS:
 !
@@ -337,21 +337,21 @@ CONTAINS
 
     flux = C(ind_PCOfromCH4) / dtChem     ! molec/cm3 --> molec/cm3/s
 
-  END FUNCTION carbon_Get_COfromCH4_Flux
+  END FUNCTION oxidants_Get_COfromCH4_Flux
 !EOC
 !------------------------------------------------------------------------------
 !                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: carbon_get_cofromnmvoc_flux
+! !IROUTINE: oxidants_get_cofromnmvoc_flux
 !
 ! !DESCRIPTION: Returns the flux of CO_NMVOC in molec/cm3/s for diagnostics.
 !\\
 !\\
 ! !INTERFACE:
 !
-  FUNCTION carbon_Get_COfromNMVOC_Flux( dtChem ) RESULT ( flux )
+  FUNCTION oxidants_Get_COfromNMVOC_Flux( dtChem ) RESULT ( flux )
 !
 ! !INPUT PARAMETERS:
 !
@@ -367,21 +367,21 @@ CONTAINS
 
     flux = C(ind_PCOfromNMVOC) / dtChem   ! molec/cm3 --> molec/cm3/s
 
-  END FUNCTION carbon_Get_COfromNMVOC_Flux
+  END FUNCTION oxidants_Get_COfromNMVOC_Flux
 !EOC
 !------------------------------------------------------------------------------
 !                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: carbon_get_ch4byoh_loss
+! !IROUTINE: oxidants_get_ch4byoh_loss
 !
 ! !DESCRIPTION: Returns the grid-box CH4 loss rate from reaction with OH.
 !\
 !\
 ! !INTERFACE:
 !
-  FUNCTION carbon_Get_CH4byOH_Loss( dtChem, airvol_m3 ) RESULT ( loss )
+  FUNCTION oxidants_Get_CH4byOH_Loss( dtChem, airvol_m3 ) RESULT ( loss )
 !
 ! !INPUT PARAMETERS:
 !
@@ -398,21 +398,21 @@ CONTAINS
     loss = C(ind_LCH4byOH) * airvol_m3 * 1.0e+6_dp /                        &
            ( dtChem * xnumol_CH4 )
 
-  END FUNCTION carbon_Get_CH4byOH_Loss
+  END FUNCTION oxidants_Get_CH4byOH_Loss
 !EOC
 !------------------------------------------------------------------------------
 !                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: carbon_get_ch4bycl_loss
+! !IROUTINE: oxidants_get_ch4bycl_loss
 !
 ! !DESCRIPTION: Returns the grid-box CH4 loss rate from reaction with Cl.
 !\
 !\
 ! !INTERFACE:
 !
-  FUNCTION carbon_Get_CH4byCl_Loss( dtChem, airvol_m3 ) RESULT ( loss )
+  FUNCTION oxidants_Get_CH4byCl_Loss( dtChem, airvol_m3 ) RESULT ( loss )
 !
 ! !INPUT PARAMETERS:
 !
@@ -429,21 +429,21 @@ CONTAINS
     loss = C(ind_LCH4byCl) * airvol_m3 * 1.0e+6_dp /                        &
            ( dtChem * xnumol_CH4 )
 
-  END FUNCTION carbon_Get_CH4byCl_Loss
+  END FUNCTION oxidants_Get_CH4byCl_Loss
 !EOC
 !------------------------------------------------------------------------------
 !                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: carbon_get_ch4byo1d_loss
+! !IROUTINE: oxidants_get_ch4byo1d_loss
 !
 ! !DESCRIPTION: Returns the grid-box CH4 loss rate from reaction with O(1D).
 !\
 !\
 ! !INTERFACE:
 !
-  FUNCTION carbon_Get_CH4byO1D_Loss( dtChem, airvol_m3 ) RESULT ( loss )
+  FUNCTION oxidants_Get_CH4byO1D_Loss( dtChem, airvol_m3 ) RESULT ( loss )
 !
 ! !INPUT PARAMETERS:
 !
@@ -460,21 +460,21 @@ CONTAINS
     loss = C(ind_LCH4byO1D) * airvol_m3 * 1.0e+6_dp /                       &
            ( dtChem * xnumol_CH4 )
 
-  END FUNCTION carbon_Get_CH4byO1D_Loss
+  END FUNCTION oxidants_Get_CH4byO1D_Loss
 !EOC
 !------------------------------------------------------------------------------
 !                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: carbon_get_ch4bysoil_loss
+! !IROUTINE: oxidants_get_ch4bysoil_loss
 !
 ! !DESCRIPTION: Returns the grid-box CH4 loss rate from soil uptake.
 !\
 !\
 ! !INTERFACE:
 !
-  FUNCTION carbon_Get_CH4bySoil_Loss( dtChem, airvol_m3 ) RESULT ( loss )
+  FUNCTION oxidants_Get_CH4bySoil_Loss( dtChem, airvol_m3 ) RESULT ( loss )
 !
 ! !INPUT PARAMETERS:
 !
@@ -491,14 +491,14 @@ CONTAINS
     loss = C(ind_LCH4bySoil) * airvol_m3 * 1.0e+6_dp /                      &
            ( dtChem * xnumol_CH4 )
 
-  END FUNCTION carbon_Get_CH4bySoil_Loss
+  END FUNCTION oxidants_Get_CH4bySoil_Loss
 !EOC
 !------------------------------------------------------------------------------
 !                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: carbon_get_ch4soil_uptake_rate
+! !IROUTINE: oxidants_get_ch4soil_uptake_rate
 !
 ! !DESCRIPTION: Converts a prescribed positive CH4 soil-uptake flux and the
 !  instantaneous surface-grid-box CH4 mass into a first-order rate constant.
@@ -508,7 +508,7 @@ CONTAINS
 !\
 ! !INTERFACE:
 !
-  FUNCTION carbon_Get_CH4SoilUptakeRate( uptakeFlux, gridArea, ch4Mass )     &
+  FUNCTION oxidants_Get_CH4SoilUptakeRate( uptakeFlux, gridArea, ch4Mass )     &
        RESULT ( rate )
 !
 ! !INPUT PARAMETERS:
@@ -530,21 +530,21 @@ CONTAINS
 
     rate = SafeDiv( uptakeFlux * gridArea, ch4Mass, 0.0_fp )
 
-  END FUNCTION carbon_Get_CH4SoilUptakeRate
+  END FUNCTION oxidants_Get_CH4SoilUptakeRate
 !EOC
 !------------------------------------------------------------------------------
 !                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: carbon_get_cobyoh_loss
+! !IROUTINE: oxidants_get_cobyoh_loss
 !
 ! !DESCRIPTION: Returns the grid-box CO loss rate from reaction with OH.
 !\
 !\
 ! !INTERFACE:
 !
-  FUNCTION carbon_Get_CObyOH_Loss( dtChem, airvol_m3 ) RESULT ( loss )
+  FUNCTION oxidants_Get_CObyOH_Loss( dtChem, airvol_m3 ) RESULT ( loss )
 !
 ! !INPUT PARAMETERS:
 !
@@ -561,7 +561,7 @@ CONTAINS
     loss = C(ind_LCObyOH) * airvol_m3 * 1.0e+6_dp /                         &
            ( dtChem * xnumol_CO )
 
-  END FUNCTION carbon_Get_CObyOH_Loss
+  END FUNCTION oxidants_Get_CObyOH_Loss
 !EOC
 !------------------------------------------------------------------------------
 !                  GEOS-Chem Global Chemical Transport Model                  !
@@ -630,7 +630,7 @@ CONTAINS
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: carbon_InitCarbonKPPFuncs
+! !IROUTINE: oxidants_InitKPPFuncs
 !
 ! !DESCRIPTION: Stores species indices and kg/molecule in module variables
 !  for fast lookup.
@@ -638,7 +638,7 @@ CONTAINS
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE carbon_InitCarbonKPPFuncs( kgmolec_CH4, kgmolec_CO, kgmolec_CO2, RC )
+  SUBROUTINE oxidants_InitKPPFuncs( kgmolec_CH4, kgmolec_CO, kgmolec_CO2, RC )
 !
 ! !USES:
 !
@@ -671,14 +671,14 @@ CONTAINS
     CHARACTER(LEN=4)   :: N_char
 
     !=================================================================
-    ! carbon_InitCarbonKPPFuncs begins here!
+    ! oxidants_InitKPPFuncs begins here!
     !=================================================================
 
     ! Initialize
     RC       = GC_SUCCESS
     ErrMsg   = ''
     ThisLoc  = &
-       ' -> at carbon_InitCarbonKPPFuncs (in KPP/carbon/carbon_InitCarbonKPPFuncs.F90'
+       ' -> at oxidants_InitKPPFuncs (in KPP/oxidants/oxidants_InitKPPFuncs.F90'
 
 #ifdef JACOBIAN
     ! Get number of Jacobian tracers, if any
@@ -718,21 +718,21 @@ CONTAINS
     xnumol_CO   = kgmolec_CO
     xnumol_CO2  = kgmolec_CO2
 
-  END SUBROUTINE carbon_InitCarbonKPPFuncs
+  END SUBROUTINE oxidants_InitKPPFuncs
 !EOC
 !------------------------------------------------------------------------------
 !                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: carbon_CleanupCarbonKPPFuncs
+! !IROUTINE: oxidants_CleanupCarbonKPPFuncs
 !
 ! !DESCRIPTION: Deallocates module arrays.
 !\\
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE carbon_CleanupCarbonKPPFuncs( RC )
+  SUBROUTINE oxidants_CleanupCarbonKPPFuncs( RC )
 !
 ! !USES:
 !
@@ -749,7 +749,7 @@ CONTAINS
 !BOC
 
     !=================================================================
-    ! carbon_CleanupCarbonKPPFuncs begins here!
+    ! oxidants_CleanupCarbonKPPFuncs begins here!
     !=================================================================
 
     ! Initialize
@@ -758,10 +758,10 @@ CONTAINS
 #ifdef JACOBIAN
     IF ( ALLOCATED( JacobianIDs ) ) THEN
        DEALLOCATE( JacobianIDs, STAT=RC )
-       CALL GC_CheckVar( 'carbon_Funcs.F90:JacobianIDs', 1, RC )
+       CALL GC_CheckVar( 'oxidants_Funcs.F90:JacobianIDs', 1, RC )
     ENDIF
 #endif
 
-  END SUBROUTINE carbon_CleanupCarbonKPPFuncs
+  END SUBROUTINE oxidants_CleanupCarbonKPPFuncs
 !EOC
-END MODULE carbon_Funcs
+END MODULE oxidants_Funcs
