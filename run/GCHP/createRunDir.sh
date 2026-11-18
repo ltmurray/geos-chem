@@ -104,7 +104,8 @@ printf "${thinline}Choose simulation type:${thinline}"
 printf "   1. Full chemistry\n"
 printf "   2. TransportTracers\n"
 printf "   3. Carbon\n"
-printf "   4. Tagged O3\n"
+printf "   4. Oxidants\n"
+printf "   5. Tagged O3\n"
 
 valid_sim=0
 while [ "${valid_sim}" -eq 0 ]; do
@@ -117,6 +118,8 @@ while [ "${valid_sim}" -eq 0 ]; do
     elif [[ ${sim_num} = "3" ]]; then
 	sim_name=carbon
     elif [[ ${sim_num} = "4" ]]; then
+	sim_name=oxidants
+    elif [[ ${sim_num} = "5" ]]; then
 	sim_name=tagO3
     else
         valid_sim=0
@@ -203,8 +206,9 @@ if [[ ${sim_name} = "fullchem" ]]; then
 elif [[ ${sim_name} = "TransportTracers" ]]; then
     sim_extra_option=none
 
-# Ask user to specify carbon simulation options
-elif [[ "x${sim_name}" == "xcarbon" ]]; then
+# Ask user to specify carbon or oxidants simulation options
+elif [[ "x${sim_name}" == "xcarbon"   ||
+        "x${sim_name}" == "xoxidants" ]]; then
     printf "${thinline}Do you wish to use a single advected species?${thinline}"
     printf "  1. Use all species\n"
     printf "  2. Use CH4 only\n"
@@ -653,7 +657,8 @@ cp ./setCommonRunSettings.sh.template  ${rundir}/setCommonRunSettings.sh
 cp ./extractPerformance.sh  ${rundir}/extractPerformance.sh
 
 # Copy metrics.py file to computing global OH
-if [[ "x${sim_name}" == "xfullchem" || "x${sim_name}" == "xcarbon" ]]; then
+if [[ "x${sim_name}" == "xfullchem" || "x${sim_name}" == "xcarbon" ||
+      "x${sim_name}" == "xoxidants" ]]; then
     cp -r ${gcdir}/run/shared/metrics.py  ${rundir}
     chmod 744 ${rundir}/metrics.py
 fi
@@ -711,10 +716,10 @@ elif [[ "x${sim_name}" == "xTransportTracers" ]]; then
     start_date='20190101'
     restart_dir='GC_14.8.0'
     restart_name="${sim_name}"
-elif [[ ${sim_name} = "carbon" ]]; then
+elif [[ "x${sim_name}" == "xcarbon" || "x${sim_name}" == "xoxidants" ]]; then
     start_date='20190101'
     restart_dir='GC_14.7.0'
-    restart_name="${sim_name}"
+    restart_name="carbon"
 fi
 for N in 24 30 48 90 180
 do
@@ -808,6 +813,7 @@ if [[ "x${sim_extra_option}" == "xbenchmark"        ||
       "x${sim_extra_option}" == "xcomplexSOA_SVPOA" ||
       "x${sim_extra_option}" == "xAPM"              ||
       "x${sim_name}"         == "xcarbon"           ||
+      "x${sim_name}"         == "xoxidants"         ||
       "x${sim_extra_option}" == "xTOMAS15"          ||
       "x${sim_extra_option}" == "xTOMAS40"          ||
       "x${sim_name}"         == "xPOPs"             ||
@@ -842,8 +848,9 @@ if [[ "x${sim_name}" = "xfullchem" ]]; then
     set_common_settings "${sim_extra_option}" "GCHP"
 fi
 
-# If necessary, edit config files for a carbon single species simulation
-if [[ "x${sim_name}" == "xcarbon" ]]; then
+# If necessary, edit config files for a carbon or oxidants single species run
+if [[ "x${sim_name}" == "xcarbon"   ||
+      "x${sim_name}" == "xoxidants" ]]; then
     if [[ "x${sim_extra_option}" != "xnone" ]]; then
 	singleCarbonSpecies "${sim_extra_option}" "${rundir}"
     fi
@@ -962,6 +969,7 @@ ftr="<<<<\n"
 
 EXTRA_CMAKE_OPTIONS=""
 [[ "x${sim_name}" == "xcarbon" ]] && EXTRA_CMAKE_OPTIONS="-DMECH=carbon "
+[[ "x${sim_name}" == "xoxidants" ]] && EXTRA_CMAKE_OPTIONS="-DMECH=oxidants "
 [[ "x${sim_name}" == "xHg"     ]] && EXTRA_CMAKE_OPTIONS="-DMECH=Hg -DFASTJX=y "
 if [[ "x${sim_name}" == "xfullchem" ]]; then
     [[ "x${sim_extra_option}" == "xAPM"     ]] && EXTRA_CMAKE_OPTIONS="-DAPM=y "

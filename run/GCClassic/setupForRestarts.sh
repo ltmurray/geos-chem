@@ -433,7 +433,8 @@ function copyRestartToRunDir() {
         remote_rst=$(getAerosolRemote "${rst_root}")
         local_rst=$(getAerosolLocal "${loc_root}")
 
-    elif [[ "x${sim_name}" == "xcarbon" ]]; then
+    elif [[ "x${sim_name}" == "xcarbon"   ||
+            "x${sim_name}" == "xoxidants" ]]; then
         remote_rst=$(getCarbonRemote "${rst_root}")
 	local_rst=$(getCarbonLocal "${loc_root}")
 

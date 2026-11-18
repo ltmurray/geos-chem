@@ -19,6 +19,13 @@ if("${MECH}" STREQUAL carbon)
 endif()
 
 #-----------------------------------------------------------------------------
+# Build the oxidants mechanism if configured with -DMECH=oxidants
+#-----------------------------------------------------------------------------
+if("${MECH}" STREQUAL oxidants)
+  add_subdirectory(oxidants)
+endif()
+
+#-----------------------------------------------------------------------------
 # Build the custom mechanism if configured with -DMECH=custom
 # Also build the KPP-Standalone if configured with -DKPPSA=y
 #-----------------------------------------------------------------------------

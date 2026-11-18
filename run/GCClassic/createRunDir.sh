@@ -106,11 +106,12 @@ printf "${thinline}Choose simulation type:${thinline}"
 printf "   1. Full chemistry\n"
 printf "   2. Aerosols only\n"
 printf "   3. Carbon\n"
-printf "   4. Hg\n"
-printf "   5. POPs\n"
-printf "   6. Tagged O3\n"
-printf "   7. TransportTracers\n"
-printf "   8. Trace metals\n"
+printf "   4. Oxidants\n"
+printf "   5. Hg\n"
+printf "   6. POPs\n"
+printf "   7. Tagged O3\n"
+printf "   8. TransportTracers\n"
+printf "   9. Trace metals\n"
 valid_sim=0
 while [ "${valid_sim}" -eq 0 ]; do
     read -p "${USER_PROMPT}" sim_num
@@ -122,14 +123,16 @@ while [ "${valid_sim}" -eq 0 ]; do
     elif [[ ${sim_num} = "3" ]]; then
 	sim_name=carbon
     elif [[ ${sim_num} = "4" ]]; then
-	sim_name=Hg
+	sim_name=oxidants
     elif [[ ${sim_num} = "5" ]]; then
-	sim_name=POPs
+	sim_name=Hg
     elif [[ ${sim_num} = "6" ]]; then
-	sim_name=tagO3
+	sim_name=POPs
     elif [[ ${sim_num} = "7" ]]; then
-	sim_name=TransportTracers
+	sim_name=tagO3
     elif [[ ${sim_num} = "8" ]]; then
+	sim_name=TransportTracers
+    elif [[ ${sim_num} = "9" ]]; then
 	sim_name=metals
     else
         valid_sim=0
@@ -238,8 +241,9 @@ elif [[ ${sim_name} = "POPs" ]]; then
 	fi
     done
 
-# Ask user to specify carbon simulation options
-elif [[ "x${sim_name}" == "xcarbon" ]]; then
+# Ask user to specify carbon or oxidants simulation options
+elif [[ "x${sim_name}" == "xcarbon"   ||
+        "x${sim_name}" == "xoxidants" ]]; then
     printf "${thinline}Do you wish to use a single advected species?${thinline}"
     printf "  1. Use all species\n"
     printf "  2. Use CH4 only\n"
@@ -1074,7 +1078,8 @@ if [[ "x${grid_res}" = "x0125x015625" ]]; then
     startdate='20230101'
     enddate='20230201'
 elif [[ "x${sim_name}" == "xHg"   ||
-      "x${sim_name}" == "xcarbon" ||
+      "x${sim_name}" == "xcarbon"   ||
+      "x${sim_name}" == "xoxidants" ||
       "x${sim_name}" == "xTransportTracers" ]]; then
     startdate='20190101'
     enddate='20190201'
@@ -1287,8 +1292,9 @@ if [[ "x${sim_name}" = "xfullchem" ]]; then
     set_common_settings "${sim_extra_option}" "GCClassic"
 fi
 
-# If necessary, edit config files for a carbon single species simulation
-if [[ "x${sim_name}" == "xcarbon" ]]; then
+# If necessary, edit config files for a carbon or oxidants single species run
+if [[ "x${sim_name}" == "xcarbon"   ||
+      "x${sim_name}" == "xoxidants" ]]; then
     if [[ "x${sim_extra_option}" != "xnone" ]]; then
 	singleCarbonSpecies "${sim_extra_option}" "${rundir}"
     fi
@@ -1397,6 +1403,7 @@ hdr="\n>>>> REMINDER: You must compile with options:"
 ftr="<<<<\n"
 EXTRA_CMAKE_OPTIONS=""
 [[ "x${sim_name}" == "xcarbon" ]] && EXTRA_CMAKE_OPTIONS="-DMECH=carbon "
+[[ "x${sim_name}" == "xoxidants" ]] && EXTRA_CMAKE_OPTIONS="-DMECH=oxidants "
 [[ "x${sim_name}" == "xHg"     ]] && EXTRA_CMAKE_OPTIONS="-DMECH=Hg -DFASTJX=y "
 if [[ "x${sim_name}" == "xfullchem" ]]; then
     [[ "x${sim_extra_option}" == "xAPM"     ]] && EXTRA_CMAKE_OPTIONS="-DAPM=y "

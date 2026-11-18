@@ -279,7 +279,8 @@ CONTAINS
     ENDIF
     IsFullChem  = ( To_UpperCase( v_str ) == "FULLCHEM"    )
     IsHg        = ( To_UpperCase( v_str ) == "HG"          )
-    IsCarbon    = ( To_UpperCase( v_str ) == "CARBON" )
+    IsCarbon    = ( To_UpperCase( v_str ) == "CARBON"   .or. &
+                    To_UpperCase( v_str ) == "OXIDANTS"       )
 
     ! Read the altitude above the surface in meters for drydep diags
     key   = "operations%dry_deposition%diag_alt_above_sfc_in_m"

@@ -19,6 +19,43 @@ import sys
 import datetime
 
 
+def addPassiveSpeciesArgument():
+    """Add the initializer argument expected by GEOS-Chem to KPP 3.1 output."""
+
+    filename = 'gckpp_Initialize.F90'
+    with open(filename, 'r') as f:
+        contents = f.read()
+
+    if 'PassiveSpc_ATOL_Threshold' in contents:
+        return
+
+    replacements = (
+        (
+            '!   Arguments :\n! \n',
+            '!   Arguments :\n'
+            '!      PassiveSpc_ATOL_Threshold- Species with ATOL > this value are passive\n'
+            '! \n',
+        ),
+        (
+            'SUBROUTINE Initialize ( )',
+            'SUBROUTINE Initialize ( PassiveSpc_ATOL_Threshold )',
+        ),
+        (
+            '  USE gckpp_Parameters\n\n',
+            '  USE gckpp_Parameters\n\n'
+            '! PassiveSpc_ATOL_Threshold - Species with ATOL > this value are passive\n'
+            '  REAL(kind=dp), OPTIONAL :: PassiveSpc_ATOL_Threshold\n\n',
+        ),
+    )
+    for old, new in replacements:
+        if old not in contents:
+            raise RuntimeError('Cannot update KPP initializer: expected text is missing')
+        contents = contents.replace(old, new, 1)
+
+    with open(filename, 'w') as f:
+        f.write(contents)
+
+
 def writeHeader(fo, mechName):
     """
     Writes the header of the Get_OHreactivity subroutine.
@@ -43,10 +80,7 @@ def writeHeader(fo, mechName):
     fo.write('! OHreact - OH reactivity [s-1]\n')
     fo.write('  REAL(kind=dp) :: OHreact\n')
     fo.write('\n')
-    if "carbon" in mechName:
-        fo.write('  OHreact = 0.0_dp') # carbon mech has no OH reactivity
-    else:
-        fo.write('  OHreact = ')
+    fo.write('  OHreact = ')
 
 
 def writeFooter(fo):
@@ -184,6 +218,11 @@ def writeReactivity(mechName):
             ntot += 1
             fo.write(istr)
 
+    # A mechanism with no OH-reactivity terms still needs a valid Fortran
+    # assignment.  KPP 3.1.1 otherwise leaves a bare ``OHreact =`` line.
+    if ntot == 0:
+        fo.write('0.0_dp')
+
     # Close the subroutine and the module
     writeFooter(fo)
     fo.write(EndModuleStr)
@@ -207,6 +246,9 @@ def main():
 
     # Write the OH reactivity routine in gckpp_Util.F90
     writeReactivity(mechName)
+
+    # KPP 3.1 omits the optional initializer argument used by GEOS-Chem
+    addPassiveSpeciesArgument()
     
 
 if __name__ == '__main__':

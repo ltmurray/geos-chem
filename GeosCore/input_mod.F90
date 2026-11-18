@@ -419,6 +419,7 @@ CONTAINS
     Sim = To_UpperCase( TRIM( Input_Opt%SimulationName ) )
     IF ( TRIM(Sim) /= 'AEROSOL'                                        .and. &
          TRIM(Sim) /= 'CARBON'                                         .and. &
+         TRIM(Sim) /= 'OXIDANTS'                                       .and. &
          TRIM(Sim) /= 'FULLCHEM'                                       .and. &
          TRIM(Sim) /= 'HG'                                             .and. &
          TRIM(Sim) /= 'METALS'                                         .and. &
@@ -428,15 +429,16 @@ CONTAINS
          
        errMsg = Trim( Input_Opt%SimulationName) // ' is not a'            // &
                 ' valid simulation. Supported simulations are:'           // &
-                ' aerosol, carbon, fullchem, Hg, Metals, POPs,'           // &
-                ' TransportTracers, or TagO3.'
+                ' aerosol, carbon, fullchem, Hg, Metals, oxidants,'        // &
+                ' POPs, TransportTracers, or TagO3.'
        CALL GC_Error( errMsg, RC, thisLoc )
        RETURN
     ENDIF
 
     ! Set simulation type flags in Input_Opt
     Input_Opt%ITS_AN_AEROSOL_SIM   = ( TRIM(Sim) == 'AEROSOL'               )
-    Input_Opt%ITS_A_CARBON_SIM     = ( TRIM(Sim) == 'CARBON'                )
+    Input_Opt%ITS_A_CARBON_SIM     = ( TRIM(Sim) == 'CARBON'          .or.  &
+                                       TRIM(Sim) == 'OXIDANTS'              )
     Input_Opt%ITS_A_FULLCHEM_SIM   = ( TRIM(Sim) == 'FULLCHEM'              )
     Input_Opt%ITS_A_MERCURY_SIM    = ( TRIM(Sim) == 'HG'                    )
     Input_Opt%ITS_A_TRACEMETAL_SIM = ( TRIM(Sim) == 'METALS'                )
