@@ -534,6 +534,7 @@ function setupTaggedCH4Regions() {
                 next
             }
             if ($1 != "0") next
+            if ($2 ~ /_TAG_/) next
             target = ""
             for (n = 3; n <= NF; n++) {
                 if ($n == "CH4") target = n
@@ -558,7 +559,7 @@ function setupTaggedCH4Regions() {
     for spc in "${CH4_REGION_SPECIES[@]}"; do
         regionList+="${spc}/"
     done
-    sed -i "/^112[[:space:]]*GFAS/s|CH4/CO|CH4/${regionList}CO|" "${hemco}"
+    sed -i "/^112[[:space:]]*GFAS/s|CH4/|CH4/${regionList}|" "${hemco}"
 
     # Archive each regional emission flux and its four chemical-loss pathways.
     for spc in "${CH4_REGION_SPECIES[@]}"; do
@@ -596,8 +597,9 @@ function singleOxidantsSpecies() {
     fi
 
     # Get species to include/exclude
-    if [[ "x${1}" == "xCH4_SECTORS" ]] || \
-       [[ "x${1}" == "xCH4_REGIONS" ]]; then
+    if [[ "x${1}" == "xCH4_SECTORS"         ]] || \
+       [[ "x${1}" == "xCH4_REGIONS"         ]] || \
+       [[ "x${1}" == "xCH4_SECTORS_REGIONS" ]]; then
         include="CH4"
     else
         include=${1}
@@ -614,6 +616,9 @@ function singleOxidantsSpecies() {
     if [[ "x${1}" == "xCH4_SECTORS" ]]; then
         setupTaggedCH4Sectors "${rundir}"
     elif [[ "x${1}" == "xCH4_REGIONS" ]]; then
+        setupTaggedCH4Regions "${rundir}"
+    elif [[ "x${1}" == "xCH4_SECTORS_REGIONS" ]]; then
+        setupTaggedCH4Sectors "${rundir}"
         setupTaggedCH4Regions "${rundir}"
     fi
 }
