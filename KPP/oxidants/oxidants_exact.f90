@@ -82,6 +82,39 @@ CONTAINS
 
     REAL(dp), INTENT(IN) :: dt
 
+    INTEGER, PARAMETER :: nTaggedCH4 = 14
+    INTEGER, PARAMETER :: indTaggedCH4(nTaggedCH4) = (/                    &
+         ind_CH4_OIL, ind_CH4_GAS, ind_CH4_COL, &
+         ind_CH4_LIV, ind_CH4_LDF, ind_CH4_WST, &
+         ind_CH4_RIC, ind_CH4_OTA, ind_CH4_BBN, &
+         ind_CH4_WTL, ind_CH4_SEE, ind_CH4_LAK, &
+         ind_CH4_TER, ind_CH4_RES /)
+    INTEGER, PARAMETER :: indTaggedLossOH(nTaggedCH4) = (/                  &
+         ind_LCH4_OILbyOH, ind_LCH4_GASbyOH, ind_LCH4_COLbyOH, &
+         ind_LCH4_LIVbyOH, ind_LCH4_LDFbyOH, ind_LCH4_WSTbyOH, &
+         ind_LCH4_RICbyOH, ind_LCH4_OTAbyOH, ind_LCH4_BBNbyOH, &
+         ind_LCH4_WTLbyOH, ind_LCH4_SEEbyOH, ind_LCH4_LAKbyOH, &
+         ind_LCH4_TERbyOH, ind_LCH4_RESbyOH /)
+    INTEGER, PARAMETER :: indTaggedLossCl(nTaggedCH4) = (/                  &
+         ind_LCH4_OILbyCl, ind_LCH4_GASbyCl, ind_LCH4_COLbyCl, &
+         ind_LCH4_LIVbyCl, ind_LCH4_LDFbyCl, ind_LCH4_WSTbyCl, &
+         ind_LCH4_RICbyCl, ind_LCH4_OTAbyCl, ind_LCH4_BBNbyCl, &
+         ind_LCH4_WTLbyCl, ind_LCH4_SEEbyCl, ind_LCH4_LAKbyCl, &
+         ind_LCH4_TERbyCl, ind_LCH4_RESbyCl /)
+    INTEGER, PARAMETER :: indTaggedLossO1D(nTaggedCH4) = (/                 &
+         ind_LCH4_OILbyO1D, ind_LCH4_GASbyO1D, ind_LCH4_COLbyO1D, &
+         ind_LCH4_LIVbyO1D, ind_LCH4_LDFbyO1D, ind_LCH4_WSTbyO1D, &
+         ind_LCH4_RICbyO1D, ind_LCH4_OTAbyO1D, ind_LCH4_BBNbyO1D, &
+         ind_LCH4_WTLbyO1D, ind_LCH4_SEEbyO1D, ind_LCH4_LAKbyO1D, &
+         ind_LCH4_TERbyO1D, ind_LCH4_RESbyO1D /)
+    INTEGER, PARAMETER :: indTaggedLossSoil(nTaggedCH4) = (/                &
+         ind_LCH4_OILbySoil, ind_LCH4_GASbySoil, ind_LCH4_COLbySoil, &
+         ind_LCH4_LIVbySoil, ind_LCH4_LDFbySoil, ind_LCH4_WSTbySoil, &
+         ind_LCH4_RICbySoil, ind_LCH4_OTAbySoil, ind_LCH4_BBNbySoil, &
+         ind_LCH4_WTLbySoil, ind_LCH4_SEEbySoil, ind_LCH4_LAKbySoil, &
+         ind_LCH4_TERbySoil, ind_LCH4_RESbySoil /)
+
+    INTEGER  :: N
     REAL(dp) :: ch4Initial, ch4Loss, ch4Remaining
     REAL(dp) :: coInitial, coLoss, coRemaining
     REAL(dp) :: kCH4OH, kCH4Cl, kCH4O1D, kCH4Soil, kCH4
@@ -116,6 +149,32 @@ CONTAINS
     ELSE
        C(ind_CH4) = ch4Initial
     ENDIF
+
+    !---------------------------------------------------------------------
+    ! Sector-tagged CH4: exact decay with the same four rate constants.
+    ! Tagged carbon terminates in fixed DummyCO until tagged CO is coupled.
+    !---------------------------------------------------------------------
+    DO N = 1, nTaggedCH4
+       ch4Initial = MAX( C(indTaggedCH4(N)), 0.0_dp )
+       IF ( kCH4 > 0.0_dp .and. ch4Initial > 0.0_dp ) THEN
+          lossFraction = OneMinusExpNeg( kCH4 * dt )
+          ch4Loss      = ch4Initial * lossFraction
+          ch4Remaining = ch4Initial - ch4Loss
+
+          C(indTaggedLossOH(N)) = C(indTaggedLossOH(N))                 &
+                                + ch4Loss * ( kCH4OH / kCH4 )
+          C(indTaggedLossCl(N)) = C(indTaggedLossCl(N))                 &
+                                + ch4Loss * ( kCH4Cl / kCH4 )
+          C(indTaggedLossO1D(N)) = C(indTaggedLossO1D(N))               &
+                                 + ch4Loss * ( kCH4O1D / kCH4 )
+          C(indTaggedLossSoil(N)) = C(indTaggedLossSoil(N))             &
+                                  + ch4Loss * ( kCH4Soil / kCH4 )
+          C(indTaggedCH4(N)) = MAX( ch4Remaining, 0.0_dp )
+       ELSE
+          C(indTaggedCH4(N)) = ch4Initial
+       ENDIF
+    ENDDO
+
 
     !---------------------------------------------------------------------
     ! CO: exact solution of dCO/dt = P - k*CO.  The loss of CO produced
@@ -185,8 +244,8 @@ CONTAINS
     isValid = .FALSE.
     message = ''
 
-    IF ( NSPEC /= 17 .or. NVAR /= 12 .or. NVARACT /= 2 .or.              &
-         NREACT /= 7 .or. NFAM /= 3 ) THEN
+    IF ( NSPEC /= 88 .or. NVAR /= 82 .or. NVARACT /= 16 .or.             &
+         NREACT /= 63 .or. NFAM /= 3 ) THEN
        message = 'Unexpected oxidants KPP dimensions or reaction count'
        RETURN
     ENDIF
@@ -207,7 +266,8 @@ CONTAINS
          TRIM( SPC_NAMES(ind_FixedCl)      ) /= 'FixedCl'      .or.       &
          TRIM( SPC_NAMES(ind_FixedO1D)     ) /= 'FixedO1D'     .or.       &
          TRIM( SPC_NAMES(ind_DummyCH4)     ) /= 'DummyCH4'     .or.       &
-         TRIM( SPC_NAMES(ind_DummyNMVOC)   ) /= 'DummyNMVOC' ) THEN
+         TRIM( SPC_NAMES(ind_DummyNMVOC)   ) /= 'DummyNMVOC'   .or.       &
+         TRIM( SPC_NAMES(ind_DummyCO)      ) /= 'DummyCO' ) THEN
        message = 'Unexpected oxidants KPP species ordering'
        RETURN
     ENDIF
@@ -229,7 +289,11 @@ CONTAINS
          INDEX( EQN_NAMES(5), 'DummyCH4 --> CO' ) == 0 .or.                &
          INDEX( EQN_NAMES(6), 'CO + FixedOH'   ) == 0 .or.                 &
          INDEX( EQN_NAMES(6), 'LCObyOH'        ) == 0 .or.                 &
-         INDEX( EQN_NAMES(7), 'DummyNMVOC --> CO' ) == 0 ) THEN
+         INDEX( EQN_NAMES(7),  'DummyNMVOC --> CO' ) == 0 .or.            &
+         INDEX( EQN_NAMES(8),  'CH4_OIL + FixedOH' ) == 0 .or.            &
+         INDEX( EQN_NAMES(8),  'LCH4_OILbyOH' ) == 0 .or.                 &
+         INDEX( EQN_NAMES(63), 'CH4_RES --> LCH4_RESbySoil' ) == 0 .or.   &
+         INDEX( EQN_NAMES(63), 'LCH4_RESbySoil' ) == 0 ) THEN
        message = 'Oxidants equations changed; analytical solver requires review'
        RETURN
     ENDIF

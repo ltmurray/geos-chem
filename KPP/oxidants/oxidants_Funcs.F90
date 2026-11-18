@@ -39,6 +39,7 @@ MODULE oxidants_Funcs
   PUBLIC :: oxidants_Get_CH4bySoil_Loss
   PUBLIC :: oxidants_Get_CH4SoilUptakeRate
   PUBLIC :: oxidants_Get_CObyOH_Loss
+  PUBLIC :: oxidants_Get_TaggedCH4Loss
   PUBLIC :: GC_OHCO
 !
 ! !PUBLIC TYPES:
@@ -46,6 +47,44 @@ MODULE oxidants_Funcs
   ! Species ID flags
   INTEGER  :: id_CH4
   INTEGER  :: id_CO
+  INTEGER, PARAMETER :: N_TAGGED_CH4 = 14
+  INTEGER            :: id_CH4_sector(N_TAGGED_CH4)
+
+  CHARACTER(LEN=7), PARAMETER :: TAGGED_CH4_NAMES(N_TAGGED_CH4) = (/       &
+       'CH4_OIL', 'CH4_GAS', 'CH4_COL', 'CH4_LIV', 'CH4_LDF', 'CH4_WST', &
+       'CH4_RIC', 'CH4_OTA', 'CH4_BBN', 'CH4_WTL', 'CH4_SEE', 'CH4_LAK', &
+       'CH4_TER', 'CH4_RES' /)
+
+  INTEGER, PARAMETER :: ind_CH4_sector(N_TAGGED_CH4) = (/                  &
+       ind_CH4_OIL, ind_CH4_GAS, ind_CH4_COL, &
+       ind_CH4_LIV, ind_CH4_LDF, ind_CH4_WST, &
+       ind_CH4_RIC, ind_CH4_OTA, ind_CH4_BBN, &
+       ind_CH4_WTL, ind_CH4_SEE, ind_CH4_LAK, &
+       ind_CH4_TER, ind_CH4_RES /)
+  INTEGER, PARAMETER :: ind_LCH4_sector_byOH(N_TAGGED_CH4) = (/             &
+       ind_LCH4_OILbyOH, ind_LCH4_GASbyOH, ind_LCH4_COLbyOH, &
+       ind_LCH4_LIVbyOH, ind_LCH4_LDFbyOH, ind_LCH4_WSTbyOH, &
+       ind_LCH4_RICbyOH, ind_LCH4_OTAbyOH, ind_LCH4_BBNbyOH, &
+       ind_LCH4_WTLbyOH, ind_LCH4_SEEbyOH, ind_LCH4_LAKbyOH, &
+       ind_LCH4_TERbyOH, ind_LCH4_RESbyOH /)
+  INTEGER, PARAMETER :: ind_LCH4_sector_byCl(N_TAGGED_CH4) = (/             &
+       ind_LCH4_OILbyCl, ind_LCH4_GASbyCl, ind_LCH4_COLbyCl, &
+       ind_LCH4_LIVbyCl, ind_LCH4_LDFbyCl, ind_LCH4_WSTbyCl, &
+       ind_LCH4_RICbyCl, ind_LCH4_OTAbyCl, ind_LCH4_BBNbyCl, &
+       ind_LCH4_WTLbyCl, ind_LCH4_SEEbyCl, ind_LCH4_LAKbyCl, &
+       ind_LCH4_TERbyCl, ind_LCH4_RESbyCl /)
+  INTEGER, PARAMETER :: ind_LCH4_sector_byO1D(N_TAGGED_CH4) = (/            &
+       ind_LCH4_OILbyO1D, ind_LCH4_GASbyO1D, ind_LCH4_COLbyO1D, &
+       ind_LCH4_LIVbyO1D, ind_LCH4_LDFbyO1D, ind_LCH4_WSTbyO1D, &
+       ind_LCH4_RICbyO1D, ind_LCH4_OTAbyO1D, ind_LCH4_BBNbyO1D, &
+       ind_LCH4_WTLbyO1D, ind_LCH4_SEEbyO1D, ind_LCH4_LAKbyO1D, &
+       ind_LCH4_TERbyO1D, ind_LCH4_RESbyO1D /)
+  INTEGER, PARAMETER :: ind_LCH4_sector_bySoil(N_TAGGED_CH4) = (/           &
+       ind_LCH4_OILbySoil, ind_LCH4_GASbySoil, ind_LCH4_COLbySoil, &
+       ind_LCH4_LIVbySoil, ind_LCH4_LDFbySoil, ind_LCH4_WSTbySoil, &
+       ind_LCH4_RICbySoil, ind_LCH4_OTAbySoil, ind_LCH4_BBNbySoil, &
+       ind_LCH4_WTLbySoil, ind_LCH4_SEEbySoil, ind_LCH4_LAKbySoil, &
+       ind_LCH4_TERbySoil, ind_LCH4_RESbySoil /)
 
 #ifdef JACOBIAN
   ! Jacobian CH4 tracers
@@ -118,6 +157,13 @@ CONTAINS
        C(ind_CO)  = Spc(id_CO)%Conc(I,J,L)  * xnumol_CO  / airvol_cm3
     ENDIF
 
+    DO N = 1, N_TAGGED_CH4
+       IF ( id_CH4_sector(N) > 0 ) THEN
+          C(ind_CH4_sector(N)) = Spc(id_CH4_sector(N))%Conc(I,J,L)           &
+                                * xnumol_CH4 / airvol_cm3
+       ENDIF
+    ENDDO
+
 #ifdef JACOBIAN
     ! Do the same for Jacobian CH4 tracers, if any
     IF ( numJacobianTracers > 0 ) THEN
@@ -130,6 +176,7 @@ CONTAINS
     ! Initialize placeholder species to 1 molec/cm3
     C(ind_DummyCH4)   = 1.0_dp
     C(ind_DummyNMVOC) = 1.0_dp
+    C(ind_DummyCO)    = 0.0_dp
 
     ! Initialize fixed species to 1 molec/cm3
     ! These will later be set to values read via HEMCO
@@ -281,6 +328,13 @@ CONTAINS
        convfac_CO             = airvol_cm3 / xnumol_CO
        Spc(id_CO)%Conc(I,J,L) = C(ind_CO)  * convfac_CO
     ENDIF
+
+    DO N = 1, N_TAGGED_CH4
+       IF ( id_CH4_sector(N) > 0 ) THEN
+          Spc(id_CH4_sector(N))%Conc(I,J,L) = C(ind_CH4_sector(N))           &
+                                             * airvol_cm3 / xnumol_CH4
+       ENDIF
+    ENDDO
 
 #ifdef JACOBIAN
     ! Do the same for Jacobian CH4 tracers, if any
@@ -478,6 +532,62 @@ CONTAINS
            ( dtChem * xnumol_CH4 )
 
   END FUNCTION oxidants_Get_CH4bySoil_Loss
+!EOC
+!------------------------------------------------------------------------------
+!                  GEOS-Chem Global Chemical Transport Model                  !
+!------------------------------------------------------------------------------
+!BOP
+!
+! !IROUTINE: oxidants_get_taggedch4_loss
+!
+! !DESCRIPTION: Returns a sector-tagged CH4 loss rate for one chemical
+! pathway.  Pathways 1--4 denote OH, Cl, O(1D), and soil uptake.
+!\
+!\
+! !INTERFACE:
+!
+  FUNCTION oxidants_Get_TaggedCH4Loss( tag, pathway, dtChem, airvol_m3 )     &
+       RESULT ( loss )
+!
+! !INPUT PARAMETERS:
+!
+    INTEGER,  INTENT(IN) :: tag          ! Sector tag index
+    INTEGER,  INTENT(IN) :: pathway      ! Chemical loss pathway
+    REAL(dp), INTENT(IN) :: dtChem       ! Chemistry timestep [s]
+    REAL(dp), INTENT(IN) :: airvol_m3    ! Grid-box volume [m3]
+!
+! !RETURN VALUE:
+!
+    REAL(dp)             :: loss         ! Tagged CH4 loss [kg/s]
+!EOP
+!------------------------------------------------------------------------------
+!BOC
+!
+! !LOCAL VARIABLES:
+!
+    INTEGER :: KppId
+
+    KppId = 0
+    IF ( tag >= 1 .and. tag <= N_TAGGED_CH4 ) THEN
+       SELECT CASE ( pathway )
+          CASE ( 1 )
+             KppId = ind_LCH4_sector_byOH(tag)
+          CASE ( 2 )
+             KppId = ind_LCH4_sector_byCl(tag)
+          CASE ( 3 )
+             KppId = ind_LCH4_sector_byO1D(tag)
+          CASE ( 4 )
+             KppId = ind_LCH4_sector_bySoil(tag)
+       END SELECT
+    ENDIF
+
+    loss = 0.0_dp
+    IF ( KppId > 0 ) THEN
+       loss = C(KppId) * airvol_m3 * 1.0e+6_dp /                            &
+              ( dtChem * xnumol_CH4 )
+    ENDIF
+
+  END FUNCTION oxidants_Get_TaggedCH4Loss
 !EOC
 !------------------------------------------------------------------------------
 !                  GEOS-Chem Global Chemical Transport Model                  !
@@ -696,6 +806,9 @@ CONTAINS
     ! Define flags for species ID's
     id_CH4      = Ind_('CH4')
     id_CO       = Ind_('CO' )
+    DO N = 1, N_TAGGED_CH4
+       id_CH4_sector(N) = Ind_( TRIM( TAGGED_CH4_NAMES(N) ), 'A' )
+    ENDDO
 
     ! Set kg species / molec species
     xnumol_CH4  = kgmolec_CH4

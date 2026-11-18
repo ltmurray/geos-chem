@@ -23,6 +23,10 @@
 # List of all advected species in the oxidants simulation
 ALL_SPECIES=(CO CH4)
 
+# CH4 tracers used to separate emissions by source sector
+CH4_SECTOR_SPECIES=(CH4_OIL CH4_GAS CH4_COL CH4_LIV CH4_LDF CH4_WST CH4_RIC \
+                    CH4_OTA CH4_BBN CH4_WTL CH4_SEE CH4_LAK CH4_TER CH4_RES)
+
 
 function isItemInList() {
 
@@ -314,6 +318,129 @@ function updateExtData() {
 }
 
 
+function setupTaggedCH4Sectors() {
+
+    #========================================================================
+    # Adds sector-tagged CH4 tracers to a CH4-only oxidants simulation.
+    # Total CH4 remains an independent tracer for closure checks.  Source
+    # sector tracers use the category assignments from the historical tagged
+    # CH4 simulation.  Soil uptake is a first-order loss, not a source tracer.
+    #
+    # Arguments:
+    # ${1} : Path to the run directory
+    #========================================================================
+
+    rundir="${1}"
+    config="${rundir}/geoschem_config.yml"
+    hemco="${rundir}/HEMCO_Config.rc"
+    diagn="${rundir}/HEMCO_Diagn.rc"
+    history="${rundir}/HISTORY.rc"
+
+    # Add the source-sector tracers after total CH4.
+    for ((n=${#CH4_SECTOR_SPECIES[@]}-1; n>=0; n--)); do
+        spc="${CH4_SECTOR_SPECIES[n]}"
+        sed -i "/      - CH4$/a\\      - ${spc}" "${config}"
+    done
+
+    # Add allocation factors for combined Canadian oil-and-gas emissions.
+    # HEMCO does not support complements of scalar scale factors, so these
+    # values must be kept complementary.  They can later be replaced by
+    # spatially varying oil- and gas-fraction fields.
+    sed -i "/1 NEGATIVE -1.0/a\\
+# Canadian oil-and-gas fractions (CAN_OIL_FRACTION + CAN_GAS_FRACTION = 1)\\
+2901 CAN_OIL_FRACTION 0.5 - - - xy 1 1\\
+2902 CAN_GAS_FRACTION 0.5 - - - xy 1 1" "${hemco}"
+
+    # Duplicate each total-CH4 base-emission line into its historical source
+    # sector.  Split combined-sector fields between tracers with explicitly
+    # named HEMCO scale factors.  Category 9 biomass burning is handled
+    # separately below because the default inventory is supplied by a HEMCO
+    # extension.
+    awk '
+        function tag(cat) {
+            if (cat == "1")  return "CH4_OIL"
+            if (cat == "2")  return "CH4_GAS"
+            if (cat == "3")  return "CH4_COL"
+            if (cat == "4")  return "CH4_LIV"
+            if (cat == "5")  return "CH4_LDF"
+            if (cat == "6")  return "CH4_WST"
+            if (cat == "7")  return "CH4_RIC"
+            if (cat == "8")  return "CH4_OTA"
+            if (cat == "9")  return "CH4_BBN"
+            if (cat == "10") return "CH4_WTL"
+            if (cat == "11") return "CH4_SEE"
+            if (cat == "12") return "CH4_LAK"
+            if (cat == "13") return "CH4_TER"
+            if (cat == "15") return "CH4_RES"
+            return ""
+        }
+        function allocation(name, cat) {
+            if (name ~ /^CAN_OIL_GAS_/ && cat == "1") return "2901"
+            if (name ~ /^CAN_OIL_GAS_/ && cat == "2") return "2902"
+            return ""
+        }
+        {
+            print
+            if ($1 == "112" && $2 == "GFAS_CH4_2D") {
+                $2 = "GFAS_CH4_BBN_2D"
+                print
+                next
+            }
+            if ($1 != "0" || $2 == "CH4_Emis_Prior") next
+            target = ""
+            for (n = 3; n <= NF; n++) {
+                if ($n == "CH4") {
+                    target = n
+                }
+            }
+            if (target == "") next
+            baseName = $2
+            baseScale = $(target+1)
+            nCat = split($(NF-1), cats, "/")
+            for (i = 1; i <= nCat; i++) {
+                spc = tag(cats[i])
+                if (spc == "") continue
+                $2 = baseName "_TAG_" cats[i]
+                $target = spc
+                $(NF-1) = cats[i]
+                if (nCat > 1) {
+                    scale = allocation(baseName, cats[i])
+                    if (scale == "") {
+                        printf "No tagged-sector allocation factor for %s category %s\n", \
+                               baseName, cats[i] > "/dev/stderr"
+                        exit 2
+                    }
+                    $(target+1) = baseScale "/" scale
+                } else {
+                    $(target+1) = baseScale
+                }
+                print
+            }
+        }
+    ' "${hemco}" > "${hemco}.tmp"
+    mv "${hemco}.tmp" "${hemco}"
+
+    # Add the biomass-burning tracer to the GFED/GFAS extension species list.
+    sed -i 's/CH4\/CO/CH4\/CH4_BBN\/CO/g' "${hemco}"
+
+    # Archive the total emission flux into each sector tracer as an independent
+    # check on the category-based total-CH4 emission diagnostics.
+    for spc in "${CH4_SECTOR_SPECIES[@]}"; do
+        printf "Emis%s_Total  %s  -1  -1  -1  2  kg/m2/s  %s_emissions_from_all_sources\n" \
+               "${spc}" "${spc}" "${spc}" >> "${diagn}"
+    done
+
+    # Add per-sector concentration-loss diagnostics.  Soil loss is 2-D;
+    # oxidant loss diagnostics are 3-D.
+    for spc in "${CH4_SECTOR_SPECIES[@]}"; do
+        sed -i "/'LossCH4bySoil/a\\                             'Loss${spc}bySoil               '," "${history}"
+        sed -i "/'LossCH4byO1D/a\\                             'Loss${spc}byO1D                '," "${history}"
+        sed -i "/'LossCH4byCl/a\\                             'Loss${spc}byCl                 '," "${history}"
+        sed -i "/'LossCH4byOH/a\\                             'Loss${spc}byOH                 '," "${history}"
+    done
+}
+
+
 function singleOxidantsSpecies() {
 
     #========================================================================
@@ -338,8 +465,12 @@ function singleOxidantsSpecies() {
     fi
 
     # Get species to include/exclude
-    exclude=$(speciesToExclude "${1}")
-    include=${1}
+    if [[ "x${1}" == "xCH4_SECTORS" ]]; then
+        include="CH4"
+    else
+        include=${1}
+    fi
+    exclude=$(speciesToExclude "${include}")
 
     # Update configuration files
     updateGeosChemConfig "${exclude}" "${rundir}"
@@ -347,4 +478,8 @@ function singleOxidantsSpecies() {
     updateHemcoDiagn     "${exclude}" "${rundir}"
     updateHistory        "${exclude}" "${rundir}" "${include}"
     updateExtData        "${exclude}" "${rundir}"
+
+    if [[ "x${1}" == "xCH4_SECTORS" ]]; then
+        setupTaggedCH4Sectors "${rundir}"
+    fi
 }

@@ -958,15 +958,12 @@ CH3I:
   Src_Add: true
   Src_Mode: HEMCO
   MW_g: 141.94
-CH4_PROP: &CH4properties
+CH4: &CH4properties
   Formula: CH4
   Is_Gas: true
   MW_g: 16.04
-CH4:
-  << : *CH4properties
   Background_VV: 1.8e-6
   FullName: Methane
-  MW_g: 16.04
 CH4_BBN:
   << : *CH4properties
   Background_VV: 1.0e-20
@@ -1401,6 +1398,10 @@ DSTALbin7:
   Radius: 3.721e-6
   WD_WashoutRainPara: [3.37e-4, 0.84]
   WD_WashoutSnowPara: [2.42e-3, 0.73]
+DummyCO:
+  << : *COproperties
+  Background_VV: 1.0e-20
+  FullName: Dummy sink for carbon from tagged methane loss
 DummyCH4:
   << : *CH4properties
   Background_VV: 1.8e-6
@@ -2722,6 +2723,287 @@ LCH4bySoil:
   Is_Gas: true
   MW_g: 1.0    # KPP accumulator; mass conversion uses CH4 metadata
   KPP_AbsTol: 1.0e+25
+LCH4_OILbyOH:
+  FullName: Dummy species to track loss of CH4_OIL by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_OILbyCl:
+  FullName: Dummy species to track loss of CH4_OIL by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_OILbyO1D:
+  FullName: Dummy species to track loss of CH4_OIL by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_OILbySoil:
+  FullName: Dummy species to track loss of CH4_OIL by Soil
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_GASbyOH:
+  FullName: Dummy species to track loss of CH4_GAS by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_GASbyCl:
+  FullName: Dummy species to track loss of CH4_GAS by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_GASbyO1D:
+  FullName: Dummy species to track loss of CH4_GAS by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_GASbySoil:
+  FullName: Dummy species to track loss of CH4_GAS by Soil
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_COLbyOH:
+  FullName: Dummy species to track loss of CH4_COL by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_COLbyCl:
+  FullName: Dummy species to track loss of CH4_COL by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_COLbyO1D:
+  FullName: Dummy species to track loss of CH4_COL by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_COLbySoil:
+  FullName: Dummy species to track loss of CH4_COL by Soil
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_LIVbyOH:
+  FullName: Dummy species to track loss of CH4_LIV by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_LIVbyCl:
+  FullName: Dummy species to track loss of CH4_LIV by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_LIVbyO1D:
+  FullName: Dummy species to track loss of CH4_LIV by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_LIVbySoil:
+  FullName: Dummy species to track loss of CH4_LIV by Soil
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_LDFbyOH:
+  FullName: Dummy species to track loss of CH4_LDF by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_LDFbyCl:
+  FullName: Dummy species to track loss of CH4_LDF by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_LDFbyO1D:
+  FullName: Dummy species to track loss of CH4_LDF by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_LDFbySoil:
+  FullName: Dummy species to track loss of CH4_LDF by Soil
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_WSTbyOH:
+  FullName: Dummy species to track loss of CH4_WST by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_WSTbyCl:
+  FullName: Dummy species to track loss of CH4_WST by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_WSTbyO1D:
+  FullName: Dummy species to track loss of CH4_WST by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_WSTbySoil:
+  FullName: Dummy species to track loss of CH4_WST by Soil
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_RICbyOH:
+  FullName: Dummy species to track loss of CH4_RIC by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_RICbyCl:
+  FullName: Dummy species to track loss of CH4_RIC by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_RICbyO1D:
+  FullName: Dummy species to track loss of CH4_RIC by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_RICbySoil:
+  FullName: Dummy species to track loss of CH4_RIC by Soil
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_OTAbyOH:
+  FullName: Dummy species to track loss of CH4_OTA by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_OTAbyCl:
+  FullName: Dummy species to track loss of CH4_OTA by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_OTAbyO1D:
+  FullName: Dummy species to track loss of CH4_OTA by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_OTAbySoil:
+  FullName: Dummy species to track loss of CH4_OTA by Soil
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_BBNbyOH:
+  FullName: Dummy species to track loss of CH4_BBN by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_BBNbyCl:
+  FullName: Dummy species to track loss of CH4_BBN by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_BBNbyO1D:
+  FullName: Dummy species to track loss of CH4_BBN by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_BBNbySoil:
+  FullName: Dummy species to track loss of CH4_BBN by Soil
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_WTLbyOH:
+  FullName: Dummy species to track loss of CH4_WTL by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_WTLbyCl:
+  FullName: Dummy species to track loss of CH4_WTL by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_WTLbyO1D:
+  FullName: Dummy species to track loss of CH4_WTL by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_WTLbySoil:
+  FullName: Dummy species to track loss of CH4_WTL by Soil
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_SEEbyOH:
+  FullName: Dummy species to track loss of CH4_SEE by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_SEEbyCl:
+  FullName: Dummy species to track loss of CH4_SEE by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_SEEbyO1D:
+  FullName: Dummy species to track loss of CH4_SEE by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_SEEbySoil:
+  FullName: Dummy species to track loss of CH4_SEE by Soil
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_LAKbyOH:
+  FullName: Dummy species to track loss of CH4_LAK by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_LAKbyCl:
+  FullName: Dummy species to track loss of CH4_LAK by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_LAKbyO1D:
+  FullName: Dummy species to track loss of CH4_LAK by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_LAKbySoil:
+  FullName: Dummy species to track loss of CH4_LAK by Soil
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_TERbyOH:
+  FullName: Dummy species to track loss of CH4_TER by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_TERbyCl:
+  FullName: Dummy species to track loss of CH4_TER by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_TERbyO1D:
+  FullName: Dummy species to track loss of CH4_TER by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_TERbySoil:
+  FullName: Dummy species to track loss of CH4_TER by Soil
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_RESbyOH:
+  FullName: Dummy species to track loss of CH4_RES by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_RESbyCl:
+  FullName: Dummy species to track loss of CH4_RES by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_RESbyO1D:
+  FullName: Dummy species to track loss of CH4_RES by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+LCH4_RESbySoil:
+  FullName: Dummy species to track loss of CH4_RES by Soil
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+
 LCO:
   FullName: Dummy species to track loss rate of CO
   Is_Gas: true
@@ -2733,25 +3015,186 @@ LCObyOH:
   MW_g: 1.0
   KPP_AbsTol: 1.0e+25
 LossCH4byCl:
-  Formula: CH4
+  << : *CH4properties
   FullName: Diagnostic species for CH4 loss by reaction with Cl
-  Is_Gas: true
-  MW_g: 16.04
 LossCH4byO1D:
-  Formula: CH4
+  << : *CH4properties
   FullName: Diagnostic species for CH4 loss by reaction with O(1D)
-  Is_Gas: true
-  MW_g: 16.04
 LossCH4byOH:
-  Formula: CH4
+  << : *CH4properties
   FullName: Diagnostic species for CH4 loss by reaction with OH
-  Is_Gas: true
-  MW_g: 16.04
 LossCH4bySoil:
-  Formula: CH4
+  << : *CH4properties
   FullName: Diagnostic species for CH4 loss by soil uptake
-  Is_Gas: true
-  MW_g: 16.04
+LossCH4_OILbyCl:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_OIL loss by reaction with Cl
+LossCH4_OILbyO1D:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_OIL loss by reaction with O(1D)
+LossCH4_OILbyOH:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_OIL loss by reaction with OH
+LossCH4_OILbySoil:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_OIL loss by soil uptake
+LossCH4_GASbyCl:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_GAS loss by reaction with Cl
+LossCH4_GASbyO1D:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_GAS loss by reaction with O(1D)
+LossCH4_GASbyOH:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_GAS loss by reaction with OH
+LossCH4_GASbySoil:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_GAS loss by soil uptake
+LossCH4_COLbyCl:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_COL loss by reaction with Cl
+LossCH4_COLbyO1D:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_COL loss by reaction with O(1D)
+LossCH4_COLbyOH:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_COL loss by reaction with OH
+LossCH4_COLbySoil:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_COL loss by soil uptake
+LossCH4_LIVbyCl:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_LIV loss by reaction with Cl
+LossCH4_LIVbyO1D:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_LIV loss by reaction with O(1D)
+LossCH4_LIVbyOH:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_LIV loss by reaction with OH
+LossCH4_LIVbySoil:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_LIV loss by soil uptake
+LossCH4_LDFbyCl:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_LDF loss by reaction with Cl
+LossCH4_LDFbyO1D:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_LDF loss by reaction with O(1D)
+LossCH4_LDFbyOH:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_LDF loss by reaction with OH
+LossCH4_LDFbySoil:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_LDF loss by soil uptake
+LossCH4_WSTbyCl:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_WST loss by reaction with Cl
+LossCH4_WSTbyO1D:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_WST loss by reaction with O(1D)
+LossCH4_WSTbyOH:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_WST loss by reaction with OH
+LossCH4_WSTbySoil:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_WST loss by soil uptake
+LossCH4_RICbyCl:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_RIC loss by reaction with Cl
+LossCH4_RICbyO1D:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_RIC loss by reaction with O(1D)
+LossCH4_RICbyOH:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_RIC loss by reaction with OH
+LossCH4_RICbySoil:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_RIC loss by soil uptake
+LossCH4_OTAbyCl:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_OTA loss by reaction with Cl
+LossCH4_OTAbyO1D:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_OTA loss by reaction with O(1D)
+LossCH4_OTAbyOH:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_OTA loss by reaction with OH
+LossCH4_OTAbySoil:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_OTA loss by soil uptake
+LossCH4_BBNbyCl:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_BBN loss by reaction with Cl
+LossCH4_BBNbyO1D:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_BBN loss by reaction with O(1D)
+LossCH4_BBNbyOH:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_BBN loss by reaction with OH
+LossCH4_BBNbySoil:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_BBN loss by soil uptake
+LossCH4_WTLbyCl:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_WTL loss by reaction with Cl
+LossCH4_WTLbyO1D:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_WTL loss by reaction with O(1D)
+LossCH4_WTLbyOH:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_WTL loss by reaction with OH
+LossCH4_WTLbySoil:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_WTL loss by soil uptake
+LossCH4_SEEbyCl:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_SEE loss by reaction with Cl
+LossCH4_SEEbyO1D:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_SEE loss by reaction with O(1D)
+LossCH4_SEEbyOH:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_SEE loss by reaction with OH
+LossCH4_SEEbySoil:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_SEE loss by soil uptake
+LossCH4_LAKbyCl:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_LAK loss by reaction with Cl
+LossCH4_LAKbyO1D:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_LAK loss by reaction with O(1D)
+LossCH4_LAKbyOH:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_LAK loss by reaction with OH
+LossCH4_LAKbySoil:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_LAK loss by soil uptake
+LossCH4_TERbyCl:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_TER loss by reaction with Cl
+LossCH4_TERbyO1D:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_TER loss by reaction with O(1D)
+LossCH4_TERbyOH:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_TER loss by reaction with OH
+LossCH4_TERbySoil:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_TER loss by soil uptake
+LossCH4_RESbyCl:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_RES loss by reaction with Cl
+LossCH4_RESbyO1D:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_RES loss by reaction with O(1D)
+LossCH4_RESbyOH:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_RES loss by reaction with OH
+LossCH4_RESbySoil:
+  << : *CH4properties
+  FullName: Diagnostic species for CH4_RES loss by soil uptake
+
 LossCObyOH:
   Formula: CO
   FullName: Diagnostic species for CO loss by reaction with OH

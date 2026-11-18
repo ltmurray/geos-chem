@@ -396,7 +396,8 @@ function setEFYOtoEYinHemcoConfig() {
     sim_extra_option="${2}"   # 2nd argument: Simulation extra option
     #========================================================================
 
-    if [[ "x${sim_extra_option}" == "xaciduptake"       ||
+    if [[ "x${sim_extra_option}" == "xCH4_SECTORS"     ||
+          "x${sim_extra_option}" == "xaciduptake"       ||
           "x${sim_extra_option}" == "xmarinePOA"        ||
           "x${sim_extra_option}" == "xcomplexSOA_SVPOA" ||
           "x${sim_extra_option}" == "xAPM"              ||
@@ -404,6 +405,10 @@ function setEFYOtoEYinHemcoConfig() {
           "x${sim_name}"         == "xtagO3"        ]]; then
         old="SpeciesRst_?ALL?    \$YYYY/\$MM/\$DD/\$HH EFYO"
         new="SpeciesRst_?ALL?    \$YYYY/\$MM/\$DD/\$HH EY  "
+        sed_ie "s|${old}|${new}|" HEMCO_Config.rc
+
+        old="SpeciesRst_?ADV?    \$YYYY/\$MM/\$DD/\$HH EFYO"
+        new="SpeciesRst_?ADV?    \$YYYY/\$MM/\$DD/\$HH EY  "
         sed_ie "s|${old}|${new}|" HEMCO_Config.rc
 
         printf "\n  -- The sample restart provided for this simulation may not"
