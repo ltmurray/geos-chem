@@ -3854,7 +3854,13 @@ CONTAINS
     ! and to denote dummy species as those having ATOL > 1e25.
     !========================================================================
     ATOL = State_Chm%KPP_AbsTol
+#ifdef KPP_NO_PASSIVE_SPC_THRESHOLD
+    ! KPP 3.1.1 does not generate the optional passive-species argument.
+    ! The carbon mechanism uses Forward Euler and does not need it.
+    CALL Initialize()
+#else
     CALL Initialize( PassiveSpc_ATOL_Threshold = 1.0e+25_dp )
+#endif
 
     !========================================================================
     ! Various Settings (not sure how many of these still work)

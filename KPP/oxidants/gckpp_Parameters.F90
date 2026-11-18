@@ -41,7 +41,7 @@ MODULE gckpp_Parameters
 ! NFIX - Number of Fixed species
   INTEGER, PARAMETER :: NFIX = 5
 ! NREACT - Number of reactions
-  INTEGER, PARAMETER :: NREACT = 8
+  INTEGER, PARAMETER :: NREACT = 7
 ! NVARST - Starting of variables in conc. vect.
   INTEGER, PARAMETER :: NVARST = 1
 ! NFIXST - Starting of fixed in conc. vect.
@@ -68,9 +68,9 @@ MODULE gckpp_Parameters
   INTEGER, PARAMETER :: ind_PCOfromNMVOC = 4
   INTEGER, PARAMETER :: ind_LCH4byOH = 5
   INTEGER, PARAMETER :: ind_LCH4byCl = 6
-  INTEGER, PARAMETER :: ind_LCH4inStrat = 7
-  INTEGER, PARAMETER :: ind_LCObyOH = 8
-  INTEGER, PARAMETER :: ind_LCOinStrat = 9
+  INTEGER, PARAMETER :: ind_LCH4byO1D = 7
+  INTEGER, PARAMETER :: ind_LCH4bySoil = 8
+  INTEGER, PARAMETER :: ind_LCObyOH = 9
   INTEGER, PARAMETER :: ind_PCO = 10
   INTEGER, PARAMETER :: ind_LCO = 11
   INTEGER, PARAMETER :: ind_LCH4 = 12
@@ -80,8 +80,8 @@ MODULE gckpp_Parameters
 
   INTEGER, PARAMETER :: ind_FixedOH = 13
   INTEGER, PARAMETER :: ind_FixedCl = 14
-  INTEGER, PARAMETER :: ind_DummyCH4trop = 15
-  INTEGER, PARAMETER :: ind_DummyCH4strat = 16
+  INTEGER, PARAMETER :: ind_FixedO1D = 15
+  INTEGER, PARAMETER :: ind_DummyCH4 = 16
   INTEGER, PARAMETER :: ind_DummyNMVOC = 17
 
 ! Index declaration for fixed species in FIX
@@ -89,8 +89,8 @@ MODULE gckpp_Parameters
 
   INTEGER, PARAMETER :: indf_FixedOH = 1
   INTEGER, PARAMETER :: indf_FixedCl = 2
-  INTEGER, PARAMETER :: indf_DummyCH4trop = 3
-  INTEGER, PARAMETER :: indf_DummyCH4strat = 4
+  INTEGER, PARAMETER :: indf_FixedO1D = 3
+  INTEGER, PARAMETER :: indf_DummyCH4 = 4
   INTEGER, PARAMETER :: indf_DummyNMVOC = 5
 
 END MODULE gckpp_Parameters

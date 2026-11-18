@@ -548,14 +548,15 @@ Mask fractions:              false
 #==============================================================================
 # --- CH4: Soil absorption from MeMo model (Murguia-Flores et al. 2018, GMD) ---
 #
-# - Multiply soil absorption by -1 to get a "negative" flux
+# The positive uptake magnitude is imported as a non-emissions field.
+# GEOS-Chem converts it to a surface-only first-order KPP loss.
 #==============================================================================
 (((MeMo_SOIL_ABSORPTION
 # Climatology
-0 CH4_SOILABSORB $ROOT/CH4/v2019-10/MeMo_SoilAbs/MeMo_CH4uptake_Climatology.nc CH4uptake 2009/1-12/1/0 C xy kg/m2/s CH4 1 14 2
+* CH4_SOIL_UPTAKE $ROOT/CH4/v2019-10/MeMo_SoilAbs/MeMo_CH4uptake_Climatology.nc CH4uptake 2009/1-12/1/0 C xy kg/m2/s * - 18 1
 
 # 1990-2009
-#0 CH4_SOILABSORB $ROOT/CH4/v2019-10/MeMo_SoilAbs/MeMo_CH4uptake_1990-2009.nc CH4uptake 1990-2009/1-12/1/0 C xy kg/m2/s CH4 1 14 2
+#* CH4_SOIL_UPTAKE $ROOT/CH4/v2019-10/MeMo_SoilAbs/MeMo_CH4uptake_1990-2009.nc CH4uptake 1990-2009/1-12/1/0 C xy kg/m2/s * - 18 1
 )))MeMo_SOIL_ABSORPTION
 
 #==============================================================================

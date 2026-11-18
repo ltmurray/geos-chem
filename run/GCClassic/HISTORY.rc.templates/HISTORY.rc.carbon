@@ -148,14 +148,26 @@ COLLECTIONS: 'Restart',
 # %%%%% THE ProdLoss COLLECTION %%%%%
 #
 # Production and loss fields from the carbon simulation via KPP
+#
+# List aggregate families explicitly instead of using Prod_?PRD? and
+# Loss_?LOS?.  The wildcard expands every family compiled into KPP, including
+# families whose target species may be disabled in a single-species run.
 #==============================================================================
   ProdLoss.template:         '%y4%m2%d2_%h2%n2z.nc4',
   ProdLoss.frequency:        ${RUNDIR_HIST_TIME_AVG_FREQ}
   ProdLoss.duration:         ${RUNDIR_HIST_TIME_AVG_DUR}
   ProdLoss.mode:             'time-averaged'
-  ProdLoss.fields:           'ProdCOfromCH4                  ',
+  ProdLoss.fields:           'Prod_CO                        ',
+                             'Loss_CO                        ',
+                             'Loss_CH4                       ',
+                             'ProdCOfromCH4                  ',
                              'ProdCOfromNMVOC                ',
                              'ProdCO2fromCO                  ',
+                             'LossCH4byOH                    ',
+                             'LossCH4byCl                    ',
+                             'LossCH4byO1D                   ',
+                             'LossCH4bySoil                  ',
+                             'LossCObyOH                     ',
 ::
 #==============================================================================
 # %%%%% THE RxnConst COLLECTION %%%%%

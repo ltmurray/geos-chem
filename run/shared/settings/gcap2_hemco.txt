@@ -42,6 +42,7 @@ RUNDIR_GLOBAL_NO3='* GLOBAL_NO3     $ROOT/GCAP2/OFFLINE_FIELDS/13.0.0/GEOSChem.S
 RUNDIR_GLOBAL_O3='* GLOBAL_O3      $ROOT/GCAP2/OFFLINE_FIELDS/13.0.0/GEOSChem.SpeciesConc.2010-2019.$MM.$GCAPVERTRES.nc4 SpeciesConc_O3         2015/1-12/1/0 C xyz 1        * - 1 1'
 
 RUNDIR_GLOBAL_OH='* GLOBAL_OH      $ROOT/GCAP2/OFFLINE_FIELDS/13.0.0/GEOSChem.SpeciesConc.2010-2019.$MM.$GCAPVERTRES.nc4 SpeciesConc_OH         2015/1-12/1/0 C xyz 1        * - 1 1'
+RUNDIR_GLOBAL_O1D='* GLOBAL_O1D     $ROOT/GCAP2/GMI/v2015-02/$GCAPVERTRES/gmi.clim.O1D.geos5.2x25.nc                    species                2005/1-12/1/0 C xyz v/v      * - 1 1'
 
 RUNDIR_AERO_SO4='* AERO_SO4       $ROOT/GCAP2/OFFLINE_FIELDS/13.0.0/GEOSChem.SpeciesConc.2010-2019.$MM.$GCAPVERTRES.nc4 SpeciesConc_SO4        2015/1-12/1/0 C xyz 1        * - 1 1'
 

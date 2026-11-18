@@ -33,6 +33,12 @@ MODULE carbon_Funcs
   PUBLIC :: carbon_CleanupCarbonKPPFuncs
   PUBLIC :: carbon_Get_COfromCH4_Flux
   PUBLIC :: carbon_Get_COfromNMVOC_Flux
+  PUBLIC :: carbon_Get_CH4byOH_Loss
+  PUBLIC :: carbon_Get_CH4byCl_Loss
+  PUBLIC :: carbon_Get_CH4byO1D_Loss
+  PUBLIC :: carbon_Get_CH4bySoil_Loss
+  PUBLIC :: carbon_Get_CH4SoilUptakeRate
+  PUBLIC :: carbon_Get_CObyOH_Loss
   PUBLIC :: GC_OHCO
 !
 ! !PUBLIC TYPES:
@@ -130,14 +136,14 @@ CONTAINS
 #endif
 
     ! Initialize placeholder species to 1 molec/cm3
-    C(ind_DummyCH4trop)  = 1.0_dp
-    C(ind_DummyCH4strat) = 1.0_dp
-    C(ind_DummyNMVOC)    = 1.0_dp
+    C(ind_DummyCH4)   = 1.0_dp
+    C(ind_DummyNMVOC) = 1.0_dp
 
     ! Initialize fixed species to 1 molec/cm3
     ! These will later be set to values read via HEMCO
     C(ind_FixedCl) = 1.0_dp
     C(ind_FixedOH) = 1.0_dp
+    C(ind_FixedO1D) = 1.0_dp
 
     ! Free pointer
     Spc => NULL()
@@ -159,10 +165,10 @@ CONTAINS
 !
   SUBROUTINE carbon_ComputeRateConstants(                                    &
              I,             J,                 L,                            &
-             ConcClMnd,     ConcOHMnd,         LCH4_in_Strat,                &
-             LCO_in_Strat,  OHdiurnalFac,      PCO_fr_CH4_use,               &
+             ConcClMnd,     ConcOHMnd,         ConcO1Dmnd,                   &
+             OHdiurnalFac,  PCO_fr_CH4_use,                                   &
              PCO_fr_CH4,    PCO_fr_NMVOC_use,  PCO_fr_NMVOC,                 &
-             PCO_in_Strat,  dtChem,            State_Chm,                    &
+             CH4_soil_k,    dtChem,            State_Chm,                    &
              State_Met                                                      )
 !
 ! !USES:
@@ -176,14 +182,13 @@ CONTAINS
     INTEGER,        INTENT(IN) :: I, J, L
     REAL(fp),       INTENT(IN) :: ConcClMnd       ! Cl conc [molec/cm3]
     REAL(fp),       INTENT(IN) :: ConcOHmnd       ! OH conc [molec/cm3]
-    REAL(fp),       INTENT(IN) :: LCH4_in_Strat   ! Strat L(CH4) [1/s]
-    REAL(fp),       INTENT(IN) :: LCO_in_Strat    ! Strat L(CO) [molec/cm3/s]
+    REAL(fp),       INTENT(IN) :: ConcO1Dmnd      ! O(1D) conc [molec/cm3]
     REAL(fp),       INTENT(IN) :: OHdiurnalFac    ! OH diurnal scale factor [1]
     LOGICAL,        INTENT(IN) :: PCO_fr_CH4_use  ! Use P(CO) fr CH4? [T/F]
     REAL(fp),       INTENT(IN) :: PCO_fr_CH4      ! P(CO) fr CH4 [molec/cm3/s]
     LOGICAL,        INTENT(IN) :: PCO_fr_NMVOC_use! Use P(CO) from NMVOC [T/F]
     REAL(fp),       INTENT(IN) :: PCO_fr_NMVOC    ! P(CO) fr NMVOC [molec/cm3/s]
-    REAL(fp),       INTENT(IN) :: PCO_in_Strat    ! Strat P(CO) [molec/cm3/s]
+    REAL(fp),       INTENT(IN) :: CH4_soil_k      ! CH4 soil-loss rate [s-1]
     REAL(fp),       INTENT(IN) :: dtChem          ! Chemistry timestep [s]
     TYPE(ChmState), INTENT(IN) :: State_Chm       ! Chemistry State object
     TYPE(MetState), INTENT(IN) :: State_Met       ! Meteorology State object
@@ -201,79 +206,26 @@ CONTAINS
     !========================================================================
 
     ! Initialize
-    k_Strat = 0.0_dp
-    k_Trop  = 0.0_dp
-    trop    = 0.0_dp
+    K_CARBON = 0.0_dp
 
-    IF ( State_Met%InTroposphere(I,J,L) ) THEN
+    ! Prescribed oxidants are applied at every model level.  Preserve the
+    ! supplied OH, Cl, and O(1D) concentrations without regional masking.
+    C(ind_FixedOH)  = ConcOHmnd
+    C(ind_FixedCl)  = ConcClMnd
+    C(ind_FixedO1D) = ConcO1Dmnd
 
-       !=====================================================================
-       ! Grid box (I,J.L) is in the troposphere
-       !=====================================================================
-
-       ! Set toggle that we are in the troposphere
-       ! (used for CH4 + FixedCl = Dummy reaction)
-       trop = 1.0_dp
-
-       !%%% TAGGED SPECIES HANDLING -- comment out for now
-       !%%% State_Chm%SpcData(16)%Info%MW_g * 1.0e-3_fp ! kg/mol
-
-       ! OH and Cl concentrations [molec/cm3]
-       C(ind_FixedOH) = ConcOHmnd
-       C(ind_FixedCl) = ConcClMnd
-
-       !---------------------------------------------------------------------
-       ! k_Trop(1): Rate [1/s] for rxn for DummyCH4trop -> CO + PCOfromCH4
-       !---------------------------------------------------------------------
-       IF ( PCO_fr_CH4_use ) THEN
-          k_Trop(1) = PCO_fr_CH4     * OHdiurnalFac
-       ENDIF
-
-       !---------------------------------------------------------------------
-       ! k_Trop(2): Rate [1/s] for CO + FixedOH = LCObyOH
-       !---------------------------------------------------------------------
-       k_Trop(2) = GC_OHCO()
-
-       !---------------------------------------------------------------------
-       ! k_Trop(3): Rate [molec/cm3/s] for FixedNMVOC   = CO  + PCOfromNMVOC
-       !---------------------------------------------------------------------
-       IF ( PCO_fr_NMVOC_use ) THEN
-          k_Trop(3) = PCO_fr_NMVOC * OHdiurnalFac
-       ENDIF
-
-    ELSE
-
-       !=====================================================================
-       ! Grid box (I,J.L) is in the stratosphere
-       !=====================================================================
-
-       !---------------------------------------------------------------------
-       ! k_Strat(1): Loss rate [1/s] for CH4 -> LCH4inStrat
-       ! k_Strat(3): Loss rate [1/s] for CO  -> LCOinStrat
-       !---------------------------------------------------------------------
-       k_Strat(1) = LCH4_in_Strat
-       k_Strat(3) = LCO_in_Strat
-
-       !---------------------------------------------------------------------
-       ! k_Strat(2): Loss rate [molec/cm3/s] for DummyCH4strat -> CO
-       !
-       ! NOTE: This reaction rate is in molec/cm3/s instead of 1/s because
-       ! of the way the reaction is written.  DummyCH4strat is a "dummy"
-       ! species that is set to 1, so the result of the integration (using
-       ! the forward Euler scheme) is
-       !
-       ! CO = k_Strat(2)  * dummyCH4strat * DT
-       !    = molec/cm3/s * 1     * s
-       !    = molec/cm3
-       !
-       ! NOTE: PCO_in_Strat is in [v/v/s]; convert to [molec/cm3] below
-       !---------------------------------------------------------------------
-       k_Strat(2) = PCO_in_Strat                                             &
-                  * AVO                                                      &
-                  / ( AIRMW * 1.0e-3_dp )                                    &
-                  * State_Met%AirDen(I,J,L)                                  &
-                  * 1.0e-6_dp
+    IF ( PCO_fr_CH4_use ) THEN
+       K_CARBON(1) = PCO_fr_CH4 * OHdiurnalFac
     ENDIF
+
+    K_CARBON(2) = GC_OHCO()
+
+    IF ( PCO_fr_NMVOC_use ) THEN
+       K_CARBON(3) = PCO_fr_NMVOC * OHdiurnalFac
+    ENDIF
+
+    ! Surface-only first-order CH4 uptake by soils
+    K_CARBON(4) = CH4_soil_k
 
   END SUBROUTINE carbon_ComputeRateConstants
 !EOC
@@ -422,9 +374,203 @@ CONTAINS
 !------------------------------------------------------------------------------
 !BOP
 !
+! !IROUTINE: carbon_get_ch4byoh_loss
+!
+! !DESCRIPTION: Returns the grid-box CH4 loss rate from reaction with OH.
+!\
+!\
+! !INTERFACE:
+!
+  FUNCTION carbon_Get_CH4byOH_Loss( dtChem, airvol_m3 ) RESULT ( loss )
+!
+! !INPUT PARAMETERS:
+!
+    REAL(dp), INTENT(IN) :: dtChem       ! Chemistry timestep [s]
+    REAL(dp), INTENT(IN) :: airvol_m3    ! Grid-box volume [m3]
+!
+! !RETURN VALUE:
+!
+    REAL(dp)             :: loss         ! CH4 loss [kg/s]
+!EOP
+!------------------------------------------------------------------------------
+!BOC
+
+    loss = C(ind_LCH4byOH) * airvol_m3 * 1.0e+6_dp /                        &
+           ( dtChem * xnumol_CH4 )
+
+  END FUNCTION carbon_Get_CH4byOH_Loss
+!EOC
+!------------------------------------------------------------------------------
+!                  GEOS-Chem Global Chemical Transport Model                  !
+!------------------------------------------------------------------------------
+!BOP
+!
+! !IROUTINE: carbon_get_ch4bycl_loss
+!
+! !DESCRIPTION: Returns the grid-box CH4 loss rate from reaction with Cl.
+!\
+!\
+! !INTERFACE:
+!
+  FUNCTION carbon_Get_CH4byCl_Loss( dtChem, airvol_m3 ) RESULT ( loss )
+!
+! !INPUT PARAMETERS:
+!
+    REAL(dp), INTENT(IN) :: dtChem       ! Chemistry timestep [s]
+    REAL(dp), INTENT(IN) :: airvol_m3    ! Grid-box volume [m3]
+!
+! !RETURN VALUE:
+!
+    REAL(dp)             :: loss         ! CH4 loss [kg/s]
+!EOP
+!------------------------------------------------------------------------------
+!BOC
+
+    loss = C(ind_LCH4byCl) * airvol_m3 * 1.0e+6_dp /                        &
+           ( dtChem * xnumol_CH4 )
+
+  END FUNCTION carbon_Get_CH4byCl_Loss
+!EOC
+!------------------------------------------------------------------------------
+!                  GEOS-Chem Global Chemical Transport Model                  !
+!------------------------------------------------------------------------------
+!BOP
+!
+! !IROUTINE: carbon_get_ch4byo1d_loss
+!
+! !DESCRIPTION: Returns the grid-box CH4 loss rate from reaction with O(1D).
+!\
+!\
+! !INTERFACE:
+!
+  FUNCTION carbon_Get_CH4byO1D_Loss( dtChem, airvol_m3 ) RESULT ( loss )
+!
+! !INPUT PARAMETERS:
+!
+    REAL(dp), INTENT(IN) :: dtChem       ! Chemistry timestep [s]
+    REAL(dp), INTENT(IN) :: airvol_m3    ! Grid-box volume [m3]
+!
+! !RETURN VALUE:
+!
+    REAL(dp)             :: loss         ! CH4 loss [kg/s]
+!EOP
+!------------------------------------------------------------------------------
+!BOC
+
+    loss = C(ind_LCH4byO1D) * airvol_m3 * 1.0e+6_dp /                       &
+           ( dtChem * xnumol_CH4 )
+
+  END FUNCTION carbon_Get_CH4byO1D_Loss
+!EOC
+!------------------------------------------------------------------------------
+!                  GEOS-Chem Global Chemical Transport Model                  !
+!------------------------------------------------------------------------------
+!BOP
+!
+! !IROUTINE: carbon_get_ch4bysoil_loss
+!
+! !DESCRIPTION: Returns the grid-box CH4 loss rate from soil uptake.
+!\
+!\
+! !INTERFACE:
+!
+  FUNCTION carbon_Get_CH4bySoil_Loss( dtChem, airvol_m3 ) RESULT ( loss )
+!
+! !INPUT PARAMETERS:
+!
+    REAL(dp), INTENT(IN) :: dtChem       ! Chemistry timestep [s]
+    REAL(dp), INTENT(IN) :: airvol_m3    ! Grid-box volume [m3]
+!
+! !RETURN VALUE:
+!
+    REAL(dp)             :: loss         ! CH4 loss [kg/s]
+!EOP
+!------------------------------------------------------------------------------
+!BOC
+
+    loss = C(ind_LCH4bySoil) * airvol_m3 * 1.0e+6_dp /                      &
+           ( dtChem * xnumol_CH4 )
+
+  END FUNCTION carbon_Get_CH4bySoil_Loss
+!EOC
+!------------------------------------------------------------------------------
+!                  GEOS-Chem Global Chemical Transport Model                  !
+!------------------------------------------------------------------------------
+!BOP
+!
+! !IROUTINE: carbon_get_ch4soil_uptake_rate
+!
+! !DESCRIPTION: Converts a prescribed positive CH4 soil-uptake flux and the
+!  instantaneous surface-grid-box CH4 mass into a first-order rate constant.
+!  Keeping this parameterization in one function provides a clean interface
+!  for a future process-based soil-uptake model.
+!\
+!\
+! !INTERFACE:
+!
+  FUNCTION carbon_Get_CH4SoilUptakeRate( uptakeFlux, gridArea, ch4Mass )     &
+       RESULT ( rate )
+!
+! !INPUT PARAMETERS:
+!
+    REAL(fp), INTENT(IN) :: uptakeFlux ! Positive uptake flux [kg/m2/s]
+    REAL(fp), INTENT(IN) :: gridArea   ! Grid-cell area [m2]
+    REAL(fp), INTENT(IN) :: ch4Mass    ! Surface grid-box CH4 mass [kg]
+!
+! !RETURN VALUE:
+!
+    REAL(fp)             :: rate       ! First-order soil loss rate [s-1]
+!EOP
+!------------------------------------------------------------------------------
+!BOC
+
+    rate = 0.0_fp
+    IF ( uptakeFlux <= 0.0_fp .or. gridArea <= 0.0_fp .or.                 &
+         ch4Mass    <= 0.0_fp ) RETURN
+
+    rate = SafeDiv( uptakeFlux * gridArea, ch4Mass, 0.0_fp )
+
+  END FUNCTION carbon_Get_CH4SoilUptakeRate
+!EOC
+!------------------------------------------------------------------------------
+!                  GEOS-Chem Global Chemical Transport Model                  !
+!------------------------------------------------------------------------------
+!BOP
+!
+! !IROUTINE: carbon_get_cobyoh_loss
+!
+! !DESCRIPTION: Returns the grid-box CO loss rate from reaction with OH.
+!\
+!\
+! !INTERFACE:
+!
+  FUNCTION carbon_Get_CObyOH_Loss( dtChem, airvol_m3 ) RESULT ( loss )
+!
+! !INPUT PARAMETERS:
+!
+    REAL(dp), INTENT(IN) :: dtChem       ! Chemistry timestep [s]
+    REAL(dp), INTENT(IN) :: airvol_m3    ! Grid-box volume [m3]
+!
+! !RETURN VALUE:
+!
+    REAL(dp)             :: loss         ! CO loss [kg/s]
+!EOP
+!------------------------------------------------------------------------------
+!BOC
+
+    loss = C(ind_LCObyOH) * airvol_m3 * 1.0e+6_dp /                         &
+           ( dtChem * xnumol_CO )
+
+  END FUNCTION carbon_Get_CObyOH_Loss
+!EOC
+!------------------------------------------------------------------------------
+!                  GEOS-Chem Global Chemical Transport Model                  !
+!------------------------------------------------------------------------------
+!BOP
+!
 ! !IROUTINE: GC_OHCO
 !
-! !DESCRIPTION: Returns the rate of tropospheric loss of CO due to chemical reaction with OH
+! !DESCRIPTION: Returns the rate of CO loss due to chemical reaction with OH
 !\\
 !\\
 ! !INTERFACE:
@@ -433,7 +579,7 @@ CONTAINS
 
 !
 ! !REMARKS:
-! Tropospheric loss of CO due to chemical rxn w/ OH
+! Loss of CO due to chemical reaction with OH at any model level
 !
 !  DECAY RATE
 !  The decay rate (KRATE) is calculated by:

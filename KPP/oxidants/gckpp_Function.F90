@@ -64,29 +64,28 @@ SUBROUTINE Fun ( V, F, RCT, Vdot, Aout )
 ! Computation of equation rates
   A(1) = RCT(1)*V(1)*F(1)
   A(2) = RCT(2)*V(1)*F(2)
-  A(3) = RCT(3)*F(3)
-  A(4) = RCT(4)*V(2)*F(1)
-  A(5) = RCT(5)*F(5)
-  A(6) = RCT(6)*V(1)
-  A(7) = RCT(7)*F(4)
-  A(8) = RCT(8)*V(2)
+  A(3) = RCT(3)*V(1)*F(3)
+  A(4) = RCT(4)*V(1)
+  A(5) = RCT(5)*F(4)
+  A(6) = RCT(6)*V(2)*F(1)
+  A(7) = RCT(7)*F(5)
 
   !### Use Aout to return equation rates
   IF ( PRESENT( Aout ) ) Aout = A
 
 ! Aggregate function
-  Vdot(1) = -A(1)-A(2)-A(6)
-  Vdot(2) = A(3)-A(4)+A(5)+A(7)-A(8)
-  Vdot(3) = A(3)
-  Vdot(4) = A(5)
+  Vdot(1) = -A(1)-A(2)-A(3)-A(4)
+  Vdot(2) = A(5)-A(6)+A(7)
+  Vdot(3) = A(5)
+  Vdot(4) = A(7)
   Vdot(5) = A(1)
   Vdot(6) = A(2)
-  Vdot(7) = A(6)
+  Vdot(7) = A(3)
   Vdot(8) = A(4)
-  Vdot(9) = A(8)
-  Vdot(10) = A(3)+A(5)+A(7)
-  Vdot(11) = A(4)+A(8)
-  Vdot(12) = A(1)+A(2)+A(6)
+  Vdot(9) = A(6)
+  Vdot(10) = A(5)+A(7)
+  Vdot(11) = A(6)
+  Vdot(12) = A(1)+A(2)+A(3)+A(4)
 
 END SUBROUTINE Fun
 
@@ -129,33 +128,32 @@ SUBROUTINE Fun_SPLIT ( V, F, RCT, Vdot, P_VAR, D_VAR, Aout )
 ! Computation of equation rates
   A(1) = RCT(1)*V(1)*F(1)
   A(2) = RCT(2)*V(1)*F(2)
-  A(3) = RCT(3)*F(3)
-  A(4) = RCT(4)*V(2)*F(1)
-  A(5) = RCT(5)*F(5)
-  A(6) = RCT(6)*V(1)
-  A(7) = RCT(7)*F(4)
-  A(8) = RCT(8)*V(2)
+  A(3) = RCT(3)*V(1)*F(3)
+  A(4) = RCT(4)*V(1)
+  A(5) = RCT(5)*F(4)
+  A(6) = RCT(6)*V(2)*F(1)
+  A(7) = RCT(7)*F(5)
 
   !### Use Aout to return equation rates
   IF ( PRESENT( Aout ) ) Aout = A
 
 ! Production function
   P_VAR(1) = 0
-  P_VAR(2) = A(3)+A(5)+A(7)
-  P_VAR(3) = A(3)
-  P_VAR(4) = A(5)
+  P_VAR(2) = A(5)+A(7)
+  P_VAR(3) = A(5)
+  P_VAR(4) = A(7)
   P_VAR(5) = A(1)
   P_VAR(6) = A(2)
-  P_VAR(7) = A(6)
+  P_VAR(7) = A(3)
   P_VAR(8) = A(4)
-  P_VAR(9) = A(8)
-  P_VAR(10) = A(3)+A(5)+A(7)
-  P_VAR(11) = A(4)+A(8)
-  P_VAR(12) = A(1)+A(2)+A(6)
+  P_VAR(9) = A(6)
+  P_VAR(10) = A(5)+A(7)
+  P_VAR(11) = A(6)
+  P_VAR(12) = A(1)+A(2)+A(3)+A(4)
 
 ! Destruction function
-  D_VAR(1) = RCT(1)*F(1)+RCT(2)*F(2)+RCT(6)
-  D_VAR(2) = RCT(4)*F(1)+RCT(8)
+  D_VAR(1) = RCT(1)*F(1)+RCT(2)*F(2)+RCT(3)*F(3)+RCT(4)
+  D_VAR(2) = RCT(6)*F(1)
   D_VAR(3) = 0
   D_VAR(4) = 0
   D_VAR(5) = 0
@@ -191,27 +189,25 @@ SUBROUTINE CalcStoichNum ( StoichNum )
   StoichNum(:,:) = 0.
   StoichNum(1,1) = -1
   StoichNum(1,2) = -1
-  StoichNum(1,6) = -1
-  StoichNum(2,3) = 1
-  StoichNum(2,4) = -1
+  StoichNum(1,3) = -1
+  StoichNum(1,4) = -1
   StoichNum(2,5) = 1
+  StoichNum(2,6) = -1
   StoichNum(2,7) = 1
-  StoichNum(2,8) = -1
-  StoichNum(3,3) = 1
-  StoichNum(4,5) = 1
+  StoichNum(3,5) = 1
+  StoichNum(4,7) = 1
   StoichNum(5,1) = 1
   StoichNum(6,2) = 1
-  StoichNum(7,6) = 1
+  StoichNum(7,3) = 1
   StoichNum(8,4) = 1
-  StoichNum(9,8) = 1
-  StoichNum(10,3) = 1
+  StoichNum(9,6) = 1
   StoichNum(10,5) = 1
   StoichNum(10,7) = 1
-  StoichNum(11,4) = 1
-  StoichNum(11,8) = 1
+  StoichNum(11,6) = 1
   StoichNum(12,1) = 1
   StoichNum(12,2) = 1
-  StoichNum(12,6) = 1
+  StoichNum(12,3) = 1
+  StoichNum(12,4) = 1
 
 END SUBROUTINE CalcStoichNum
 

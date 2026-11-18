@@ -129,7 +129,6 @@ COLLECTIONS: 'SpeciesConc',
                               'EmisCH4_Seeps        ', 'GCHPchem',
                               'EmisCH4_Lakes        ', 'GCHPchem',
                               'EmisCH4_Termites     ', 'GCHPchem',
-                              'EmisCH4_SoilAbsorb   ', 'GCHPchem',
                               'EmisCH4_Reservoirs   ', 'GCHPchem',
                               'EmisCO_Total         ', 'GCHPchem',
                               'EmisCO_Aircraft      ', 'GCHPchem',
@@ -312,9 +311,20 @@ COLLECTIONS: 'SpeciesConc',
   ProdLoss.frequency:       010000
   ProdLoss.duration:        010000
   ProdLoss.mode:            'time-averaged'
-  ProdLoss.fields:          'ProdCOfromCH4  ', 'GCHPchem',
+# List aggregate families explicitly instead of using Prod_?PRD? and
+# Loss_?LOS?.  The wildcard expands every family compiled into KPP, including
+# families whose target species may be disabled in a single-species run.
+  ProdLoss.fields:          'Prod_CO        ', 'GCHPchem',
+                            'Loss_CO        ', 'GCHPchem',
+                            'Loss_CH4       ', 'GCHPchem',
+                            'ProdCOfromCH4  ', 'GCHPchem',
                             'ProdCOfromNMVOC', 'GCHPchem',
                             'ProdCO2fromCO  ', 'GCHPchem',
+                            'LossCH4byOH    ', 'GCHPchem',
+                            'LossCH4byCl    ', 'GCHPchem',
+                            'LossCH4byO1D   ', 'GCHPchem',
+                            'LossCH4bySoil  ', 'GCHPchem',
+                            'LossCObyOH     ', 'GCHPchem',
 ::
 #==============================================================================
   RxnRates.template:          '%y4%m2%d2_%h2%n2z.nc4',
