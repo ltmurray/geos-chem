@@ -58,7 +58,7 @@ COLLECTIONS: 'Restart',
   Restart.frequency:          ${RUNDIR_HIST_TIME_AVG_FREQ},
   Restart.duration:           ${RUNDIR_HIST_TIME_AVG_FREQ},
   Restart.mode:               'instantaneous'
-  Restart.fields:             'SpeciesRst_?ALL?               ',
+  Restart.fields:             'SpeciesRst_?ADV?               ',
                               'Met_DELPDRY                    ',
                               'Met_BXHEIGHT                   ',
                               'Met_TropLev                    ',
