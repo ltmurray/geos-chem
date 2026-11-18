@@ -76,18 +76,139 @@ MODULE State_Diag_Mod
 !
 ! !PUBLIC DATA MEMBERS:
 !
-  INTEGER, PUBLIC, PARAMETER :: N_TAGGED_CH4 = 39
+  INTEGER, PUBLIC, PARAMETER :: N_TAGGED_CH4 = 389
 
-  CHARACTER(LEN=7), PUBLIC, PARAMETER :: TAGGED_CH4_NAMES(N_TAGGED_CH4) = (/ &
-       'CH4_OIL', 'CH4_GAS', 'CH4_COL', 'CH4_LIV', 'CH4_LDF', 'CH4_WST',    &
-       'CH4_RIC', 'CH4_OTA', 'CH4_BBN', 'CH4_WTL', 'CH4_SEE', 'CH4_LAK',    &
-       'CH4_TER', 'CH4_RES',                                                 &
-       'CH4_USA', 'CH4_CAN', 'CH4_MEX', 'CH4_CAC', 'CH4_BRA', 'CH4_NSA', &
-       'CH4_SCN', 'CH4_WEU', 'CH4_EEU', 'CH4_RUS', 'CH4_MDE', 'CH4_NAF', &
-       'CH4_WAF', 'CH4_CAF', 'CH4_EAF', 'CH4_SIO', 'CH4_SAC', 'CH4_CAS', &
-       'CH4_IND', 'CH4_SAS', 'CH4_CHN', 'CH4_EAS', 'CH4_SEA', 'CH4_OCE', &
-       'CH4_ROW' &
-       /)
+  CHARACTER(LEN=11), PUBLIC, PARAMETER :: TAGGED_CH4_NAMES(N_TAGGED_CH4) = (/ CHARACTER(LEN=11) :: &
+       'CH4_OIL', 'CH4_GAS', 'CH4_COL', &
+       'CH4_LIV', 'CH4_LDF', 'CH4_WST', &
+       'CH4_RIC', 'CH4_OTA', 'CH4_BBN', &
+       'CH4_WTL', 'CH4_SEE', 'CH4_LAK', &
+       'CH4_TER', 'CH4_RES', 'CH4_USA', &
+       'CH4_CAN', 'CH4_MEX', 'CH4_CAC', &
+       'CH4_BRA', 'CH4_NSA', 'CH4_SCN', &
+       'CH4_WEU', 'CH4_EEU', 'CH4_RUS', &
+       'CH4_MDE', 'CH4_NAF', 'CH4_WAF', &
+       'CH4_CAF', 'CH4_EAF', 'CH4_SIO', &
+       'CH4_SAC', 'CH4_CAS', 'CH4_IND', &
+       'CH4_SAS', 'CH4_CHN', 'CH4_EAS', &
+       'CH4_SEA', 'CH4_OCE', 'CH4_ROW', &
+       'CH4_USA_OIL', 'CH4_USA_GAS', 'CH4_USA_COL', &
+       'CH4_USA_LIV', 'CH4_USA_LDF', 'CH4_USA_WST', &
+       'CH4_USA_RIC', 'CH4_USA_OTA', 'CH4_USA_BBN', &
+       'CH4_USA_WTL', 'CH4_USA_SEE', 'CH4_USA_LAK', &
+       'CH4_USA_TER', 'CH4_USA_RES', 'CH4_CAN_OIL', &
+       'CH4_CAN_GAS', 'CH4_CAN_COL', 'CH4_CAN_LIV', &
+       'CH4_CAN_LDF', 'CH4_CAN_WST', 'CH4_CAN_RIC', &
+       'CH4_CAN_OTA', 'CH4_CAN_BBN', 'CH4_CAN_WTL', &
+       'CH4_CAN_SEE', 'CH4_CAN_LAK', 'CH4_CAN_TER', &
+       'CH4_CAN_RES', 'CH4_MEX_OIL', 'CH4_MEX_GAS', &
+       'CH4_MEX_COL', 'CH4_MEX_LIV', 'CH4_MEX_LDF', &
+       'CH4_MEX_WST', 'CH4_MEX_RIC', 'CH4_MEX_OTA', &
+       'CH4_MEX_BBN', 'CH4_MEX_WTL', 'CH4_MEX_SEE', &
+       'CH4_MEX_LAK', 'CH4_MEX_TER', 'CH4_MEX_RES', &
+       'CH4_CAC_OIL', 'CH4_CAC_GAS', 'CH4_CAC_COL', &
+       'CH4_CAC_LIV', 'CH4_CAC_LDF', 'CH4_CAC_WST', &
+       'CH4_CAC_RIC', 'CH4_CAC_OTA', 'CH4_CAC_BBN', &
+       'CH4_CAC_WTL', 'CH4_CAC_SEE', 'CH4_CAC_LAK', &
+       'CH4_CAC_TER', 'CH4_CAC_RES', 'CH4_BRA_OIL', &
+       'CH4_BRA_GAS', 'CH4_BRA_COL', 'CH4_BRA_LIV', &
+       'CH4_BRA_LDF', 'CH4_BRA_WST', 'CH4_BRA_RIC', &
+       'CH4_BRA_OTA', 'CH4_BRA_BBN', 'CH4_BRA_WTL', &
+       'CH4_BRA_SEE', 'CH4_BRA_LAK', 'CH4_BRA_TER', &
+       'CH4_BRA_RES', 'CH4_NSA_OIL', 'CH4_NSA_GAS', &
+       'CH4_NSA_COL', 'CH4_NSA_LIV', 'CH4_NSA_LDF', &
+       'CH4_NSA_WST', 'CH4_NSA_RIC', 'CH4_NSA_OTA', &
+       'CH4_NSA_BBN', 'CH4_NSA_WTL', 'CH4_NSA_SEE', &
+       'CH4_NSA_LAK', 'CH4_NSA_TER', 'CH4_NSA_RES', &
+       'CH4_SCN_OIL', 'CH4_SCN_GAS', 'CH4_SCN_COL', &
+       'CH4_SCN_LIV', 'CH4_SCN_LDF', 'CH4_SCN_WST', &
+       'CH4_SCN_RIC', 'CH4_SCN_OTA', 'CH4_SCN_BBN', &
+       'CH4_SCN_WTL', 'CH4_SCN_SEE', 'CH4_SCN_LAK', &
+       'CH4_SCN_TER', 'CH4_SCN_RES', 'CH4_WEU_OIL', &
+       'CH4_WEU_GAS', 'CH4_WEU_COL', 'CH4_WEU_LIV', &
+       'CH4_WEU_LDF', 'CH4_WEU_WST', 'CH4_WEU_RIC', &
+       'CH4_WEU_OTA', 'CH4_WEU_BBN', 'CH4_WEU_WTL', &
+       'CH4_WEU_SEE', 'CH4_WEU_LAK', 'CH4_WEU_TER', &
+       'CH4_WEU_RES', 'CH4_EEU_OIL', 'CH4_EEU_GAS', &
+       'CH4_EEU_COL', 'CH4_EEU_LIV', 'CH4_EEU_LDF', &
+       'CH4_EEU_WST', 'CH4_EEU_RIC', 'CH4_EEU_OTA', &
+       'CH4_EEU_BBN', 'CH4_EEU_WTL', 'CH4_EEU_SEE', &
+       'CH4_EEU_LAK', 'CH4_EEU_TER', 'CH4_EEU_RES', &
+       'CH4_RUS_OIL', 'CH4_RUS_GAS', 'CH4_RUS_COL', &
+       'CH4_RUS_LIV', 'CH4_RUS_LDF', 'CH4_RUS_WST', &
+       'CH4_RUS_RIC', 'CH4_RUS_OTA', 'CH4_RUS_BBN', &
+       'CH4_RUS_WTL', 'CH4_RUS_SEE', 'CH4_RUS_LAK', &
+       'CH4_RUS_TER', 'CH4_RUS_RES', 'CH4_MDE_OIL', &
+       'CH4_MDE_GAS', 'CH4_MDE_COL', 'CH4_MDE_LIV', &
+       'CH4_MDE_LDF', 'CH4_MDE_WST', 'CH4_MDE_RIC', &
+       'CH4_MDE_OTA', 'CH4_MDE_BBN', 'CH4_MDE_WTL', &
+       'CH4_MDE_SEE', 'CH4_MDE_LAK', 'CH4_MDE_TER', &
+       'CH4_MDE_RES', 'CH4_NAF_OIL', 'CH4_NAF_GAS', &
+       'CH4_NAF_COL', 'CH4_NAF_LIV', 'CH4_NAF_LDF', &
+       'CH4_NAF_WST', 'CH4_NAF_RIC', 'CH4_NAF_OTA', &
+       'CH4_NAF_BBN', 'CH4_NAF_WTL', 'CH4_NAF_SEE', &
+       'CH4_NAF_LAK', 'CH4_NAF_TER', 'CH4_NAF_RES', &
+       'CH4_WAF_OIL', 'CH4_WAF_GAS', 'CH4_WAF_COL', &
+       'CH4_WAF_LIV', 'CH4_WAF_LDF', 'CH4_WAF_WST', &
+       'CH4_WAF_RIC', 'CH4_WAF_OTA', 'CH4_WAF_BBN', &
+       'CH4_WAF_WTL', 'CH4_WAF_SEE', 'CH4_WAF_LAK', &
+       'CH4_WAF_TER', 'CH4_WAF_RES', 'CH4_CAF_OIL', &
+       'CH4_CAF_GAS', 'CH4_CAF_COL', 'CH4_CAF_LIV', &
+       'CH4_CAF_LDF', 'CH4_CAF_WST', 'CH4_CAF_RIC', &
+       'CH4_CAF_OTA', 'CH4_CAF_BBN', 'CH4_CAF_WTL', &
+       'CH4_CAF_SEE', 'CH4_CAF_LAK', 'CH4_CAF_TER', &
+       'CH4_CAF_RES', 'CH4_EAF_OIL', 'CH4_EAF_GAS', &
+       'CH4_EAF_COL', 'CH4_EAF_LIV', 'CH4_EAF_LDF', &
+       'CH4_EAF_WST', 'CH4_EAF_RIC', 'CH4_EAF_OTA', &
+       'CH4_EAF_BBN', 'CH4_EAF_WTL', 'CH4_EAF_SEE', &
+       'CH4_EAF_LAK', 'CH4_EAF_TER', 'CH4_EAF_RES', &
+       'CH4_SIO_OIL', 'CH4_SIO_GAS', 'CH4_SIO_COL', &
+       'CH4_SIO_LIV', 'CH4_SIO_LDF', 'CH4_SIO_WST', &
+       'CH4_SIO_RIC', 'CH4_SIO_OTA', 'CH4_SIO_BBN', &
+       'CH4_SIO_WTL', 'CH4_SIO_SEE', 'CH4_SIO_LAK', &
+       'CH4_SIO_TER', 'CH4_SIO_RES', 'CH4_SAC_OIL', &
+       'CH4_SAC_GAS', 'CH4_SAC_COL', 'CH4_SAC_LIV', &
+       'CH4_SAC_LDF', 'CH4_SAC_WST', 'CH4_SAC_RIC', &
+       'CH4_SAC_OTA', 'CH4_SAC_BBN', 'CH4_SAC_WTL', &
+       'CH4_SAC_SEE', 'CH4_SAC_LAK', 'CH4_SAC_TER', &
+       'CH4_SAC_RES', 'CH4_CAS_OIL', 'CH4_CAS_GAS', &
+       'CH4_CAS_COL', 'CH4_CAS_LIV', 'CH4_CAS_LDF', &
+       'CH4_CAS_WST', 'CH4_CAS_RIC', 'CH4_CAS_OTA', &
+       'CH4_CAS_BBN', 'CH4_CAS_WTL', 'CH4_CAS_SEE', &
+       'CH4_CAS_LAK', 'CH4_CAS_TER', 'CH4_CAS_RES', &
+       'CH4_IND_OIL', 'CH4_IND_GAS', 'CH4_IND_COL', &
+       'CH4_IND_LIV', 'CH4_IND_LDF', 'CH4_IND_WST', &
+       'CH4_IND_RIC', 'CH4_IND_OTA', 'CH4_IND_BBN', &
+       'CH4_IND_WTL', 'CH4_IND_SEE', 'CH4_IND_LAK', &
+       'CH4_IND_TER', 'CH4_IND_RES', 'CH4_SAS_OIL', &
+       'CH4_SAS_GAS', 'CH4_SAS_COL', 'CH4_SAS_LIV', &
+       'CH4_SAS_LDF', 'CH4_SAS_WST', 'CH4_SAS_RIC', &
+       'CH4_SAS_OTA', 'CH4_SAS_BBN', 'CH4_SAS_WTL', &
+       'CH4_SAS_SEE', 'CH4_SAS_LAK', 'CH4_SAS_TER', &
+       'CH4_SAS_RES', 'CH4_CHN_OIL', 'CH4_CHN_GAS', &
+       'CH4_CHN_COL', 'CH4_CHN_LIV', 'CH4_CHN_LDF', &
+       'CH4_CHN_WST', 'CH4_CHN_RIC', 'CH4_CHN_OTA', &
+       'CH4_CHN_BBN', 'CH4_CHN_WTL', 'CH4_CHN_SEE', &
+       'CH4_CHN_LAK', 'CH4_CHN_TER', 'CH4_CHN_RES', &
+       'CH4_EAS_OIL', 'CH4_EAS_GAS', 'CH4_EAS_COL', &
+       'CH4_EAS_LIV', 'CH4_EAS_LDF', 'CH4_EAS_WST', &
+       'CH4_EAS_RIC', 'CH4_EAS_OTA', 'CH4_EAS_BBN', &
+       'CH4_EAS_WTL', 'CH4_EAS_SEE', 'CH4_EAS_LAK', &
+       'CH4_EAS_TER', 'CH4_EAS_RES', 'CH4_SEA_OIL', &
+       'CH4_SEA_GAS', 'CH4_SEA_COL', 'CH4_SEA_LIV', &
+       'CH4_SEA_LDF', 'CH4_SEA_WST', 'CH4_SEA_RIC', &
+       'CH4_SEA_OTA', 'CH4_SEA_BBN', 'CH4_SEA_WTL', &
+       'CH4_SEA_SEE', 'CH4_SEA_LAK', 'CH4_SEA_TER', &
+       'CH4_SEA_RES', 'CH4_OCE_OIL', 'CH4_OCE_GAS', &
+       'CH4_OCE_COL', 'CH4_OCE_LIV', 'CH4_OCE_LDF', &
+       'CH4_OCE_WST', 'CH4_OCE_RIC', 'CH4_OCE_OTA', &
+       'CH4_OCE_BBN', 'CH4_OCE_WTL', 'CH4_OCE_SEE', &
+       'CH4_OCE_LAK', 'CH4_OCE_TER', 'CH4_OCE_RES', &
+       'CH4_ROW_OIL', 'CH4_ROW_GAS', 'CH4_ROW_COL', &
+       'CH4_ROW_LIV', 'CH4_ROW_LDF', 'CH4_ROW_WST', &
+       'CH4_ROW_RIC', 'CH4_ROW_OTA', 'CH4_ROW_BBN', &
+       'CH4_ROW_WTL', 'CH4_ROW_SEE', 'CH4_ROW_LAK', &
+       'CH4_ROW_TER', 'CH4_ROW_RES' /)
 
   !=========================================================================
   ! Type for mapping objects

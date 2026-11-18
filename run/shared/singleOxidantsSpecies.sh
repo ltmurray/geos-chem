@@ -26,6 +26,7 @@ ALL_SPECIES=(CO CH4)
 # CH4 tracers used to separate emissions by source sector
 CH4_SECTOR_SPECIES=(CH4_OIL CH4_GAS CH4_COL CH4_LIV CH4_LDF CH4_WST CH4_RIC \
                     CH4_OTA CH4_BBN CH4_WTL CH4_SEE CH4_LAK CH4_TER CH4_RES)
+CH4_SECTOR_CODES=(OIL GAS COL LIV LDF WST RIC OTA BBN WTL SEE LAK TER RES)
 
 # CH4 tracers used to separate emissions by source region
 CH4_REGION_CODES=(USA CAN MEX CAC BRA NSA SCN WEU \
@@ -573,6 +574,204 @@ function setupTaggedCH4Regions() {
 }
 
 
+function setupTaggedCH4RegionSectors() {
+
+    #========================================================================
+    # Adds region-by-sector tagged CH4 tracers to a CH4-only oxidants
+    # simulation.  Each tracer receives one source category multiplied by one
+    # regional fractional-area scale factor.  The 25 x 14 tracers partition
+    # total CH4 emissions without also transporting the separate sector-only
+    # or region-only tracer families.
+    #
+    # Arguments:
+    # ${1} : Path to the run directory
+    #========================================================================
+
+    rundir="${1}"
+    config="${rundir}/geoschem_config.yml"
+    hemco="${rundir}/HEMCO_Config.rc"
+    diagn="${rundir}/HEMCO_Diagn.rc"
+    history="${rundir}/HISTORY.rc"
+    speciesDb="${rundir}/species_database.yml"
+    maskFile='$ROOT/MASKS/v2026-11/PrescribedOxidants_Regions_0.05x0.05_v2026-11.nc4'
+
+    # Construct the 350 region-by-sector species names.
+    crossSpecies=()
+    for region in "${CH4_REGION_CODES[@]}"; do
+        for sector in "${CH4_SECTOR_CODES[@]}"; do
+            crossSpecies+=("CH4_${region}_${sector}")
+        done
+    done
+
+    # Add all cross-product tracers after total CH4 in one pass.
+    awk -v species="${crossSpecies[*]}" '
+        !done && $0 == "      - CH4" {
+            print
+            nSpecies = split(species, spc)
+            for (n = 1; n <= nSpecies; n++) print "      - " spc[n]
+            done = 1
+            next
+        }
+        { print }
+    ' "${config}" > "${config}.tmp"
+    mv "${config}.tmp" "${config}"
+
+    # Define the regional fractions and explicit complementary allocation
+    # factors for combined Canadian oil-and-gas inventory fields.
+    awk -v codes="${CH4_REGION_CODES[*]}" -v mask="${maskFile}" '
+        {
+            print
+            if ($1 == "1" && $2 == "NEGATIVE") {
+                print "# Canadian oil-and-gas fractions (CAN_OIL_FRACTION + CAN_GAS_FRACTION = 1)"
+                print "2901 CAN_OIL_FRACTION 0.5 - - - xy 1 1"
+                print "2902 CAN_GAS_FRACTION 0.5 - - - xy 1 1"
+                print "# Prescribed Oxidants regional emission fractions"
+                nRegion = split(codes, region)
+                for (n = 1; n <= nRegion; n++) {
+                    printf "%d CH4_REGION_%s_SF %s %s 2000/1/1/0 C xy 1 1\n", \
+                           4000+n, region[n], mask, region[n]
+                }
+            }
+        }
+    ' "${hemco}" > "${hemco}.tmp"
+    mv "${hemco}.tmp" "${hemco}"
+
+    # Split each total-CH4 source by historical sector category and then by
+    # regional fractional area.  Category 9 biomass burning is supplied by
+    # the GFAS extension and is handled in the same pass.
+    awk -v codes="${CH4_REGION_CODES[*]}" '
+        function sector(cat) {
+            if (cat == "1")  return "OIL"
+            if (cat == "2")  return "GAS"
+            if (cat == "3")  return "COL"
+            if (cat == "4")  return "LIV"
+            if (cat == "5")  return "LDF"
+            if (cat == "6")  return "WST"
+            if (cat == "7")  return "RIC"
+            if (cat == "8")  return "OTA"
+            if (cat == "9")  return "BBN"
+            if (cat == "10") return "WTL"
+            if (cat == "11") return "SEE"
+            if (cat == "12") return "LAK"
+            if (cat == "13") return "TER"
+            if (cat == "15") return "RES"
+            return ""
+        }
+        function allocation(name, cat) {
+            if (name ~ /^CAN_OIL_GAS_/ && cat == "1") return "2901"
+            if (name ~ /^CAN_OIL_GAS_/ && cat == "2") return "2902"
+            return ""
+        }
+        function addScale(base, scale) {
+            if (base == "-") return scale
+            return base "/" scale
+        }
+        {
+            print
+            nRegion = split(codes, region)
+            if ($1 == "112" && $2 == "GFAS_CH4_2D") {
+                baseName = $2
+                baseScale = $(NF-2)
+                for (r = 1; r <= nRegion; r++) {
+                    $2 = "GFAS_CH4_" region[r] "_BBN_2D"
+                    $(NF-2) = addScale(baseScale, 4000+r)
+                    print
+                }
+                next
+            }
+            if ($1 != "0" || $2 == "CH4_Emis_Prior") next
+            target = ""
+            for (n = 3; n <= NF; n++) {
+                if ($n == "CH4") target = n
+            }
+            if (target == "") next
+            baseName = $2
+            baseScale = $(target+1)
+            baseCategories = $(NF-1)
+            nCat = split(baseCategories, cats, "/")
+            for (i = 1; i <= nCat; i++) {
+                sectorCode = sector(cats[i])
+                if (sectorCode == "") continue
+                sectorScale = baseScale
+                if (nCat > 1) {
+                    scale = allocation(baseName, cats[i])
+                    if (scale == "") {
+                        printf "No region-sector allocation factor for %s category %s\n", \
+                               baseName, cats[i] > "/dev/stderr"
+                        exit 2
+                    }
+                    sectorScale = addScale(sectorScale, scale)
+                }
+                for (r = 1; r <= nRegion; r++) {
+                    $2 = baseName "_TAG_" cats[i] "_REG_" region[r]
+                    $target = "CH4_" region[r] "_" sectorCode
+                    $(target+1) = addScale(sectorScale, 4000+r)
+                    $(NF-1) = cats[i]
+                    print
+                }
+            }
+        }
+    ' "${hemco}" > "${hemco}.tmp"
+    mv "${hemco}.tmp" "${hemco}"
+
+    # Route the 25 region-specific GFAS fields to their biomass-burning
+    # tracers.  Other sector tracers receive ordinary HEMCO base fields.
+    gfasList=""
+    for region in "${CH4_REGION_CODES[@]}"; do
+        gfasList+="CH4_${region}_BBN/"
+    done
+    sed -i "s|CH4/CO|CH4/${gfasList}CO|g" "${hemco}"
+
+    # Define inherited methane properties, KPP loss accumulators, and archive
+    # diagnostic species only for run directories that request this mode.
+    {
+        printf "\n# Region-by-sector tagged methane species\n"
+        for spc in "${crossSpecies[@]}"; do
+            printf "%s:\n" "${spc}"
+            printf "  << : *CH4properties\n"
+            printf "  Background_VV: 1.0e-20\n"
+            printf "  FullName: Methane from %s region and %s sector emissions\n" \
+                   "${spc:4:3}" "${spc:8:3}"
+            for loss in OH Cl O1D Soil; do
+                printf "L%sby%s:\n" "${spc}" "${loss}"
+                printf "  FullName: Dummy species to track loss of %s by %s\n" \
+                       "${spc}" "${loss}"
+                printf "  Is_Gas: true\n"
+                printf "  MW_g: 1.0\n"
+                printf "  KPP_AbsTol: 1.0e+25\n"
+                printf "Loss%sby%s:\n" "${spc}" "${loss}"
+                printf "  << : *CH4properties\n"
+                printf "  FullName: Diagnostic species for %s loss by %s\n" \
+                       "${spc}" "${loss}"
+            done
+        done
+    } >> "${speciesDb}"
+
+    # Archive each tracer's emission flux and loss pathways.
+    soilFile="${rundir}/.region_sector_soil"
+    o1dFile="${rundir}/.region_sector_o1d"
+    clFile="${rundir}/.region_sector_cl"
+    ohFile="${rundir}/.region_sector_oh"
+    : > "${soilFile}"
+    : > "${o1dFile}"
+    : > "${clFile}"
+    : > "${ohFile}"
+    for spc in "${crossSpecies[@]}"; do
+        printf "Emis%s_Total  %s  -1  -1  -1  2  kg/m2/s  %s_emissions_from_all_sources\n" \
+               "${spc}" "${spc}" "${spc}" >> "${diagn}"
+        printf "                             'Loss%sbySoil               ',\n" "${spc}" >> "${soilFile}"
+        printf "                             'Loss%sbyO1D                ',\n" "${spc}" >> "${o1dFile}"
+        printf "                             'Loss%sbyCl                 ',\n" "${spc}" >> "${clFile}"
+        printf "                             'Loss%sbyOH                 ',\n" "${spc}" >> "${ohFile}"
+    done
+    sed -i "/'LossCH4bySoil/r ${soilFile}" "${history}"
+    sed -i "/'LossCH4byO1D/r ${o1dFile}" "${history}"
+    sed -i "/'LossCH4byCl/r ${clFile}" "${history}"
+    sed -i "/'LossCH4byOH/r ${ohFile}" "${history}"
+    rm -f "${soilFile}" "${o1dFile}" "${clFile}" "${ohFile}"
+}
+
+
 function singleOxidantsSpecies() {
 
     #========================================================================
@@ -597,9 +796,10 @@ function singleOxidantsSpecies() {
     fi
 
     # Get species to include/exclude
-    if [[ "x${1}" == "xCH4_SECTORS"         ]] || \
-       [[ "x${1}" == "xCH4_REGIONS"         ]] || \
-       [[ "x${1}" == "xCH4_SECTORS_REGIONS" ]]; then
+    if [[ "x${1}" == "xCH4_SECTORS"          ]] || \
+       [[ "x${1}" == "xCH4_REGIONS"          ]] || \
+       [[ "x${1}" == "xCH4_SECTORS_REGIONS"  ]] || \
+       [[ "x${1}" == "xCH4_REGIONS_X_SECTORS" ]]; then
         include="CH4"
     else
         include=${1}
@@ -620,5 +820,7 @@ function singleOxidantsSpecies() {
     elif [[ "x${1}" == "xCH4_SECTORS_REGIONS" ]]; then
         setupTaggedCH4Sectors "${rundir}"
         setupTaggedCH4Regions "${rundir}"
+    elif [[ "x${1}" == "xCH4_REGIONS_X_SECTORS" ]]; then
+        setupTaggedCH4RegionSectors "${rundir}"
     fi
 }

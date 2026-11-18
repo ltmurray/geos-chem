@@ -88,7 +88,7 @@ MODULE gckpp_Monitor
      'LCH4_INDbyCl                    ','LCH4_INDbyO1D                   ','LCH4_INDbySoil                  ', & ! index 172 - 174
      'CH4_SAS                         ','LCH4_SASbyOH                    ','LCH4_SASbyCl                    ', & ! index 175 - 177
      'LCH4_SASbyO1D                   ','LCH4_SASbySoil                  ','CH4_CHN                         ' /) ! index up to 180
-  CHARACTER(LEN=32), PARAMETER, DIMENSION(33) :: SPC_NAMES_2 = (/ &
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_2 = (/ &
      'LCH4_CHNbyOH                    ','LCH4_CHNbyCl                    ','LCH4_CHNbyO1D                   ', & ! index 181 - 183
      'LCH4_CHNbySoil                  ','CH4_EAS                         ','LCH4_EASbyOH                    ', & ! index 184 - 186
      'LCH4_EASbyCl                    ','LCH4_EASbyO1D                   ','LCH4_EASbySoil                  ', & ! index 187 - 189
@@ -97,187 +97,2250 @@ MODULE gckpp_Monitor
      'LCH4_OCEbyOH                    ','LCH4_OCEbyCl                    ','LCH4_OCEbyO1D                   ', & ! index 196 - 198
      'LCH4_OCEbySoil                  ','CH4_ROW                         ','LCH4_ROWbyOH                    ', & ! index 199 - 201
      'LCH4_ROWbyCl                    ','LCH4_ROWbyO1D                   ','LCH4_ROWbySoil                  ', & ! index 202 - 204
-     'PCO                             ','LCO                             ','LCH4                            ', & ! index 205 - 207
-     'FixedOH                         ','FixedCl                         ','FixedO1D                        ', & ! index 208 - 210
-     'DummyCH4                        ','DummyNMVOC                      ','DummyCO                         ' /) ! index up to 213
-  CHARACTER(LEN=32), PARAMETER, DIMENSION(213) :: SPC_NAMES = (/&
-    SPC_NAMES_0, SPC_NAMES_1, SPC_NAMES_2 /)
+     'CH4_USA_OIL                     ','LCH4_USA_OILbyOH                ','LCH4_USA_OILbyCl                ', & ! index 205 - 207
+     'LCH4_USA_OILbyO1D               ','LCH4_USA_OILbySoil              ','CH4_USA_GAS                     ', & ! index 208 - 210
+     'LCH4_USA_GASbyOH                ','LCH4_USA_GASbyCl                ','LCH4_USA_GASbyO1D               ', & ! index 211 - 213
+     'LCH4_USA_GASbySoil              ','CH4_USA_COL                     ','LCH4_USA_COLbyOH                ', & ! index 214 - 216
+     'LCH4_USA_COLbyCl                ','LCH4_USA_COLbyO1D               ','LCH4_USA_COLbySoil              ', & ! index 217 - 219
+     'CH4_USA_LIV                     ','LCH4_USA_LIVbyOH                ','LCH4_USA_LIVbyCl                ', & ! index 220 - 222
+     'LCH4_USA_LIVbyO1D               ','LCH4_USA_LIVbySoil              ','CH4_USA_LDF                     ', & ! index 223 - 225
+     'LCH4_USA_LDFbyOH                ','LCH4_USA_LDFbyCl                ','LCH4_USA_LDFbyO1D               ', & ! index 226 - 228
+     'LCH4_USA_LDFbySoil              ','CH4_USA_WST                     ','LCH4_USA_WSTbyOH                ', & ! index 229 - 231
+     'LCH4_USA_WSTbyCl                ','LCH4_USA_WSTbyO1D               ','LCH4_USA_WSTbySoil              ', & ! index 232 - 234
+     'CH4_USA_RIC                     ','LCH4_USA_RICbyOH                ','LCH4_USA_RICbyCl                ', & ! index 235 - 237
+     'LCH4_USA_RICbyO1D               ','LCH4_USA_RICbySoil              ','CH4_USA_OTA                     ', & ! index 238 - 240
+     'LCH4_USA_OTAbyOH                ','LCH4_USA_OTAbyCl                ','LCH4_USA_OTAbyO1D               ', & ! index 241 - 243
+     'LCH4_USA_OTAbySoil              ','CH4_USA_BBN                     ','LCH4_USA_BBNbyOH                ', & ! index 244 - 246
+     'LCH4_USA_BBNbyCl                ','LCH4_USA_BBNbyO1D               ','LCH4_USA_BBNbySoil              ', & ! index 247 - 249
+     'CH4_USA_WTL                     ','LCH4_USA_WTLbyOH                ','LCH4_USA_WTLbyCl                ', & ! index 250 - 252
+     'LCH4_USA_WTLbyO1D               ','LCH4_USA_WTLbySoil              ','CH4_USA_SEE                     ', & ! index 253 - 255
+     'LCH4_USA_SEEbyOH                ','LCH4_USA_SEEbyCl                ','LCH4_USA_SEEbyO1D               ', & ! index 256 - 258
+     'LCH4_USA_SEEbySoil              ','CH4_USA_LAK                     ','LCH4_USA_LAKbyOH                ', & ! index 259 - 261
+     'LCH4_USA_LAKbyCl                ','LCH4_USA_LAKbyO1D               ','LCH4_USA_LAKbySoil              ', & ! index 262 - 264
+     'CH4_USA_TER                     ','LCH4_USA_TERbyOH                ','LCH4_USA_TERbyCl                ', & ! index 265 - 267
+     'LCH4_USA_TERbyO1D               ','LCH4_USA_TERbySoil              ','CH4_USA_RES                     ' /) ! index up to 270
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_3 = (/ &
+     'LCH4_USA_RESbyOH                ','LCH4_USA_RESbyCl                ','LCH4_USA_RESbyO1D               ', & ! index 271 - 273
+     'LCH4_USA_RESbySoil              ','CH4_CAN_OIL                     ','LCH4_CAN_OILbyOH                ', & ! index 274 - 276
+     'LCH4_CAN_OILbyCl                ','LCH4_CAN_OILbyO1D               ','LCH4_CAN_OILbySoil              ', & ! index 277 - 279
+     'CH4_CAN_GAS                     ','LCH4_CAN_GASbyOH                ','LCH4_CAN_GASbyCl                ', & ! index 280 - 282
+     'LCH4_CAN_GASbyO1D               ','LCH4_CAN_GASbySoil              ','CH4_CAN_COL                     ', & ! index 283 - 285
+     'LCH4_CAN_COLbyOH                ','LCH4_CAN_COLbyCl                ','LCH4_CAN_COLbyO1D               ', & ! index 286 - 288
+     'LCH4_CAN_COLbySoil              ','CH4_CAN_LIV                     ','LCH4_CAN_LIVbyOH                ', & ! index 289 - 291
+     'LCH4_CAN_LIVbyCl                ','LCH4_CAN_LIVbyO1D               ','LCH4_CAN_LIVbySoil              ', & ! index 292 - 294
+     'CH4_CAN_LDF                     ','LCH4_CAN_LDFbyOH                ','LCH4_CAN_LDFbyCl                ', & ! index 295 - 297
+     'LCH4_CAN_LDFbyO1D               ','LCH4_CAN_LDFbySoil              ','CH4_CAN_WST                     ', & ! index 298 - 300
+     'LCH4_CAN_WSTbyOH                ','LCH4_CAN_WSTbyCl                ','LCH4_CAN_WSTbyO1D               ', & ! index 301 - 303
+     'LCH4_CAN_WSTbySoil              ','CH4_CAN_RIC                     ','LCH4_CAN_RICbyOH                ', & ! index 304 - 306
+     'LCH4_CAN_RICbyCl                ','LCH4_CAN_RICbyO1D               ','LCH4_CAN_RICbySoil              ', & ! index 307 - 309
+     'CH4_CAN_OTA                     ','LCH4_CAN_OTAbyOH                ','LCH4_CAN_OTAbyCl                ', & ! index 310 - 312
+     'LCH4_CAN_OTAbyO1D               ','LCH4_CAN_OTAbySoil              ','CH4_CAN_BBN                     ', & ! index 313 - 315
+     'LCH4_CAN_BBNbyOH                ','LCH4_CAN_BBNbyCl                ','LCH4_CAN_BBNbyO1D               ', & ! index 316 - 318
+     'LCH4_CAN_BBNbySoil              ','CH4_CAN_WTL                     ','LCH4_CAN_WTLbyOH                ', & ! index 319 - 321
+     'LCH4_CAN_WTLbyCl                ','LCH4_CAN_WTLbyO1D               ','LCH4_CAN_WTLbySoil              ', & ! index 322 - 324
+     'CH4_CAN_SEE                     ','LCH4_CAN_SEEbyOH                ','LCH4_CAN_SEEbyCl                ', & ! index 325 - 327
+     'LCH4_CAN_SEEbyO1D               ','LCH4_CAN_SEEbySoil              ','CH4_CAN_LAK                     ', & ! index 328 - 330
+     'LCH4_CAN_LAKbyOH                ','LCH4_CAN_LAKbyCl                ','LCH4_CAN_LAKbyO1D               ', & ! index 331 - 333
+     'LCH4_CAN_LAKbySoil              ','CH4_CAN_TER                     ','LCH4_CAN_TERbyOH                ', & ! index 334 - 336
+     'LCH4_CAN_TERbyCl                ','LCH4_CAN_TERbyO1D               ','LCH4_CAN_TERbySoil              ', & ! index 337 - 339
+     'CH4_CAN_RES                     ','LCH4_CAN_RESbyOH                ','LCH4_CAN_RESbyCl                ', & ! index 340 - 342
+     'LCH4_CAN_RESbyO1D               ','LCH4_CAN_RESbySoil              ','CH4_MEX_OIL                     ', & ! index 343 - 345
+     'LCH4_MEX_OILbyOH                ','LCH4_MEX_OILbyCl                ','LCH4_MEX_OILbyO1D               ', & ! index 346 - 348
+     'LCH4_MEX_OILbySoil              ','CH4_MEX_GAS                     ','LCH4_MEX_GASbyOH                ', & ! index 349 - 351
+     'LCH4_MEX_GASbyCl                ','LCH4_MEX_GASbyO1D               ','LCH4_MEX_GASbySoil              ', & ! index 352 - 354
+     'CH4_MEX_COL                     ','LCH4_MEX_COLbyOH                ','LCH4_MEX_COLbyCl                ', & ! index 355 - 357
+     'LCH4_MEX_COLbyO1D               ','LCH4_MEX_COLbySoil              ','CH4_MEX_LIV                     ' /) ! index up to 360
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_4 = (/ &
+     'LCH4_MEX_LIVbyOH                ','LCH4_MEX_LIVbyCl                ','LCH4_MEX_LIVbyO1D               ', & ! index 361 - 363
+     'LCH4_MEX_LIVbySoil              ','CH4_MEX_LDF                     ','LCH4_MEX_LDFbyOH                ', & ! index 364 - 366
+     'LCH4_MEX_LDFbyCl                ','LCH4_MEX_LDFbyO1D               ','LCH4_MEX_LDFbySoil              ', & ! index 367 - 369
+     'CH4_MEX_WST                     ','LCH4_MEX_WSTbyOH                ','LCH4_MEX_WSTbyCl                ', & ! index 370 - 372
+     'LCH4_MEX_WSTbyO1D               ','LCH4_MEX_WSTbySoil              ','CH4_MEX_RIC                     ', & ! index 373 - 375
+     'LCH4_MEX_RICbyOH                ','LCH4_MEX_RICbyCl                ','LCH4_MEX_RICbyO1D               ', & ! index 376 - 378
+     'LCH4_MEX_RICbySoil              ','CH4_MEX_OTA                     ','LCH4_MEX_OTAbyOH                ', & ! index 379 - 381
+     'LCH4_MEX_OTAbyCl                ','LCH4_MEX_OTAbyO1D               ','LCH4_MEX_OTAbySoil              ', & ! index 382 - 384
+     'CH4_MEX_BBN                     ','LCH4_MEX_BBNbyOH                ','LCH4_MEX_BBNbyCl                ', & ! index 385 - 387
+     'LCH4_MEX_BBNbyO1D               ','LCH4_MEX_BBNbySoil              ','CH4_MEX_WTL                     ', & ! index 388 - 390
+     'LCH4_MEX_WTLbyOH                ','LCH4_MEX_WTLbyCl                ','LCH4_MEX_WTLbyO1D               ', & ! index 391 - 393
+     'LCH4_MEX_WTLbySoil              ','CH4_MEX_SEE                     ','LCH4_MEX_SEEbyOH                ', & ! index 394 - 396
+     'LCH4_MEX_SEEbyCl                ','LCH4_MEX_SEEbyO1D               ','LCH4_MEX_SEEbySoil              ', & ! index 397 - 399
+     'CH4_MEX_LAK                     ','LCH4_MEX_LAKbyOH                ','LCH4_MEX_LAKbyCl                ', & ! index 400 - 402
+     'LCH4_MEX_LAKbyO1D               ','LCH4_MEX_LAKbySoil              ','CH4_MEX_TER                     ', & ! index 403 - 405
+     'LCH4_MEX_TERbyOH                ','LCH4_MEX_TERbyCl                ','LCH4_MEX_TERbyO1D               ', & ! index 406 - 408
+     'LCH4_MEX_TERbySoil              ','CH4_MEX_RES                     ','LCH4_MEX_RESbyOH                ', & ! index 409 - 411
+     'LCH4_MEX_RESbyCl                ','LCH4_MEX_RESbyO1D               ','LCH4_MEX_RESbySoil              ', & ! index 412 - 414
+     'CH4_CAC_OIL                     ','LCH4_CAC_OILbyOH                ','LCH4_CAC_OILbyCl                ', & ! index 415 - 417
+     'LCH4_CAC_OILbyO1D               ','LCH4_CAC_OILbySoil              ','CH4_CAC_GAS                     ', & ! index 418 - 420
+     'LCH4_CAC_GASbyOH                ','LCH4_CAC_GASbyCl                ','LCH4_CAC_GASbyO1D               ', & ! index 421 - 423
+     'LCH4_CAC_GASbySoil              ','CH4_CAC_COL                     ','LCH4_CAC_COLbyOH                ', & ! index 424 - 426
+     'LCH4_CAC_COLbyCl                ','LCH4_CAC_COLbyO1D               ','LCH4_CAC_COLbySoil              ', & ! index 427 - 429
+     'CH4_CAC_LIV                     ','LCH4_CAC_LIVbyOH                ','LCH4_CAC_LIVbyCl                ', & ! index 430 - 432
+     'LCH4_CAC_LIVbyO1D               ','LCH4_CAC_LIVbySoil              ','CH4_CAC_LDF                     ', & ! index 433 - 435
+     'LCH4_CAC_LDFbyOH                ','LCH4_CAC_LDFbyCl                ','LCH4_CAC_LDFbyO1D               ', & ! index 436 - 438
+     'LCH4_CAC_LDFbySoil              ','CH4_CAC_WST                     ','LCH4_CAC_WSTbyOH                ', & ! index 439 - 441
+     'LCH4_CAC_WSTbyCl                ','LCH4_CAC_WSTbyO1D               ','LCH4_CAC_WSTbySoil              ', & ! index 442 - 444
+     'CH4_CAC_RIC                     ','LCH4_CAC_RICbyOH                ','LCH4_CAC_RICbyCl                ', & ! index 445 - 447
+     'LCH4_CAC_RICbyO1D               ','LCH4_CAC_RICbySoil              ','CH4_CAC_OTA                     ' /) ! index up to 450
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_5 = (/ &
+     'LCH4_CAC_OTAbyOH                ','LCH4_CAC_OTAbyCl                ','LCH4_CAC_OTAbyO1D               ', & ! index 451 - 453
+     'LCH4_CAC_OTAbySoil              ','CH4_CAC_BBN                     ','LCH4_CAC_BBNbyOH                ', & ! index 454 - 456
+     'LCH4_CAC_BBNbyCl                ','LCH4_CAC_BBNbyO1D               ','LCH4_CAC_BBNbySoil              ', & ! index 457 - 459
+     'CH4_CAC_WTL                     ','LCH4_CAC_WTLbyOH                ','LCH4_CAC_WTLbyCl                ', & ! index 460 - 462
+     'LCH4_CAC_WTLbyO1D               ','LCH4_CAC_WTLbySoil              ','CH4_CAC_SEE                     ', & ! index 463 - 465
+     'LCH4_CAC_SEEbyOH                ','LCH4_CAC_SEEbyCl                ','LCH4_CAC_SEEbyO1D               ', & ! index 466 - 468
+     'LCH4_CAC_SEEbySoil              ','CH4_CAC_LAK                     ','LCH4_CAC_LAKbyOH                ', & ! index 469 - 471
+     'LCH4_CAC_LAKbyCl                ','LCH4_CAC_LAKbyO1D               ','LCH4_CAC_LAKbySoil              ', & ! index 472 - 474
+     'CH4_CAC_TER                     ','LCH4_CAC_TERbyOH                ','LCH4_CAC_TERbyCl                ', & ! index 475 - 477
+     'LCH4_CAC_TERbyO1D               ','LCH4_CAC_TERbySoil              ','CH4_CAC_RES                     ', & ! index 478 - 480
+     'LCH4_CAC_RESbyOH                ','LCH4_CAC_RESbyCl                ','LCH4_CAC_RESbyO1D               ', & ! index 481 - 483
+     'LCH4_CAC_RESbySoil              ','CH4_BRA_OIL                     ','LCH4_BRA_OILbyOH                ', & ! index 484 - 486
+     'LCH4_BRA_OILbyCl                ','LCH4_BRA_OILbyO1D               ','LCH4_BRA_OILbySoil              ', & ! index 487 - 489
+     'CH4_BRA_GAS                     ','LCH4_BRA_GASbyOH                ','LCH4_BRA_GASbyCl                ', & ! index 490 - 492
+     'LCH4_BRA_GASbyO1D               ','LCH4_BRA_GASbySoil              ','CH4_BRA_COL                     ', & ! index 493 - 495
+     'LCH4_BRA_COLbyOH                ','LCH4_BRA_COLbyCl                ','LCH4_BRA_COLbyO1D               ', & ! index 496 - 498
+     'LCH4_BRA_COLbySoil              ','CH4_BRA_LIV                     ','LCH4_BRA_LIVbyOH                ', & ! index 499 - 501
+     'LCH4_BRA_LIVbyCl                ','LCH4_BRA_LIVbyO1D               ','LCH4_BRA_LIVbySoil              ', & ! index 502 - 504
+     'CH4_BRA_LDF                     ','LCH4_BRA_LDFbyOH                ','LCH4_BRA_LDFbyCl                ', & ! index 505 - 507
+     'LCH4_BRA_LDFbyO1D               ','LCH4_BRA_LDFbySoil              ','CH4_BRA_WST                     ', & ! index 508 - 510
+     'LCH4_BRA_WSTbyOH                ','LCH4_BRA_WSTbyCl                ','LCH4_BRA_WSTbyO1D               ', & ! index 511 - 513
+     'LCH4_BRA_WSTbySoil              ','CH4_BRA_RIC                     ','LCH4_BRA_RICbyOH                ', & ! index 514 - 516
+     'LCH4_BRA_RICbyCl                ','LCH4_BRA_RICbyO1D               ','LCH4_BRA_RICbySoil              ', & ! index 517 - 519
+     'CH4_BRA_OTA                     ','LCH4_BRA_OTAbyOH                ','LCH4_BRA_OTAbyCl                ', & ! index 520 - 522
+     'LCH4_BRA_OTAbyO1D               ','LCH4_BRA_OTAbySoil              ','CH4_BRA_BBN                     ', & ! index 523 - 525
+     'LCH4_BRA_BBNbyOH                ','LCH4_BRA_BBNbyCl                ','LCH4_BRA_BBNbyO1D               ', & ! index 526 - 528
+     'LCH4_BRA_BBNbySoil              ','CH4_BRA_WTL                     ','LCH4_BRA_WTLbyOH                ', & ! index 529 - 531
+     'LCH4_BRA_WTLbyCl                ','LCH4_BRA_WTLbyO1D               ','LCH4_BRA_WTLbySoil              ', & ! index 532 - 534
+     'CH4_BRA_SEE                     ','LCH4_BRA_SEEbyOH                ','LCH4_BRA_SEEbyCl                ', & ! index 535 - 537
+     'LCH4_BRA_SEEbyO1D               ','LCH4_BRA_SEEbySoil              ','CH4_BRA_LAK                     ' /) ! index up to 540
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_6 = (/ &
+     'LCH4_BRA_LAKbyOH                ','LCH4_BRA_LAKbyCl                ','LCH4_BRA_LAKbyO1D               ', & ! index 541 - 543
+     'LCH4_BRA_LAKbySoil              ','CH4_BRA_TER                     ','LCH4_BRA_TERbyOH                ', & ! index 544 - 546
+     'LCH4_BRA_TERbyCl                ','LCH4_BRA_TERbyO1D               ','LCH4_BRA_TERbySoil              ', & ! index 547 - 549
+     'CH4_BRA_RES                     ','LCH4_BRA_RESbyOH                ','LCH4_BRA_RESbyCl                ', & ! index 550 - 552
+     'LCH4_BRA_RESbyO1D               ','LCH4_BRA_RESbySoil              ','CH4_NSA_OIL                     ', & ! index 553 - 555
+     'LCH4_NSA_OILbyOH                ','LCH4_NSA_OILbyCl                ','LCH4_NSA_OILbyO1D               ', & ! index 556 - 558
+     'LCH4_NSA_OILbySoil              ','CH4_NSA_GAS                     ','LCH4_NSA_GASbyOH                ', & ! index 559 - 561
+     'LCH4_NSA_GASbyCl                ','LCH4_NSA_GASbyO1D               ','LCH4_NSA_GASbySoil              ', & ! index 562 - 564
+     'CH4_NSA_COL                     ','LCH4_NSA_COLbyOH                ','LCH4_NSA_COLbyCl                ', & ! index 565 - 567
+     'LCH4_NSA_COLbyO1D               ','LCH4_NSA_COLbySoil              ','CH4_NSA_LIV                     ', & ! index 568 - 570
+     'LCH4_NSA_LIVbyOH                ','LCH4_NSA_LIVbyCl                ','LCH4_NSA_LIVbyO1D               ', & ! index 571 - 573
+     'LCH4_NSA_LIVbySoil              ','CH4_NSA_LDF                     ','LCH4_NSA_LDFbyOH                ', & ! index 574 - 576
+     'LCH4_NSA_LDFbyCl                ','LCH4_NSA_LDFbyO1D               ','LCH4_NSA_LDFbySoil              ', & ! index 577 - 579
+     'CH4_NSA_WST                     ','LCH4_NSA_WSTbyOH                ','LCH4_NSA_WSTbyCl                ', & ! index 580 - 582
+     'LCH4_NSA_WSTbyO1D               ','LCH4_NSA_WSTbySoil              ','CH4_NSA_RIC                     ', & ! index 583 - 585
+     'LCH4_NSA_RICbyOH                ','LCH4_NSA_RICbyCl                ','LCH4_NSA_RICbyO1D               ', & ! index 586 - 588
+     'LCH4_NSA_RICbySoil              ','CH4_NSA_OTA                     ','LCH4_NSA_OTAbyOH                ', & ! index 589 - 591
+     'LCH4_NSA_OTAbyCl                ','LCH4_NSA_OTAbyO1D               ','LCH4_NSA_OTAbySoil              ', & ! index 592 - 594
+     'CH4_NSA_BBN                     ','LCH4_NSA_BBNbyOH                ','LCH4_NSA_BBNbyCl                ', & ! index 595 - 597
+     'LCH4_NSA_BBNbyO1D               ','LCH4_NSA_BBNbySoil              ','CH4_NSA_WTL                     ', & ! index 598 - 600
+     'LCH4_NSA_WTLbyOH                ','LCH4_NSA_WTLbyCl                ','LCH4_NSA_WTLbyO1D               ', & ! index 601 - 603
+     'LCH4_NSA_WTLbySoil              ','CH4_NSA_SEE                     ','LCH4_NSA_SEEbyOH                ', & ! index 604 - 606
+     'LCH4_NSA_SEEbyCl                ','LCH4_NSA_SEEbyO1D               ','LCH4_NSA_SEEbySoil              ', & ! index 607 - 609
+     'CH4_NSA_LAK                     ','LCH4_NSA_LAKbyOH                ','LCH4_NSA_LAKbyCl                ', & ! index 610 - 612
+     'LCH4_NSA_LAKbyO1D               ','LCH4_NSA_LAKbySoil              ','CH4_NSA_TER                     ', & ! index 613 - 615
+     'LCH4_NSA_TERbyOH                ','LCH4_NSA_TERbyCl                ','LCH4_NSA_TERbyO1D               ', & ! index 616 - 618
+     'LCH4_NSA_TERbySoil              ','CH4_NSA_RES                     ','LCH4_NSA_RESbyOH                ', & ! index 619 - 621
+     'LCH4_NSA_RESbyCl                ','LCH4_NSA_RESbyO1D               ','LCH4_NSA_RESbySoil              ', & ! index 622 - 624
+     'CH4_SCN_OIL                     ','LCH4_SCN_OILbyOH                ','LCH4_SCN_OILbyCl                ', & ! index 625 - 627
+     'LCH4_SCN_OILbyO1D               ','LCH4_SCN_OILbySoil              ','CH4_SCN_GAS                     ' /) ! index up to 630
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_7 = (/ &
+     'LCH4_SCN_GASbyOH                ','LCH4_SCN_GASbyCl                ','LCH4_SCN_GASbyO1D               ', & ! index 631 - 633
+     'LCH4_SCN_GASbySoil              ','CH4_SCN_COL                     ','LCH4_SCN_COLbyOH                ', & ! index 634 - 636
+     'LCH4_SCN_COLbyCl                ','LCH4_SCN_COLbyO1D               ','LCH4_SCN_COLbySoil              ', & ! index 637 - 639
+     'CH4_SCN_LIV                     ','LCH4_SCN_LIVbyOH                ','LCH4_SCN_LIVbyCl                ', & ! index 640 - 642
+     'LCH4_SCN_LIVbyO1D               ','LCH4_SCN_LIVbySoil              ','CH4_SCN_LDF                     ', & ! index 643 - 645
+     'LCH4_SCN_LDFbyOH                ','LCH4_SCN_LDFbyCl                ','LCH4_SCN_LDFbyO1D               ', & ! index 646 - 648
+     'LCH4_SCN_LDFbySoil              ','CH4_SCN_WST                     ','LCH4_SCN_WSTbyOH                ', & ! index 649 - 651
+     'LCH4_SCN_WSTbyCl                ','LCH4_SCN_WSTbyO1D               ','LCH4_SCN_WSTbySoil              ', & ! index 652 - 654
+     'CH4_SCN_RIC                     ','LCH4_SCN_RICbyOH                ','LCH4_SCN_RICbyCl                ', & ! index 655 - 657
+     'LCH4_SCN_RICbyO1D               ','LCH4_SCN_RICbySoil              ','CH4_SCN_OTA                     ', & ! index 658 - 660
+     'LCH4_SCN_OTAbyOH                ','LCH4_SCN_OTAbyCl                ','LCH4_SCN_OTAbyO1D               ', & ! index 661 - 663
+     'LCH4_SCN_OTAbySoil              ','CH4_SCN_BBN                     ','LCH4_SCN_BBNbyOH                ', & ! index 664 - 666
+     'LCH4_SCN_BBNbyCl                ','LCH4_SCN_BBNbyO1D               ','LCH4_SCN_BBNbySoil              ', & ! index 667 - 669
+     'CH4_SCN_WTL                     ','LCH4_SCN_WTLbyOH                ','LCH4_SCN_WTLbyCl                ', & ! index 670 - 672
+     'LCH4_SCN_WTLbyO1D               ','LCH4_SCN_WTLbySoil              ','CH4_SCN_SEE                     ', & ! index 673 - 675
+     'LCH4_SCN_SEEbyOH                ','LCH4_SCN_SEEbyCl                ','LCH4_SCN_SEEbyO1D               ', & ! index 676 - 678
+     'LCH4_SCN_SEEbySoil              ','CH4_SCN_LAK                     ','LCH4_SCN_LAKbyOH                ', & ! index 679 - 681
+     'LCH4_SCN_LAKbyCl                ','LCH4_SCN_LAKbyO1D               ','LCH4_SCN_LAKbySoil              ', & ! index 682 - 684
+     'CH4_SCN_TER                     ','LCH4_SCN_TERbyOH                ','LCH4_SCN_TERbyCl                ', & ! index 685 - 687
+     'LCH4_SCN_TERbyO1D               ','LCH4_SCN_TERbySoil              ','CH4_SCN_RES                     ', & ! index 688 - 690
+     'LCH4_SCN_RESbyOH                ','LCH4_SCN_RESbyCl                ','LCH4_SCN_RESbyO1D               ', & ! index 691 - 693
+     'LCH4_SCN_RESbySoil              ','CH4_WEU_OIL                     ','LCH4_WEU_OILbyOH                ', & ! index 694 - 696
+     'LCH4_WEU_OILbyCl                ','LCH4_WEU_OILbyO1D               ','LCH4_WEU_OILbySoil              ', & ! index 697 - 699
+     'CH4_WEU_GAS                     ','LCH4_WEU_GASbyOH                ','LCH4_WEU_GASbyCl                ', & ! index 700 - 702
+     'LCH4_WEU_GASbyO1D               ','LCH4_WEU_GASbySoil              ','CH4_WEU_COL                     ', & ! index 703 - 705
+     'LCH4_WEU_COLbyOH                ','LCH4_WEU_COLbyCl                ','LCH4_WEU_COLbyO1D               ', & ! index 706 - 708
+     'LCH4_WEU_COLbySoil              ','CH4_WEU_LIV                     ','LCH4_WEU_LIVbyOH                ', & ! index 709 - 711
+     'LCH4_WEU_LIVbyCl                ','LCH4_WEU_LIVbyO1D               ','LCH4_WEU_LIVbySoil              ', & ! index 712 - 714
+     'CH4_WEU_LDF                     ','LCH4_WEU_LDFbyOH                ','LCH4_WEU_LDFbyCl                ', & ! index 715 - 717
+     'LCH4_WEU_LDFbyO1D               ','LCH4_WEU_LDFbySoil              ','CH4_WEU_WST                     ' /) ! index up to 720
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_8 = (/ &
+     'LCH4_WEU_WSTbyOH                ','LCH4_WEU_WSTbyCl                ','LCH4_WEU_WSTbyO1D               ', & ! index 721 - 723
+     'LCH4_WEU_WSTbySoil              ','CH4_WEU_RIC                     ','LCH4_WEU_RICbyOH                ', & ! index 724 - 726
+     'LCH4_WEU_RICbyCl                ','LCH4_WEU_RICbyO1D               ','LCH4_WEU_RICbySoil              ', & ! index 727 - 729
+     'CH4_WEU_OTA                     ','LCH4_WEU_OTAbyOH                ','LCH4_WEU_OTAbyCl                ', & ! index 730 - 732
+     'LCH4_WEU_OTAbyO1D               ','LCH4_WEU_OTAbySoil              ','CH4_WEU_BBN                     ', & ! index 733 - 735
+     'LCH4_WEU_BBNbyOH                ','LCH4_WEU_BBNbyCl                ','LCH4_WEU_BBNbyO1D               ', & ! index 736 - 738
+     'LCH4_WEU_BBNbySoil              ','CH4_WEU_WTL                     ','LCH4_WEU_WTLbyOH                ', & ! index 739 - 741
+     'LCH4_WEU_WTLbyCl                ','LCH4_WEU_WTLbyO1D               ','LCH4_WEU_WTLbySoil              ', & ! index 742 - 744
+     'CH4_WEU_SEE                     ','LCH4_WEU_SEEbyOH                ','LCH4_WEU_SEEbyCl                ', & ! index 745 - 747
+     'LCH4_WEU_SEEbyO1D               ','LCH4_WEU_SEEbySoil              ','CH4_WEU_LAK                     ', & ! index 748 - 750
+     'LCH4_WEU_LAKbyOH                ','LCH4_WEU_LAKbyCl                ','LCH4_WEU_LAKbyO1D               ', & ! index 751 - 753
+     'LCH4_WEU_LAKbySoil              ','CH4_WEU_TER                     ','LCH4_WEU_TERbyOH                ', & ! index 754 - 756
+     'LCH4_WEU_TERbyCl                ','LCH4_WEU_TERbyO1D               ','LCH4_WEU_TERbySoil              ', & ! index 757 - 759
+     'CH4_WEU_RES                     ','LCH4_WEU_RESbyOH                ','LCH4_WEU_RESbyCl                ', & ! index 760 - 762
+     'LCH4_WEU_RESbyO1D               ','LCH4_WEU_RESbySoil              ','CH4_EEU_OIL                     ', & ! index 763 - 765
+     'LCH4_EEU_OILbyOH                ','LCH4_EEU_OILbyCl                ','LCH4_EEU_OILbyO1D               ', & ! index 766 - 768
+     'LCH4_EEU_OILbySoil              ','CH4_EEU_GAS                     ','LCH4_EEU_GASbyOH                ', & ! index 769 - 771
+     'LCH4_EEU_GASbyCl                ','LCH4_EEU_GASbyO1D               ','LCH4_EEU_GASbySoil              ', & ! index 772 - 774
+     'CH4_EEU_COL                     ','LCH4_EEU_COLbyOH                ','LCH4_EEU_COLbyCl                ', & ! index 775 - 777
+     'LCH4_EEU_COLbyO1D               ','LCH4_EEU_COLbySoil              ','CH4_EEU_LIV                     ', & ! index 778 - 780
+     'LCH4_EEU_LIVbyOH                ','LCH4_EEU_LIVbyCl                ','LCH4_EEU_LIVbyO1D               ', & ! index 781 - 783
+     'LCH4_EEU_LIVbySoil              ','CH4_EEU_LDF                     ','LCH4_EEU_LDFbyOH                ', & ! index 784 - 786
+     'LCH4_EEU_LDFbyCl                ','LCH4_EEU_LDFbyO1D               ','LCH4_EEU_LDFbySoil              ', & ! index 787 - 789
+     'CH4_EEU_WST                     ','LCH4_EEU_WSTbyOH                ','LCH4_EEU_WSTbyCl                ', & ! index 790 - 792
+     'LCH4_EEU_WSTbyO1D               ','LCH4_EEU_WSTbySoil              ','CH4_EEU_RIC                     ', & ! index 793 - 795
+     'LCH4_EEU_RICbyOH                ','LCH4_EEU_RICbyCl                ','LCH4_EEU_RICbyO1D               ', & ! index 796 - 798
+     'LCH4_EEU_RICbySoil              ','CH4_EEU_OTA                     ','LCH4_EEU_OTAbyOH                ', & ! index 799 - 801
+     'LCH4_EEU_OTAbyCl                ','LCH4_EEU_OTAbyO1D               ','LCH4_EEU_OTAbySoil              ', & ! index 802 - 804
+     'CH4_EEU_BBN                     ','LCH4_EEU_BBNbyOH                ','LCH4_EEU_BBNbyCl                ', & ! index 805 - 807
+     'LCH4_EEU_BBNbyO1D               ','LCH4_EEU_BBNbySoil              ','CH4_EEU_WTL                     ' /) ! index up to 810
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_9 = (/ &
+     'LCH4_EEU_WTLbyOH                ','LCH4_EEU_WTLbyCl                ','LCH4_EEU_WTLbyO1D               ', & ! index 811 - 813
+     'LCH4_EEU_WTLbySoil              ','CH4_EEU_SEE                     ','LCH4_EEU_SEEbyOH                ', & ! index 814 - 816
+     'LCH4_EEU_SEEbyCl                ','LCH4_EEU_SEEbyO1D               ','LCH4_EEU_SEEbySoil              ', & ! index 817 - 819
+     'CH4_EEU_LAK                     ','LCH4_EEU_LAKbyOH                ','LCH4_EEU_LAKbyCl                ', & ! index 820 - 822
+     'LCH4_EEU_LAKbyO1D               ','LCH4_EEU_LAKbySoil              ','CH4_EEU_TER                     ', & ! index 823 - 825
+     'LCH4_EEU_TERbyOH                ','LCH4_EEU_TERbyCl                ','LCH4_EEU_TERbyO1D               ', & ! index 826 - 828
+     'LCH4_EEU_TERbySoil              ','CH4_EEU_RES                     ','LCH4_EEU_RESbyOH                ', & ! index 829 - 831
+     'LCH4_EEU_RESbyCl                ','LCH4_EEU_RESbyO1D               ','LCH4_EEU_RESbySoil              ', & ! index 832 - 834
+     'CH4_RUS_OIL                     ','LCH4_RUS_OILbyOH                ','LCH4_RUS_OILbyCl                ', & ! index 835 - 837
+     'LCH4_RUS_OILbyO1D               ','LCH4_RUS_OILbySoil              ','CH4_RUS_GAS                     ', & ! index 838 - 840
+     'LCH4_RUS_GASbyOH                ','LCH4_RUS_GASbyCl                ','LCH4_RUS_GASbyO1D               ', & ! index 841 - 843
+     'LCH4_RUS_GASbySoil              ','CH4_RUS_COL                     ','LCH4_RUS_COLbyOH                ', & ! index 844 - 846
+     'LCH4_RUS_COLbyCl                ','LCH4_RUS_COLbyO1D               ','LCH4_RUS_COLbySoil              ', & ! index 847 - 849
+     'CH4_RUS_LIV                     ','LCH4_RUS_LIVbyOH                ','LCH4_RUS_LIVbyCl                ', & ! index 850 - 852
+     'LCH4_RUS_LIVbyO1D               ','LCH4_RUS_LIVbySoil              ','CH4_RUS_LDF                     ', & ! index 853 - 855
+     'LCH4_RUS_LDFbyOH                ','LCH4_RUS_LDFbyCl                ','LCH4_RUS_LDFbyO1D               ', & ! index 856 - 858
+     'LCH4_RUS_LDFbySoil              ','CH4_RUS_WST                     ','LCH4_RUS_WSTbyOH                ', & ! index 859 - 861
+     'LCH4_RUS_WSTbyCl                ','LCH4_RUS_WSTbyO1D               ','LCH4_RUS_WSTbySoil              ', & ! index 862 - 864
+     'CH4_RUS_RIC                     ','LCH4_RUS_RICbyOH                ','LCH4_RUS_RICbyCl                ', & ! index 865 - 867
+     'LCH4_RUS_RICbyO1D               ','LCH4_RUS_RICbySoil              ','CH4_RUS_OTA                     ', & ! index 868 - 870
+     'LCH4_RUS_OTAbyOH                ','LCH4_RUS_OTAbyCl                ','LCH4_RUS_OTAbyO1D               ', & ! index 871 - 873
+     'LCH4_RUS_OTAbySoil              ','CH4_RUS_BBN                     ','LCH4_RUS_BBNbyOH                ', & ! index 874 - 876
+     'LCH4_RUS_BBNbyCl                ','LCH4_RUS_BBNbyO1D               ','LCH4_RUS_BBNbySoil              ', & ! index 877 - 879
+     'CH4_RUS_WTL                     ','LCH4_RUS_WTLbyOH                ','LCH4_RUS_WTLbyCl                ', & ! index 880 - 882
+     'LCH4_RUS_WTLbyO1D               ','LCH4_RUS_WTLbySoil              ','CH4_RUS_SEE                     ', & ! index 883 - 885
+     'LCH4_RUS_SEEbyOH                ','LCH4_RUS_SEEbyCl                ','LCH4_RUS_SEEbyO1D               ', & ! index 886 - 888
+     'LCH4_RUS_SEEbySoil              ','CH4_RUS_LAK                     ','LCH4_RUS_LAKbyOH                ', & ! index 889 - 891
+     'LCH4_RUS_LAKbyCl                ','LCH4_RUS_LAKbyO1D               ','LCH4_RUS_LAKbySoil              ', & ! index 892 - 894
+     'CH4_RUS_TER                     ','LCH4_RUS_TERbyOH                ','LCH4_RUS_TERbyCl                ', & ! index 895 - 897
+     'LCH4_RUS_TERbyO1D               ','LCH4_RUS_TERbySoil              ','CH4_RUS_RES                     ' /) ! index up to 900
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_10 = (/ &
+     'LCH4_RUS_RESbyOH                ','LCH4_RUS_RESbyCl                ','LCH4_RUS_RESbyO1D               ', & ! index 901 - 903
+     'LCH4_RUS_RESbySoil              ','CH4_MDE_OIL                     ','LCH4_MDE_OILbyOH                ', & ! index 904 - 906
+     'LCH4_MDE_OILbyCl                ','LCH4_MDE_OILbyO1D               ','LCH4_MDE_OILbySoil              ', & ! index 907 - 909
+     'CH4_MDE_GAS                     ','LCH4_MDE_GASbyOH                ','LCH4_MDE_GASbyCl                ', & ! index 910 - 912
+     'LCH4_MDE_GASbyO1D               ','LCH4_MDE_GASbySoil              ','CH4_MDE_COL                     ', & ! index 913 - 915
+     'LCH4_MDE_COLbyOH                ','LCH4_MDE_COLbyCl                ','LCH4_MDE_COLbyO1D               ', & ! index 916 - 918
+     'LCH4_MDE_COLbySoil              ','CH4_MDE_LIV                     ','LCH4_MDE_LIVbyOH                ', & ! index 919 - 921
+     'LCH4_MDE_LIVbyCl                ','LCH4_MDE_LIVbyO1D               ','LCH4_MDE_LIVbySoil              ', & ! index 922 - 924
+     'CH4_MDE_LDF                     ','LCH4_MDE_LDFbyOH                ','LCH4_MDE_LDFbyCl                ', & ! index 925 - 927
+     'LCH4_MDE_LDFbyO1D               ','LCH4_MDE_LDFbySoil              ','CH4_MDE_WST                     ', & ! index 928 - 930
+     'LCH4_MDE_WSTbyOH                ','LCH4_MDE_WSTbyCl                ','LCH4_MDE_WSTbyO1D               ', & ! index 931 - 933
+     'LCH4_MDE_WSTbySoil              ','CH4_MDE_RIC                     ','LCH4_MDE_RICbyOH                ', & ! index 934 - 936
+     'LCH4_MDE_RICbyCl                ','LCH4_MDE_RICbyO1D               ','LCH4_MDE_RICbySoil              ', & ! index 937 - 939
+     'CH4_MDE_OTA                     ','LCH4_MDE_OTAbyOH                ','LCH4_MDE_OTAbyCl                ', & ! index 940 - 942
+     'LCH4_MDE_OTAbyO1D               ','LCH4_MDE_OTAbySoil              ','CH4_MDE_BBN                     ', & ! index 943 - 945
+     'LCH4_MDE_BBNbyOH                ','LCH4_MDE_BBNbyCl                ','LCH4_MDE_BBNbyO1D               ', & ! index 946 - 948
+     'LCH4_MDE_BBNbySoil              ','CH4_MDE_WTL                     ','LCH4_MDE_WTLbyOH                ', & ! index 949 - 951
+     'LCH4_MDE_WTLbyCl                ','LCH4_MDE_WTLbyO1D               ','LCH4_MDE_WTLbySoil              ', & ! index 952 - 954
+     'CH4_MDE_SEE                     ','LCH4_MDE_SEEbyOH                ','LCH4_MDE_SEEbyCl                ', & ! index 955 - 957
+     'LCH4_MDE_SEEbyO1D               ','LCH4_MDE_SEEbySoil              ','CH4_MDE_LAK                     ', & ! index 958 - 960
+     'LCH4_MDE_LAKbyOH                ','LCH4_MDE_LAKbyCl                ','LCH4_MDE_LAKbyO1D               ', & ! index 961 - 963
+     'LCH4_MDE_LAKbySoil              ','CH4_MDE_TER                     ','LCH4_MDE_TERbyOH                ', & ! index 964 - 966
+     'LCH4_MDE_TERbyCl                ','LCH4_MDE_TERbyO1D               ','LCH4_MDE_TERbySoil              ', & ! index 967 - 969
+     'CH4_MDE_RES                     ','LCH4_MDE_RESbyOH                ','LCH4_MDE_RESbyCl                ', & ! index 970 - 972
+     'LCH4_MDE_RESbyO1D               ','LCH4_MDE_RESbySoil              ','CH4_NAF_OIL                     ', & ! index 973 - 975
+     'LCH4_NAF_OILbyOH                ','LCH4_NAF_OILbyCl                ','LCH4_NAF_OILbyO1D               ', & ! index 976 - 978
+     'LCH4_NAF_OILbySoil              ','CH4_NAF_GAS                     ','LCH4_NAF_GASbyOH                ', & ! index 979 - 981
+     'LCH4_NAF_GASbyCl                ','LCH4_NAF_GASbyO1D               ','LCH4_NAF_GASbySoil              ', & ! index 982 - 984
+     'CH4_NAF_COL                     ','LCH4_NAF_COLbyOH                ','LCH4_NAF_COLbyCl                ', & ! index 985 - 987
+     'LCH4_NAF_COLbyO1D               ','LCH4_NAF_COLbySoil              ','CH4_NAF_LIV                     ' /) ! index up to 990
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_11 = (/ &
+     'LCH4_NAF_LIVbyOH                ','LCH4_NAF_LIVbyCl                ','LCH4_NAF_LIVbyO1D               ', & ! index 991 - 993
+     'LCH4_NAF_LIVbySoil              ','CH4_NAF_LDF                     ','LCH4_NAF_LDFbyOH                ', & ! index 994 - 996
+     'LCH4_NAF_LDFbyCl                ','LCH4_NAF_LDFbyO1D               ','LCH4_NAF_LDFbySoil              ', & ! index 997 - 999
+     'CH4_NAF_WST                     ','LCH4_NAF_WSTbyOH                ','LCH4_NAF_WSTbyCl                ', & ! index 1000 - 1002
+     'LCH4_NAF_WSTbyO1D               ','LCH4_NAF_WSTbySoil              ','CH4_NAF_RIC                     ', & ! index 1003 - 1005
+     'LCH4_NAF_RICbyOH                ','LCH4_NAF_RICbyCl                ','LCH4_NAF_RICbyO1D               ', & ! index 1006 - 1008
+     'LCH4_NAF_RICbySoil              ','CH4_NAF_OTA                     ','LCH4_NAF_OTAbyOH                ', & ! index 1009 - 1011
+     'LCH4_NAF_OTAbyCl                ','LCH4_NAF_OTAbyO1D               ','LCH4_NAF_OTAbySoil              ', & ! index 1012 - 1014
+     'CH4_NAF_BBN                     ','LCH4_NAF_BBNbyOH                ','LCH4_NAF_BBNbyCl                ', & ! index 1015 - 1017
+     'LCH4_NAF_BBNbyO1D               ','LCH4_NAF_BBNbySoil              ','CH4_NAF_WTL                     ', & ! index 1018 - 1020
+     'LCH4_NAF_WTLbyOH                ','LCH4_NAF_WTLbyCl                ','LCH4_NAF_WTLbyO1D               ', & ! index 1021 - 1023
+     'LCH4_NAF_WTLbySoil              ','CH4_NAF_SEE                     ','LCH4_NAF_SEEbyOH                ', & ! index 1024 - 1026
+     'LCH4_NAF_SEEbyCl                ','LCH4_NAF_SEEbyO1D               ','LCH4_NAF_SEEbySoil              ', & ! index 1027 - 1029
+     'CH4_NAF_LAK                     ','LCH4_NAF_LAKbyOH                ','LCH4_NAF_LAKbyCl                ', & ! index 1030 - 1032
+     'LCH4_NAF_LAKbyO1D               ','LCH4_NAF_LAKbySoil              ','CH4_NAF_TER                     ', & ! index 1033 - 1035
+     'LCH4_NAF_TERbyOH                ','LCH4_NAF_TERbyCl                ','LCH4_NAF_TERbyO1D               ', & ! index 1036 - 1038
+     'LCH4_NAF_TERbySoil              ','CH4_NAF_RES                     ','LCH4_NAF_RESbyOH                ', & ! index 1039 - 1041
+     'LCH4_NAF_RESbyCl                ','LCH4_NAF_RESbyO1D               ','LCH4_NAF_RESbySoil              ', & ! index 1042 - 1044
+     'CH4_WAF_OIL                     ','LCH4_WAF_OILbyOH                ','LCH4_WAF_OILbyCl                ', & ! index 1045 - 1047
+     'LCH4_WAF_OILbyO1D               ','LCH4_WAF_OILbySoil              ','CH4_WAF_GAS                     ', & ! index 1048 - 1050
+     'LCH4_WAF_GASbyOH                ','LCH4_WAF_GASbyCl                ','LCH4_WAF_GASbyO1D               ', & ! index 1051 - 1053
+     'LCH4_WAF_GASbySoil              ','CH4_WAF_COL                     ','LCH4_WAF_COLbyOH                ', & ! index 1054 - 1056
+     'LCH4_WAF_COLbyCl                ','LCH4_WAF_COLbyO1D               ','LCH4_WAF_COLbySoil              ', & ! index 1057 - 1059
+     'CH4_WAF_LIV                     ','LCH4_WAF_LIVbyOH                ','LCH4_WAF_LIVbyCl                ', & ! index 1060 - 1062
+     'LCH4_WAF_LIVbyO1D               ','LCH4_WAF_LIVbySoil              ','CH4_WAF_LDF                     ', & ! index 1063 - 1065
+     'LCH4_WAF_LDFbyOH                ','LCH4_WAF_LDFbyCl                ','LCH4_WAF_LDFbyO1D               ', & ! index 1066 - 1068
+     'LCH4_WAF_LDFbySoil              ','CH4_WAF_WST                     ','LCH4_WAF_WSTbyOH                ', & ! index 1069 - 1071
+     'LCH4_WAF_WSTbyCl                ','LCH4_WAF_WSTbyO1D               ','LCH4_WAF_WSTbySoil              ', & ! index 1072 - 1074
+     'CH4_WAF_RIC                     ','LCH4_WAF_RICbyOH                ','LCH4_WAF_RICbyCl                ', & ! index 1075 - 1077
+     'LCH4_WAF_RICbyO1D               ','LCH4_WAF_RICbySoil              ','CH4_WAF_OTA                     ' /) ! index up to 1080
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_12 = (/ &
+     'LCH4_WAF_OTAbyOH                ','LCH4_WAF_OTAbyCl                ','LCH4_WAF_OTAbyO1D               ', & ! index 1081 - 1083
+     'LCH4_WAF_OTAbySoil              ','CH4_WAF_BBN                     ','LCH4_WAF_BBNbyOH                ', & ! index 1084 - 1086
+     'LCH4_WAF_BBNbyCl                ','LCH4_WAF_BBNbyO1D               ','LCH4_WAF_BBNbySoil              ', & ! index 1087 - 1089
+     'CH4_WAF_WTL                     ','LCH4_WAF_WTLbyOH                ','LCH4_WAF_WTLbyCl                ', & ! index 1090 - 1092
+     'LCH4_WAF_WTLbyO1D               ','LCH4_WAF_WTLbySoil              ','CH4_WAF_SEE                     ', & ! index 1093 - 1095
+     'LCH4_WAF_SEEbyOH                ','LCH4_WAF_SEEbyCl                ','LCH4_WAF_SEEbyO1D               ', & ! index 1096 - 1098
+     'LCH4_WAF_SEEbySoil              ','CH4_WAF_LAK                     ','LCH4_WAF_LAKbyOH                ', & ! index 1099 - 1101
+     'LCH4_WAF_LAKbyCl                ','LCH4_WAF_LAKbyO1D               ','LCH4_WAF_LAKbySoil              ', & ! index 1102 - 1104
+     'CH4_WAF_TER                     ','LCH4_WAF_TERbyOH                ','LCH4_WAF_TERbyCl                ', & ! index 1105 - 1107
+     'LCH4_WAF_TERbyO1D               ','LCH4_WAF_TERbySoil              ','CH4_WAF_RES                     ', & ! index 1108 - 1110
+     'LCH4_WAF_RESbyOH                ','LCH4_WAF_RESbyCl                ','LCH4_WAF_RESbyO1D               ', & ! index 1111 - 1113
+     'LCH4_WAF_RESbySoil              ','CH4_CAF_OIL                     ','LCH4_CAF_OILbyOH                ', & ! index 1114 - 1116
+     'LCH4_CAF_OILbyCl                ','LCH4_CAF_OILbyO1D               ','LCH4_CAF_OILbySoil              ', & ! index 1117 - 1119
+     'CH4_CAF_GAS                     ','LCH4_CAF_GASbyOH                ','LCH4_CAF_GASbyCl                ', & ! index 1120 - 1122
+     'LCH4_CAF_GASbyO1D               ','LCH4_CAF_GASbySoil              ','CH4_CAF_COL                     ', & ! index 1123 - 1125
+     'LCH4_CAF_COLbyOH                ','LCH4_CAF_COLbyCl                ','LCH4_CAF_COLbyO1D               ', & ! index 1126 - 1128
+     'LCH4_CAF_COLbySoil              ','CH4_CAF_LIV                     ','LCH4_CAF_LIVbyOH                ', & ! index 1129 - 1131
+     'LCH4_CAF_LIVbyCl                ','LCH4_CAF_LIVbyO1D               ','LCH4_CAF_LIVbySoil              ', & ! index 1132 - 1134
+     'CH4_CAF_LDF                     ','LCH4_CAF_LDFbyOH                ','LCH4_CAF_LDFbyCl                ', & ! index 1135 - 1137
+     'LCH4_CAF_LDFbyO1D               ','LCH4_CAF_LDFbySoil              ','CH4_CAF_WST                     ', & ! index 1138 - 1140
+     'LCH4_CAF_WSTbyOH                ','LCH4_CAF_WSTbyCl                ','LCH4_CAF_WSTbyO1D               ', & ! index 1141 - 1143
+     'LCH4_CAF_WSTbySoil              ','CH4_CAF_RIC                     ','LCH4_CAF_RICbyOH                ', & ! index 1144 - 1146
+     'LCH4_CAF_RICbyCl                ','LCH4_CAF_RICbyO1D               ','LCH4_CAF_RICbySoil              ', & ! index 1147 - 1149
+     'CH4_CAF_OTA                     ','LCH4_CAF_OTAbyOH                ','LCH4_CAF_OTAbyCl                ', & ! index 1150 - 1152
+     'LCH4_CAF_OTAbyO1D               ','LCH4_CAF_OTAbySoil              ','CH4_CAF_BBN                     ', & ! index 1153 - 1155
+     'LCH4_CAF_BBNbyOH                ','LCH4_CAF_BBNbyCl                ','LCH4_CAF_BBNbyO1D               ', & ! index 1156 - 1158
+     'LCH4_CAF_BBNbySoil              ','CH4_CAF_WTL                     ','LCH4_CAF_WTLbyOH                ', & ! index 1159 - 1161
+     'LCH4_CAF_WTLbyCl                ','LCH4_CAF_WTLbyO1D               ','LCH4_CAF_WTLbySoil              ', & ! index 1162 - 1164
+     'CH4_CAF_SEE                     ','LCH4_CAF_SEEbyOH                ','LCH4_CAF_SEEbyCl                ', & ! index 1165 - 1167
+     'LCH4_CAF_SEEbyO1D               ','LCH4_CAF_SEEbySoil              ','CH4_CAF_LAK                     ' /) ! index up to 1170
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_13 = (/ &
+     'LCH4_CAF_LAKbyOH                ','LCH4_CAF_LAKbyCl                ','LCH4_CAF_LAKbyO1D               ', & ! index 1171 - 1173
+     'LCH4_CAF_LAKbySoil              ','CH4_CAF_TER                     ','LCH4_CAF_TERbyOH                ', & ! index 1174 - 1176
+     'LCH4_CAF_TERbyCl                ','LCH4_CAF_TERbyO1D               ','LCH4_CAF_TERbySoil              ', & ! index 1177 - 1179
+     'CH4_CAF_RES                     ','LCH4_CAF_RESbyOH                ','LCH4_CAF_RESbyCl                ', & ! index 1180 - 1182
+     'LCH4_CAF_RESbyO1D               ','LCH4_CAF_RESbySoil              ','CH4_EAF_OIL                     ', & ! index 1183 - 1185
+     'LCH4_EAF_OILbyOH                ','LCH4_EAF_OILbyCl                ','LCH4_EAF_OILbyO1D               ', & ! index 1186 - 1188
+     'LCH4_EAF_OILbySoil              ','CH4_EAF_GAS                     ','LCH4_EAF_GASbyOH                ', & ! index 1189 - 1191
+     'LCH4_EAF_GASbyCl                ','LCH4_EAF_GASbyO1D               ','LCH4_EAF_GASbySoil              ', & ! index 1192 - 1194
+     'CH4_EAF_COL                     ','LCH4_EAF_COLbyOH                ','LCH4_EAF_COLbyCl                ', & ! index 1195 - 1197
+     'LCH4_EAF_COLbyO1D               ','LCH4_EAF_COLbySoil              ','CH4_EAF_LIV                     ', & ! index 1198 - 1200
+     'LCH4_EAF_LIVbyOH                ','LCH4_EAF_LIVbyCl                ','LCH4_EAF_LIVbyO1D               ', & ! index 1201 - 1203
+     'LCH4_EAF_LIVbySoil              ','CH4_EAF_LDF                     ','LCH4_EAF_LDFbyOH                ', & ! index 1204 - 1206
+     'LCH4_EAF_LDFbyCl                ','LCH4_EAF_LDFbyO1D               ','LCH4_EAF_LDFbySoil              ', & ! index 1207 - 1209
+     'CH4_EAF_WST                     ','LCH4_EAF_WSTbyOH                ','LCH4_EAF_WSTbyCl                ', & ! index 1210 - 1212
+     'LCH4_EAF_WSTbyO1D               ','LCH4_EAF_WSTbySoil              ','CH4_EAF_RIC                     ', & ! index 1213 - 1215
+     'LCH4_EAF_RICbyOH                ','LCH4_EAF_RICbyCl                ','LCH4_EAF_RICbyO1D               ', & ! index 1216 - 1218
+     'LCH4_EAF_RICbySoil              ','CH4_EAF_OTA                     ','LCH4_EAF_OTAbyOH                ', & ! index 1219 - 1221
+     'LCH4_EAF_OTAbyCl                ','LCH4_EAF_OTAbyO1D               ','LCH4_EAF_OTAbySoil              ', & ! index 1222 - 1224
+     'CH4_EAF_BBN                     ','LCH4_EAF_BBNbyOH                ','LCH4_EAF_BBNbyCl                ', & ! index 1225 - 1227
+     'LCH4_EAF_BBNbyO1D               ','LCH4_EAF_BBNbySoil              ','CH4_EAF_WTL                     ', & ! index 1228 - 1230
+     'LCH4_EAF_WTLbyOH                ','LCH4_EAF_WTLbyCl                ','LCH4_EAF_WTLbyO1D               ', & ! index 1231 - 1233
+     'LCH4_EAF_WTLbySoil              ','CH4_EAF_SEE                     ','LCH4_EAF_SEEbyOH                ', & ! index 1234 - 1236
+     'LCH4_EAF_SEEbyCl                ','LCH4_EAF_SEEbyO1D               ','LCH4_EAF_SEEbySoil              ', & ! index 1237 - 1239
+     'CH4_EAF_LAK                     ','LCH4_EAF_LAKbyOH                ','LCH4_EAF_LAKbyCl                ', & ! index 1240 - 1242
+     'LCH4_EAF_LAKbyO1D               ','LCH4_EAF_LAKbySoil              ','CH4_EAF_TER                     ', & ! index 1243 - 1245
+     'LCH4_EAF_TERbyOH                ','LCH4_EAF_TERbyCl                ','LCH4_EAF_TERbyO1D               ', & ! index 1246 - 1248
+     'LCH4_EAF_TERbySoil              ','CH4_EAF_RES                     ','LCH4_EAF_RESbyOH                ', & ! index 1249 - 1251
+     'LCH4_EAF_RESbyCl                ','LCH4_EAF_RESbyO1D               ','LCH4_EAF_RESbySoil              ', & ! index 1252 - 1254
+     'CH4_SIO_OIL                     ','LCH4_SIO_OILbyOH                ','LCH4_SIO_OILbyCl                ', & ! index 1255 - 1257
+     'LCH4_SIO_OILbyO1D               ','LCH4_SIO_OILbySoil              ','CH4_SIO_GAS                     ' /) ! index up to 1260
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_14 = (/ &
+     'LCH4_SIO_GASbyOH                ','LCH4_SIO_GASbyCl                ','LCH4_SIO_GASbyO1D               ', & ! index 1261 - 1263
+     'LCH4_SIO_GASbySoil              ','CH4_SIO_COL                     ','LCH4_SIO_COLbyOH                ', & ! index 1264 - 1266
+     'LCH4_SIO_COLbyCl                ','LCH4_SIO_COLbyO1D               ','LCH4_SIO_COLbySoil              ', & ! index 1267 - 1269
+     'CH4_SIO_LIV                     ','LCH4_SIO_LIVbyOH                ','LCH4_SIO_LIVbyCl                ', & ! index 1270 - 1272
+     'LCH4_SIO_LIVbyO1D               ','LCH4_SIO_LIVbySoil              ','CH4_SIO_LDF                     ', & ! index 1273 - 1275
+     'LCH4_SIO_LDFbyOH                ','LCH4_SIO_LDFbyCl                ','LCH4_SIO_LDFbyO1D               ', & ! index 1276 - 1278
+     'LCH4_SIO_LDFbySoil              ','CH4_SIO_WST                     ','LCH4_SIO_WSTbyOH                ', & ! index 1279 - 1281
+     'LCH4_SIO_WSTbyCl                ','LCH4_SIO_WSTbyO1D               ','LCH4_SIO_WSTbySoil              ', & ! index 1282 - 1284
+     'CH4_SIO_RIC                     ','LCH4_SIO_RICbyOH                ','LCH4_SIO_RICbyCl                ', & ! index 1285 - 1287
+     'LCH4_SIO_RICbyO1D               ','LCH4_SIO_RICbySoil              ','CH4_SIO_OTA                     ', & ! index 1288 - 1290
+     'LCH4_SIO_OTAbyOH                ','LCH4_SIO_OTAbyCl                ','LCH4_SIO_OTAbyO1D               ', & ! index 1291 - 1293
+     'LCH4_SIO_OTAbySoil              ','CH4_SIO_BBN                     ','LCH4_SIO_BBNbyOH                ', & ! index 1294 - 1296
+     'LCH4_SIO_BBNbyCl                ','LCH4_SIO_BBNbyO1D               ','LCH4_SIO_BBNbySoil              ', & ! index 1297 - 1299
+     'CH4_SIO_WTL                     ','LCH4_SIO_WTLbyOH                ','LCH4_SIO_WTLbyCl                ', & ! index 1300 - 1302
+     'LCH4_SIO_WTLbyO1D               ','LCH4_SIO_WTLbySoil              ','CH4_SIO_SEE                     ', & ! index 1303 - 1305
+     'LCH4_SIO_SEEbyOH                ','LCH4_SIO_SEEbyCl                ','LCH4_SIO_SEEbyO1D               ', & ! index 1306 - 1308
+     'LCH4_SIO_SEEbySoil              ','CH4_SIO_LAK                     ','LCH4_SIO_LAKbyOH                ', & ! index 1309 - 1311
+     'LCH4_SIO_LAKbyCl                ','LCH4_SIO_LAKbyO1D               ','LCH4_SIO_LAKbySoil              ', & ! index 1312 - 1314
+     'CH4_SIO_TER                     ','LCH4_SIO_TERbyOH                ','LCH4_SIO_TERbyCl                ', & ! index 1315 - 1317
+     'LCH4_SIO_TERbyO1D               ','LCH4_SIO_TERbySoil              ','CH4_SIO_RES                     ', & ! index 1318 - 1320
+     'LCH4_SIO_RESbyOH                ','LCH4_SIO_RESbyCl                ','LCH4_SIO_RESbyO1D               ', & ! index 1321 - 1323
+     'LCH4_SIO_RESbySoil              ','CH4_SAC_OIL                     ','LCH4_SAC_OILbyOH                ', & ! index 1324 - 1326
+     'LCH4_SAC_OILbyCl                ','LCH4_SAC_OILbyO1D               ','LCH4_SAC_OILbySoil              ', & ! index 1327 - 1329
+     'CH4_SAC_GAS                     ','LCH4_SAC_GASbyOH                ','LCH4_SAC_GASbyCl                ', & ! index 1330 - 1332
+     'LCH4_SAC_GASbyO1D               ','LCH4_SAC_GASbySoil              ','CH4_SAC_COL                     ', & ! index 1333 - 1335
+     'LCH4_SAC_COLbyOH                ','LCH4_SAC_COLbyCl                ','LCH4_SAC_COLbyO1D               ', & ! index 1336 - 1338
+     'LCH4_SAC_COLbySoil              ','CH4_SAC_LIV                     ','LCH4_SAC_LIVbyOH                ', & ! index 1339 - 1341
+     'LCH4_SAC_LIVbyCl                ','LCH4_SAC_LIVbyO1D               ','LCH4_SAC_LIVbySoil              ', & ! index 1342 - 1344
+     'CH4_SAC_LDF                     ','LCH4_SAC_LDFbyOH                ','LCH4_SAC_LDFbyCl                ', & ! index 1345 - 1347
+     'LCH4_SAC_LDFbyO1D               ','LCH4_SAC_LDFbySoil              ','CH4_SAC_WST                     ' /) ! index up to 1350
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_15 = (/ &
+     'LCH4_SAC_WSTbyOH                ','LCH4_SAC_WSTbyCl                ','LCH4_SAC_WSTbyO1D               ', & ! index 1351 - 1353
+     'LCH4_SAC_WSTbySoil              ','CH4_SAC_RIC                     ','LCH4_SAC_RICbyOH                ', & ! index 1354 - 1356
+     'LCH4_SAC_RICbyCl                ','LCH4_SAC_RICbyO1D               ','LCH4_SAC_RICbySoil              ', & ! index 1357 - 1359
+     'CH4_SAC_OTA                     ','LCH4_SAC_OTAbyOH                ','LCH4_SAC_OTAbyCl                ', & ! index 1360 - 1362
+     'LCH4_SAC_OTAbyO1D               ','LCH4_SAC_OTAbySoil              ','CH4_SAC_BBN                     ', & ! index 1363 - 1365
+     'LCH4_SAC_BBNbyOH                ','LCH4_SAC_BBNbyCl                ','LCH4_SAC_BBNbyO1D               ', & ! index 1366 - 1368
+     'LCH4_SAC_BBNbySoil              ','CH4_SAC_WTL                     ','LCH4_SAC_WTLbyOH                ', & ! index 1369 - 1371
+     'LCH4_SAC_WTLbyCl                ','LCH4_SAC_WTLbyO1D               ','LCH4_SAC_WTLbySoil              ', & ! index 1372 - 1374
+     'CH4_SAC_SEE                     ','LCH4_SAC_SEEbyOH                ','LCH4_SAC_SEEbyCl                ', & ! index 1375 - 1377
+     'LCH4_SAC_SEEbyO1D               ','LCH4_SAC_SEEbySoil              ','CH4_SAC_LAK                     ', & ! index 1378 - 1380
+     'LCH4_SAC_LAKbyOH                ','LCH4_SAC_LAKbyCl                ','LCH4_SAC_LAKbyO1D               ', & ! index 1381 - 1383
+     'LCH4_SAC_LAKbySoil              ','CH4_SAC_TER                     ','LCH4_SAC_TERbyOH                ', & ! index 1384 - 1386
+     'LCH4_SAC_TERbyCl                ','LCH4_SAC_TERbyO1D               ','LCH4_SAC_TERbySoil              ', & ! index 1387 - 1389
+     'CH4_SAC_RES                     ','LCH4_SAC_RESbyOH                ','LCH4_SAC_RESbyCl                ', & ! index 1390 - 1392
+     'LCH4_SAC_RESbyO1D               ','LCH4_SAC_RESbySoil              ','CH4_CAS_OIL                     ', & ! index 1393 - 1395
+     'LCH4_CAS_OILbyOH                ','LCH4_CAS_OILbyCl                ','LCH4_CAS_OILbyO1D               ', & ! index 1396 - 1398
+     'LCH4_CAS_OILbySoil              ','CH4_CAS_GAS                     ','LCH4_CAS_GASbyOH                ', & ! index 1399 - 1401
+     'LCH4_CAS_GASbyCl                ','LCH4_CAS_GASbyO1D               ','LCH4_CAS_GASbySoil              ', & ! index 1402 - 1404
+     'CH4_CAS_COL                     ','LCH4_CAS_COLbyOH                ','LCH4_CAS_COLbyCl                ', & ! index 1405 - 1407
+     'LCH4_CAS_COLbyO1D               ','LCH4_CAS_COLbySoil              ','CH4_CAS_LIV                     ', & ! index 1408 - 1410
+     'LCH4_CAS_LIVbyOH                ','LCH4_CAS_LIVbyCl                ','LCH4_CAS_LIVbyO1D               ', & ! index 1411 - 1413
+     'LCH4_CAS_LIVbySoil              ','CH4_CAS_LDF                     ','LCH4_CAS_LDFbyOH                ', & ! index 1414 - 1416
+     'LCH4_CAS_LDFbyCl                ','LCH4_CAS_LDFbyO1D               ','LCH4_CAS_LDFbySoil              ', & ! index 1417 - 1419
+     'CH4_CAS_WST                     ','LCH4_CAS_WSTbyOH                ','LCH4_CAS_WSTbyCl                ', & ! index 1420 - 1422
+     'LCH4_CAS_WSTbyO1D               ','LCH4_CAS_WSTbySoil              ','CH4_CAS_RIC                     ', & ! index 1423 - 1425
+     'LCH4_CAS_RICbyOH                ','LCH4_CAS_RICbyCl                ','LCH4_CAS_RICbyO1D               ', & ! index 1426 - 1428
+     'LCH4_CAS_RICbySoil              ','CH4_CAS_OTA                     ','LCH4_CAS_OTAbyOH                ', & ! index 1429 - 1431
+     'LCH4_CAS_OTAbyCl                ','LCH4_CAS_OTAbyO1D               ','LCH4_CAS_OTAbySoil              ', & ! index 1432 - 1434
+     'CH4_CAS_BBN                     ','LCH4_CAS_BBNbyOH                ','LCH4_CAS_BBNbyCl                ', & ! index 1435 - 1437
+     'LCH4_CAS_BBNbyO1D               ','LCH4_CAS_BBNbySoil              ','CH4_CAS_WTL                     ' /) ! index up to 1440
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_16 = (/ &
+     'LCH4_CAS_WTLbyOH                ','LCH4_CAS_WTLbyCl                ','LCH4_CAS_WTLbyO1D               ', & ! index 1441 - 1443
+     'LCH4_CAS_WTLbySoil              ','CH4_CAS_SEE                     ','LCH4_CAS_SEEbyOH                ', & ! index 1444 - 1446
+     'LCH4_CAS_SEEbyCl                ','LCH4_CAS_SEEbyO1D               ','LCH4_CAS_SEEbySoil              ', & ! index 1447 - 1449
+     'CH4_CAS_LAK                     ','LCH4_CAS_LAKbyOH                ','LCH4_CAS_LAKbyCl                ', & ! index 1450 - 1452
+     'LCH4_CAS_LAKbyO1D               ','LCH4_CAS_LAKbySoil              ','CH4_CAS_TER                     ', & ! index 1453 - 1455
+     'LCH4_CAS_TERbyOH                ','LCH4_CAS_TERbyCl                ','LCH4_CAS_TERbyO1D               ', & ! index 1456 - 1458
+     'LCH4_CAS_TERbySoil              ','CH4_CAS_RES                     ','LCH4_CAS_RESbyOH                ', & ! index 1459 - 1461
+     'LCH4_CAS_RESbyCl                ','LCH4_CAS_RESbyO1D               ','LCH4_CAS_RESbySoil              ', & ! index 1462 - 1464
+     'CH4_IND_OIL                     ','LCH4_IND_OILbyOH                ','LCH4_IND_OILbyCl                ', & ! index 1465 - 1467
+     'LCH4_IND_OILbyO1D               ','LCH4_IND_OILbySoil              ','CH4_IND_GAS                     ', & ! index 1468 - 1470
+     'LCH4_IND_GASbyOH                ','LCH4_IND_GASbyCl                ','LCH4_IND_GASbyO1D               ', & ! index 1471 - 1473
+     'LCH4_IND_GASbySoil              ','CH4_IND_COL                     ','LCH4_IND_COLbyOH                ', & ! index 1474 - 1476
+     'LCH4_IND_COLbyCl                ','LCH4_IND_COLbyO1D               ','LCH4_IND_COLbySoil              ', & ! index 1477 - 1479
+     'CH4_IND_LIV                     ','LCH4_IND_LIVbyOH                ','LCH4_IND_LIVbyCl                ', & ! index 1480 - 1482
+     'LCH4_IND_LIVbyO1D               ','LCH4_IND_LIVbySoil              ','CH4_IND_LDF                     ', & ! index 1483 - 1485
+     'LCH4_IND_LDFbyOH                ','LCH4_IND_LDFbyCl                ','LCH4_IND_LDFbyO1D               ', & ! index 1486 - 1488
+     'LCH4_IND_LDFbySoil              ','CH4_IND_WST                     ','LCH4_IND_WSTbyOH                ', & ! index 1489 - 1491
+     'LCH4_IND_WSTbyCl                ','LCH4_IND_WSTbyO1D               ','LCH4_IND_WSTbySoil              ', & ! index 1492 - 1494
+     'CH4_IND_RIC                     ','LCH4_IND_RICbyOH                ','LCH4_IND_RICbyCl                ', & ! index 1495 - 1497
+     'LCH4_IND_RICbyO1D               ','LCH4_IND_RICbySoil              ','CH4_IND_OTA                     ', & ! index 1498 - 1500
+     'LCH4_IND_OTAbyOH                ','LCH4_IND_OTAbyCl                ','LCH4_IND_OTAbyO1D               ', & ! index 1501 - 1503
+     'LCH4_IND_OTAbySoil              ','CH4_IND_BBN                     ','LCH4_IND_BBNbyOH                ', & ! index 1504 - 1506
+     'LCH4_IND_BBNbyCl                ','LCH4_IND_BBNbyO1D               ','LCH4_IND_BBNbySoil              ', & ! index 1507 - 1509
+     'CH4_IND_WTL                     ','LCH4_IND_WTLbyOH                ','LCH4_IND_WTLbyCl                ', & ! index 1510 - 1512
+     'LCH4_IND_WTLbyO1D               ','LCH4_IND_WTLbySoil              ','CH4_IND_SEE                     ', & ! index 1513 - 1515
+     'LCH4_IND_SEEbyOH                ','LCH4_IND_SEEbyCl                ','LCH4_IND_SEEbyO1D               ', & ! index 1516 - 1518
+     'LCH4_IND_SEEbySoil              ','CH4_IND_LAK                     ','LCH4_IND_LAKbyOH                ', & ! index 1519 - 1521
+     'LCH4_IND_LAKbyCl                ','LCH4_IND_LAKbyO1D               ','LCH4_IND_LAKbySoil              ', & ! index 1522 - 1524
+     'CH4_IND_TER                     ','LCH4_IND_TERbyOH                ','LCH4_IND_TERbyCl                ', & ! index 1525 - 1527
+     'LCH4_IND_TERbyO1D               ','LCH4_IND_TERbySoil              ','CH4_IND_RES                     ' /) ! index up to 1530
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_17 = (/ &
+     'LCH4_IND_RESbyOH                ','LCH4_IND_RESbyCl                ','LCH4_IND_RESbyO1D               ', & ! index 1531 - 1533
+     'LCH4_IND_RESbySoil              ','CH4_SAS_OIL                     ','LCH4_SAS_OILbyOH                ', & ! index 1534 - 1536
+     'LCH4_SAS_OILbyCl                ','LCH4_SAS_OILbyO1D               ','LCH4_SAS_OILbySoil              ', & ! index 1537 - 1539
+     'CH4_SAS_GAS                     ','LCH4_SAS_GASbyOH                ','LCH4_SAS_GASbyCl                ', & ! index 1540 - 1542
+     'LCH4_SAS_GASbyO1D               ','LCH4_SAS_GASbySoil              ','CH4_SAS_COL                     ', & ! index 1543 - 1545
+     'LCH4_SAS_COLbyOH                ','LCH4_SAS_COLbyCl                ','LCH4_SAS_COLbyO1D               ', & ! index 1546 - 1548
+     'LCH4_SAS_COLbySoil              ','CH4_SAS_LIV                     ','LCH4_SAS_LIVbyOH                ', & ! index 1549 - 1551
+     'LCH4_SAS_LIVbyCl                ','LCH4_SAS_LIVbyO1D               ','LCH4_SAS_LIVbySoil              ', & ! index 1552 - 1554
+     'CH4_SAS_LDF                     ','LCH4_SAS_LDFbyOH                ','LCH4_SAS_LDFbyCl                ', & ! index 1555 - 1557
+     'LCH4_SAS_LDFbyO1D               ','LCH4_SAS_LDFbySoil              ','CH4_SAS_WST                     ', & ! index 1558 - 1560
+     'LCH4_SAS_WSTbyOH                ','LCH4_SAS_WSTbyCl                ','LCH4_SAS_WSTbyO1D               ', & ! index 1561 - 1563
+     'LCH4_SAS_WSTbySoil              ','CH4_SAS_RIC                     ','LCH4_SAS_RICbyOH                ', & ! index 1564 - 1566
+     'LCH4_SAS_RICbyCl                ','LCH4_SAS_RICbyO1D               ','LCH4_SAS_RICbySoil              ', & ! index 1567 - 1569
+     'CH4_SAS_OTA                     ','LCH4_SAS_OTAbyOH                ','LCH4_SAS_OTAbyCl                ', & ! index 1570 - 1572
+     'LCH4_SAS_OTAbyO1D               ','LCH4_SAS_OTAbySoil              ','CH4_SAS_BBN                     ', & ! index 1573 - 1575
+     'LCH4_SAS_BBNbyOH                ','LCH4_SAS_BBNbyCl                ','LCH4_SAS_BBNbyO1D               ', & ! index 1576 - 1578
+     'LCH4_SAS_BBNbySoil              ','CH4_SAS_WTL                     ','LCH4_SAS_WTLbyOH                ', & ! index 1579 - 1581
+     'LCH4_SAS_WTLbyCl                ','LCH4_SAS_WTLbyO1D               ','LCH4_SAS_WTLbySoil              ', & ! index 1582 - 1584
+     'CH4_SAS_SEE                     ','LCH4_SAS_SEEbyOH                ','LCH4_SAS_SEEbyCl                ', & ! index 1585 - 1587
+     'LCH4_SAS_SEEbyO1D               ','LCH4_SAS_SEEbySoil              ','CH4_SAS_LAK                     ', & ! index 1588 - 1590
+     'LCH4_SAS_LAKbyOH                ','LCH4_SAS_LAKbyCl                ','LCH4_SAS_LAKbyO1D               ', & ! index 1591 - 1593
+     'LCH4_SAS_LAKbySoil              ','CH4_SAS_TER                     ','LCH4_SAS_TERbyOH                ', & ! index 1594 - 1596
+     'LCH4_SAS_TERbyCl                ','LCH4_SAS_TERbyO1D               ','LCH4_SAS_TERbySoil              ', & ! index 1597 - 1599
+     'CH4_SAS_RES                     ','LCH4_SAS_RESbyOH                ','LCH4_SAS_RESbyCl                ', & ! index 1600 - 1602
+     'LCH4_SAS_RESbyO1D               ','LCH4_SAS_RESbySoil              ','CH4_CHN_OIL                     ', & ! index 1603 - 1605
+     'LCH4_CHN_OILbyOH                ','LCH4_CHN_OILbyCl                ','LCH4_CHN_OILbyO1D               ', & ! index 1606 - 1608
+     'LCH4_CHN_OILbySoil              ','CH4_CHN_GAS                     ','LCH4_CHN_GASbyOH                ', & ! index 1609 - 1611
+     'LCH4_CHN_GASbyCl                ','LCH4_CHN_GASbyO1D               ','LCH4_CHN_GASbySoil              ', & ! index 1612 - 1614
+     'CH4_CHN_COL                     ','LCH4_CHN_COLbyOH                ','LCH4_CHN_COLbyCl                ', & ! index 1615 - 1617
+     'LCH4_CHN_COLbyO1D               ','LCH4_CHN_COLbySoil              ','CH4_CHN_LIV                     ' /) ! index up to 1620
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_18 = (/ &
+     'LCH4_CHN_LIVbyOH                ','LCH4_CHN_LIVbyCl                ','LCH4_CHN_LIVbyO1D               ', & ! index 1621 - 1623
+     'LCH4_CHN_LIVbySoil              ','CH4_CHN_LDF                     ','LCH4_CHN_LDFbyOH                ', & ! index 1624 - 1626
+     'LCH4_CHN_LDFbyCl                ','LCH4_CHN_LDFbyO1D               ','LCH4_CHN_LDFbySoil              ', & ! index 1627 - 1629
+     'CH4_CHN_WST                     ','LCH4_CHN_WSTbyOH                ','LCH4_CHN_WSTbyCl                ', & ! index 1630 - 1632
+     'LCH4_CHN_WSTbyO1D               ','LCH4_CHN_WSTbySoil              ','CH4_CHN_RIC                     ', & ! index 1633 - 1635
+     'LCH4_CHN_RICbyOH                ','LCH4_CHN_RICbyCl                ','LCH4_CHN_RICbyO1D               ', & ! index 1636 - 1638
+     'LCH4_CHN_RICbySoil              ','CH4_CHN_OTA                     ','LCH4_CHN_OTAbyOH                ', & ! index 1639 - 1641
+     'LCH4_CHN_OTAbyCl                ','LCH4_CHN_OTAbyO1D               ','LCH4_CHN_OTAbySoil              ', & ! index 1642 - 1644
+     'CH4_CHN_BBN                     ','LCH4_CHN_BBNbyOH                ','LCH4_CHN_BBNbyCl                ', & ! index 1645 - 1647
+     'LCH4_CHN_BBNbyO1D               ','LCH4_CHN_BBNbySoil              ','CH4_CHN_WTL                     ', & ! index 1648 - 1650
+     'LCH4_CHN_WTLbyOH                ','LCH4_CHN_WTLbyCl                ','LCH4_CHN_WTLbyO1D               ', & ! index 1651 - 1653
+     'LCH4_CHN_WTLbySoil              ','CH4_CHN_SEE                     ','LCH4_CHN_SEEbyOH                ', & ! index 1654 - 1656
+     'LCH4_CHN_SEEbyCl                ','LCH4_CHN_SEEbyO1D               ','LCH4_CHN_SEEbySoil              ', & ! index 1657 - 1659
+     'CH4_CHN_LAK                     ','LCH4_CHN_LAKbyOH                ','LCH4_CHN_LAKbyCl                ', & ! index 1660 - 1662
+     'LCH4_CHN_LAKbyO1D               ','LCH4_CHN_LAKbySoil              ','CH4_CHN_TER                     ', & ! index 1663 - 1665
+     'LCH4_CHN_TERbyOH                ','LCH4_CHN_TERbyCl                ','LCH4_CHN_TERbyO1D               ', & ! index 1666 - 1668
+     'LCH4_CHN_TERbySoil              ','CH4_CHN_RES                     ','LCH4_CHN_RESbyOH                ', & ! index 1669 - 1671
+     'LCH4_CHN_RESbyCl                ','LCH4_CHN_RESbyO1D               ','LCH4_CHN_RESbySoil              ', & ! index 1672 - 1674
+     'CH4_EAS_OIL                     ','LCH4_EAS_OILbyOH                ','LCH4_EAS_OILbyCl                ', & ! index 1675 - 1677
+     'LCH4_EAS_OILbyO1D               ','LCH4_EAS_OILbySoil              ','CH4_EAS_GAS                     ', & ! index 1678 - 1680
+     'LCH4_EAS_GASbyOH                ','LCH4_EAS_GASbyCl                ','LCH4_EAS_GASbyO1D               ', & ! index 1681 - 1683
+     'LCH4_EAS_GASbySoil              ','CH4_EAS_COL                     ','LCH4_EAS_COLbyOH                ', & ! index 1684 - 1686
+     'LCH4_EAS_COLbyCl                ','LCH4_EAS_COLbyO1D               ','LCH4_EAS_COLbySoil              ', & ! index 1687 - 1689
+     'CH4_EAS_LIV                     ','LCH4_EAS_LIVbyOH                ','LCH4_EAS_LIVbyCl                ', & ! index 1690 - 1692
+     'LCH4_EAS_LIVbyO1D               ','LCH4_EAS_LIVbySoil              ','CH4_EAS_LDF                     ', & ! index 1693 - 1695
+     'LCH4_EAS_LDFbyOH                ','LCH4_EAS_LDFbyCl                ','LCH4_EAS_LDFbyO1D               ', & ! index 1696 - 1698
+     'LCH4_EAS_LDFbySoil              ','CH4_EAS_WST                     ','LCH4_EAS_WSTbyOH                ', & ! index 1699 - 1701
+     'LCH4_EAS_WSTbyCl                ','LCH4_EAS_WSTbyO1D               ','LCH4_EAS_WSTbySoil              ', & ! index 1702 - 1704
+     'CH4_EAS_RIC                     ','LCH4_EAS_RICbyOH                ','LCH4_EAS_RICbyCl                ', & ! index 1705 - 1707
+     'LCH4_EAS_RICbyO1D               ','LCH4_EAS_RICbySoil              ','CH4_EAS_OTA                     ' /) ! index up to 1710
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_19 = (/ &
+     'LCH4_EAS_OTAbyOH                ','LCH4_EAS_OTAbyCl                ','LCH4_EAS_OTAbyO1D               ', & ! index 1711 - 1713
+     'LCH4_EAS_OTAbySoil              ','CH4_EAS_BBN                     ','LCH4_EAS_BBNbyOH                ', & ! index 1714 - 1716
+     'LCH4_EAS_BBNbyCl                ','LCH4_EAS_BBNbyO1D               ','LCH4_EAS_BBNbySoil              ', & ! index 1717 - 1719
+     'CH4_EAS_WTL                     ','LCH4_EAS_WTLbyOH                ','LCH4_EAS_WTLbyCl                ', & ! index 1720 - 1722
+     'LCH4_EAS_WTLbyO1D               ','LCH4_EAS_WTLbySoil              ','CH4_EAS_SEE                     ', & ! index 1723 - 1725
+     'LCH4_EAS_SEEbyOH                ','LCH4_EAS_SEEbyCl                ','LCH4_EAS_SEEbyO1D               ', & ! index 1726 - 1728
+     'LCH4_EAS_SEEbySoil              ','CH4_EAS_LAK                     ','LCH4_EAS_LAKbyOH                ', & ! index 1729 - 1731
+     'LCH4_EAS_LAKbyCl                ','LCH4_EAS_LAKbyO1D               ','LCH4_EAS_LAKbySoil              ', & ! index 1732 - 1734
+     'CH4_EAS_TER                     ','LCH4_EAS_TERbyOH                ','LCH4_EAS_TERbyCl                ', & ! index 1735 - 1737
+     'LCH4_EAS_TERbyO1D               ','LCH4_EAS_TERbySoil              ','CH4_EAS_RES                     ', & ! index 1738 - 1740
+     'LCH4_EAS_RESbyOH                ','LCH4_EAS_RESbyCl                ','LCH4_EAS_RESbyO1D               ', & ! index 1741 - 1743
+     'LCH4_EAS_RESbySoil              ','CH4_SEA_OIL                     ','LCH4_SEA_OILbyOH                ', & ! index 1744 - 1746
+     'LCH4_SEA_OILbyCl                ','LCH4_SEA_OILbyO1D               ','LCH4_SEA_OILbySoil              ', & ! index 1747 - 1749
+     'CH4_SEA_GAS                     ','LCH4_SEA_GASbyOH                ','LCH4_SEA_GASbyCl                ', & ! index 1750 - 1752
+     'LCH4_SEA_GASbyO1D               ','LCH4_SEA_GASbySoil              ','CH4_SEA_COL                     ', & ! index 1753 - 1755
+     'LCH4_SEA_COLbyOH                ','LCH4_SEA_COLbyCl                ','LCH4_SEA_COLbyO1D               ', & ! index 1756 - 1758
+     'LCH4_SEA_COLbySoil              ','CH4_SEA_LIV                     ','LCH4_SEA_LIVbyOH                ', & ! index 1759 - 1761
+     'LCH4_SEA_LIVbyCl                ','LCH4_SEA_LIVbyO1D               ','LCH4_SEA_LIVbySoil              ', & ! index 1762 - 1764
+     'CH4_SEA_LDF                     ','LCH4_SEA_LDFbyOH                ','LCH4_SEA_LDFbyCl                ', & ! index 1765 - 1767
+     'LCH4_SEA_LDFbyO1D               ','LCH4_SEA_LDFbySoil              ','CH4_SEA_WST                     ', & ! index 1768 - 1770
+     'LCH4_SEA_WSTbyOH                ','LCH4_SEA_WSTbyCl                ','LCH4_SEA_WSTbyO1D               ', & ! index 1771 - 1773
+     'LCH4_SEA_WSTbySoil              ','CH4_SEA_RIC                     ','LCH4_SEA_RICbyOH                ', & ! index 1774 - 1776
+     'LCH4_SEA_RICbyCl                ','LCH4_SEA_RICbyO1D               ','LCH4_SEA_RICbySoil              ', & ! index 1777 - 1779
+     'CH4_SEA_OTA                     ','LCH4_SEA_OTAbyOH                ','LCH4_SEA_OTAbyCl                ', & ! index 1780 - 1782
+     'LCH4_SEA_OTAbyO1D               ','LCH4_SEA_OTAbySoil              ','CH4_SEA_BBN                     ', & ! index 1783 - 1785
+     'LCH4_SEA_BBNbyOH                ','LCH4_SEA_BBNbyCl                ','LCH4_SEA_BBNbyO1D               ', & ! index 1786 - 1788
+     'LCH4_SEA_BBNbySoil              ','CH4_SEA_WTL                     ','LCH4_SEA_WTLbyOH                ', & ! index 1789 - 1791
+     'LCH4_SEA_WTLbyCl                ','LCH4_SEA_WTLbyO1D               ','LCH4_SEA_WTLbySoil              ', & ! index 1792 - 1794
+     'CH4_SEA_SEE                     ','LCH4_SEA_SEEbyOH                ','LCH4_SEA_SEEbyCl                ', & ! index 1795 - 1797
+     'LCH4_SEA_SEEbyO1D               ','LCH4_SEA_SEEbySoil              ','CH4_SEA_LAK                     ' /) ! index up to 1800
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(90) :: SPC_NAMES_20 = (/ &
+     'LCH4_SEA_LAKbyOH                ','LCH4_SEA_LAKbyCl                ','LCH4_SEA_LAKbyO1D               ', & ! index 1801 - 1803
+     'LCH4_SEA_LAKbySoil              ','CH4_SEA_TER                     ','LCH4_SEA_TERbyOH                ', & ! index 1804 - 1806
+     'LCH4_SEA_TERbyCl                ','LCH4_SEA_TERbyO1D               ','LCH4_SEA_TERbySoil              ', & ! index 1807 - 1809
+     'CH4_SEA_RES                     ','LCH4_SEA_RESbyOH                ','LCH4_SEA_RESbyCl                ', & ! index 1810 - 1812
+     'LCH4_SEA_RESbyO1D               ','LCH4_SEA_RESbySoil              ','CH4_OCE_OIL                     ', & ! index 1813 - 1815
+     'LCH4_OCE_OILbyOH                ','LCH4_OCE_OILbyCl                ','LCH4_OCE_OILbyO1D               ', & ! index 1816 - 1818
+     'LCH4_OCE_OILbySoil              ','CH4_OCE_GAS                     ','LCH4_OCE_GASbyOH                ', & ! index 1819 - 1821
+     'LCH4_OCE_GASbyCl                ','LCH4_OCE_GASbyO1D               ','LCH4_OCE_GASbySoil              ', & ! index 1822 - 1824
+     'CH4_OCE_COL                     ','LCH4_OCE_COLbyOH                ','LCH4_OCE_COLbyCl                ', & ! index 1825 - 1827
+     'LCH4_OCE_COLbyO1D               ','LCH4_OCE_COLbySoil              ','CH4_OCE_LIV                     ', & ! index 1828 - 1830
+     'LCH4_OCE_LIVbyOH                ','LCH4_OCE_LIVbyCl                ','LCH4_OCE_LIVbyO1D               ', & ! index 1831 - 1833
+     'LCH4_OCE_LIVbySoil              ','CH4_OCE_LDF                     ','LCH4_OCE_LDFbyOH                ', & ! index 1834 - 1836
+     'LCH4_OCE_LDFbyCl                ','LCH4_OCE_LDFbyO1D               ','LCH4_OCE_LDFbySoil              ', & ! index 1837 - 1839
+     'CH4_OCE_WST                     ','LCH4_OCE_WSTbyOH                ','LCH4_OCE_WSTbyCl                ', & ! index 1840 - 1842
+     'LCH4_OCE_WSTbyO1D               ','LCH4_OCE_WSTbySoil              ','CH4_OCE_RIC                     ', & ! index 1843 - 1845
+     'LCH4_OCE_RICbyOH                ','LCH4_OCE_RICbyCl                ','LCH4_OCE_RICbyO1D               ', & ! index 1846 - 1848
+     'LCH4_OCE_RICbySoil              ','CH4_OCE_OTA                     ','LCH4_OCE_OTAbyOH                ', & ! index 1849 - 1851
+     'LCH4_OCE_OTAbyCl                ','LCH4_OCE_OTAbyO1D               ','LCH4_OCE_OTAbySoil              ', & ! index 1852 - 1854
+     'CH4_OCE_BBN                     ','LCH4_OCE_BBNbyOH                ','LCH4_OCE_BBNbyCl                ', & ! index 1855 - 1857
+     'LCH4_OCE_BBNbyO1D               ','LCH4_OCE_BBNbySoil              ','CH4_OCE_WTL                     ', & ! index 1858 - 1860
+     'LCH4_OCE_WTLbyOH                ','LCH4_OCE_WTLbyCl                ','LCH4_OCE_WTLbyO1D               ', & ! index 1861 - 1863
+     'LCH4_OCE_WTLbySoil              ','CH4_OCE_SEE                     ','LCH4_OCE_SEEbyOH                ', & ! index 1864 - 1866
+     'LCH4_OCE_SEEbyCl                ','LCH4_OCE_SEEbyO1D               ','LCH4_OCE_SEEbySoil              ', & ! index 1867 - 1869
+     'CH4_OCE_LAK                     ','LCH4_OCE_LAKbyOH                ','LCH4_OCE_LAKbyCl                ', & ! index 1870 - 1872
+     'LCH4_OCE_LAKbyO1D               ','LCH4_OCE_LAKbySoil              ','CH4_OCE_TER                     ', & ! index 1873 - 1875
+     'LCH4_OCE_TERbyOH                ','LCH4_OCE_TERbyCl                ','LCH4_OCE_TERbyO1D               ', & ! index 1876 - 1878
+     'LCH4_OCE_TERbySoil              ','CH4_OCE_RES                     ','LCH4_OCE_RESbyOH                ', & ! index 1879 - 1881
+     'LCH4_OCE_RESbyCl                ','LCH4_OCE_RESbyO1D               ','LCH4_OCE_RESbySoil              ', & ! index 1882 - 1884
+     'CH4_ROW_OIL                     ','LCH4_ROW_OILbyOH                ','LCH4_ROW_OILbyCl                ', & ! index 1885 - 1887
+     'LCH4_ROW_OILbyO1D               ','LCH4_ROW_OILbySoil              ','CH4_ROW_GAS                     ' /) ! index up to 1890
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(73) :: SPC_NAMES_21 = (/ &
+     'LCH4_ROW_GASbyOH                ','LCH4_ROW_GASbyCl                ','LCH4_ROW_GASbyO1D               ', & ! index 1891 - 1893
+     'LCH4_ROW_GASbySoil              ','CH4_ROW_COL                     ','LCH4_ROW_COLbyOH                ', & ! index 1894 - 1896
+     'LCH4_ROW_COLbyCl                ','LCH4_ROW_COLbyO1D               ','LCH4_ROW_COLbySoil              ', & ! index 1897 - 1899
+     'CH4_ROW_LIV                     ','LCH4_ROW_LIVbyOH                ','LCH4_ROW_LIVbyCl                ', & ! index 1900 - 1902
+     'LCH4_ROW_LIVbyO1D               ','LCH4_ROW_LIVbySoil              ','CH4_ROW_LDF                     ', & ! index 1903 - 1905
+     'LCH4_ROW_LDFbyOH                ','LCH4_ROW_LDFbyCl                ','LCH4_ROW_LDFbyO1D               ', & ! index 1906 - 1908
+     'LCH4_ROW_LDFbySoil              ','CH4_ROW_WST                     ','LCH4_ROW_WSTbyOH                ', & ! index 1909 - 1911
+     'LCH4_ROW_WSTbyCl                ','LCH4_ROW_WSTbyO1D               ','LCH4_ROW_WSTbySoil              ', & ! index 1912 - 1914
+     'CH4_ROW_RIC                     ','LCH4_ROW_RICbyOH                ','LCH4_ROW_RICbyCl                ', & ! index 1915 - 1917
+     'LCH4_ROW_RICbyO1D               ','LCH4_ROW_RICbySoil              ','CH4_ROW_OTA                     ', & ! index 1918 - 1920
+     'LCH4_ROW_OTAbyOH                ','LCH4_ROW_OTAbyCl                ','LCH4_ROW_OTAbyO1D               ', & ! index 1921 - 1923
+     'LCH4_ROW_OTAbySoil              ','CH4_ROW_BBN                     ','LCH4_ROW_BBNbyOH                ', & ! index 1924 - 1926
+     'LCH4_ROW_BBNbyCl                ','LCH4_ROW_BBNbyO1D               ','LCH4_ROW_BBNbySoil              ', & ! index 1927 - 1929
+     'CH4_ROW_WTL                     ','LCH4_ROW_WTLbyOH                ','LCH4_ROW_WTLbyCl                ', & ! index 1930 - 1932
+     'LCH4_ROW_WTLbyO1D               ','LCH4_ROW_WTLbySoil              ','CH4_ROW_SEE                     ', & ! index 1933 - 1935
+     'LCH4_ROW_SEEbyOH                ','LCH4_ROW_SEEbyCl                ','LCH4_ROW_SEEbyO1D               ', & ! index 1936 - 1938
+     'LCH4_ROW_SEEbySoil              ','CH4_ROW_LAK                     ','LCH4_ROW_LAKbyOH                ', & ! index 1939 - 1941
+     'LCH4_ROW_LAKbyCl                ','LCH4_ROW_LAKbyO1D               ','LCH4_ROW_LAKbySoil              ', & ! index 1942 - 1944
+     'CH4_ROW_TER                     ','LCH4_ROW_TERbyOH                ','LCH4_ROW_TERbyCl                ', & ! index 1945 - 1947
+     'LCH4_ROW_TERbyO1D               ','LCH4_ROW_TERbySoil              ','CH4_ROW_RES                     ', & ! index 1948 - 1950
+     'LCH4_ROW_RESbyOH                ','LCH4_ROW_RESbyCl                ','LCH4_ROW_RESbyO1D               ', & ! index 1951 - 1953
+     'LCH4_ROW_RESbySoil              ','PCO                             ','LCO                             ', & ! index 1954 - 1956
+     'LCH4                            ','FixedOH                         ','FixedCl                         ', & ! index 1957 - 1959
+     'FixedO1D                        ','DummyCH4                        ','DummyNMVOC                      ', & ! index 1960 - 1962
+     'DummyCO                         ' /) ! index up to 1963
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(1963) :: SPC_NAMES = (/&
+    SPC_NAMES_0, SPC_NAMES_1, SPC_NAMES_2, SPC_NAMES_3, SPC_NAMES_4, &
+    SPC_NAMES_5, SPC_NAMES_6, SPC_NAMES_7, SPC_NAMES_8, SPC_NAMES_9, &
+    SPC_NAMES_10, SPC_NAMES_11, SPC_NAMES_12, SPC_NAMES_13, SPC_NAMES_14, &
+    SPC_NAMES_15, SPC_NAMES_16, SPC_NAMES_17, SPC_NAMES_18, SPC_NAMES_19, &
+    SPC_NAMES_20, SPC_NAMES_21 /)
 
   INTEGER, DIMENSION(1) :: LOOKAT
   INTEGER, DIMENSION(1) :: MONITOR
   CHARACTER(LEN=32), DIMENSION(1) :: SMASS
   CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_0 = (/ &
-     '     CH4 + FixedOH --> LCH4byOH + LCH4                                                              ', & ! index 1
-     '     CH4 + FixedCl --> LCH4byCl + LCH4                                                              ', & ! index 2
-     '    CH4 + FixedO1D --> LCH4byO1D + LCH4                                                             ', & ! index 3
-     '               CH4 --> LCH4bySoil + LCH4                                                            ', & ! index 4
-     '          DummyCH4 --> CO + PCOfromCH4 + PCO                                                        ', & ! index 5
-     '      CO + FixedOH --> LCObyOH + LCO                                                                ', & ! index 6
-     '        DummyNMVOC --> CO + PCOfromNMVOC + PCO                                                      ', & ! index 7
-     ' CH4_OIL + FixedOH --> LCH4_OILbyOH + DummyCO                                                       ', & ! index 8
-     ' CH4_OIL + FixedCl --> LCH4_OILbyCl + DummyCO                                                       ', & ! index 9
-     'CH4_OIL + FixedO1D --> LCH4_OILbyO1D + DummyCO                                                      ', & ! index 10
-     '           CH4_OIL --> LCH4_OILbySoil + DummyCO                                                     ', & ! index 11
-     ' CH4_GAS + FixedOH --> LCH4_GASbyOH + DummyCO                                                       ', & ! index 12
-     ' CH4_GAS + FixedCl --> LCH4_GASbyCl + DummyCO                                                       ', & ! index 13
-     'CH4_GAS + FixedO1D --> LCH4_GASbyO1D + DummyCO                                                      ', & ! index 14
-     '           CH4_GAS --> LCH4_GASbySoil + DummyCO                                                     ', & ! index 15
-     ' CH4_COL + FixedOH --> LCH4_COLbyOH + DummyCO                                                       ', & ! index 16
-     ' CH4_COL + FixedCl --> LCH4_COLbyCl + DummyCO                                                       ', & ! index 17
-     'CH4_COL + FixedO1D --> LCH4_COLbyO1D + DummyCO                                                      ', & ! index 18
-     '           CH4_COL --> LCH4_COLbySoil + DummyCO                                                     ', & ! index 19
-     ' CH4_LIV + FixedOH --> LCH4_LIVbyOH + DummyCO                                                       ', & ! index 20
-     ' CH4_LIV + FixedCl --> LCH4_LIVbyCl + DummyCO                                                       ', & ! index 21
-     'CH4_LIV + FixedO1D --> LCH4_LIVbyO1D + DummyCO                                                      ', & ! index 22
-     '           CH4_LIV --> LCH4_LIVbySoil + DummyCO                                                     ', & ! index 23
-     ' CH4_LDF + FixedOH --> LCH4_LDFbyOH + DummyCO                                                       ', & ! index 24
-     ' CH4_LDF + FixedCl --> LCH4_LDFbyCl + DummyCO                                                       ', & ! index 25
-     'CH4_LDF + FixedO1D --> LCH4_LDFbyO1D + DummyCO                                                      ', & ! index 26
-     '           CH4_LDF --> LCH4_LDFbySoil + DummyCO                                                     ', & ! index 27
-     ' CH4_WST + FixedOH --> LCH4_WSTbyOH + DummyCO                                                       ', & ! index 28
-     ' CH4_WST + FixedCl --> LCH4_WSTbyCl + DummyCO                                                       ', & ! index 29
-     'CH4_WST + FixedO1D --> LCH4_WSTbyO1D + DummyCO                                                      ' /) ! index up to 30
+     '         CH4 + FixedOH --> LCH4byOH + LCH4                                                          ', & ! index 1
+     '         CH4 + FixedCl --> LCH4byCl + LCH4                                                          ', & ! index 2
+     '        CH4 + FixedO1D --> LCH4byO1D + LCH4                                                         ', & ! index 3
+     '                   CH4 --> LCH4bySoil + LCH4                                                        ', & ! index 4
+     '              DummyCH4 --> CO + PCOfromCH4 + PCO                                                    ', & ! index 5
+     '          CO + FixedOH --> LCObyOH + LCO                                                            ', & ! index 6
+     '            DummyNMVOC --> CO + PCOfromNMVOC + PCO                                                  ', & ! index 7
+     '     CH4_OIL + FixedOH --> LCH4_OILbyOH + DummyCO                                                   ', & ! index 8
+     '     CH4_OIL + FixedCl --> LCH4_OILbyCl + DummyCO                                                   ', & ! index 9
+     '    CH4_OIL + FixedO1D --> LCH4_OILbyO1D + DummyCO                                                  ', & ! index 10
+     '               CH4_OIL --> LCH4_OILbySoil + DummyCO                                                 ', & ! index 11
+     '     CH4_GAS + FixedOH --> LCH4_GASbyOH + DummyCO                                                   ', & ! index 12
+     '     CH4_GAS + FixedCl --> LCH4_GASbyCl + DummyCO                                                   ', & ! index 13
+     '    CH4_GAS + FixedO1D --> LCH4_GASbyO1D + DummyCO                                                  ', & ! index 14
+     '               CH4_GAS --> LCH4_GASbySoil + DummyCO                                                 ', & ! index 15
+     '     CH4_COL + FixedOH --> LCH4_COLbyOH + DummyCO                                                   ', & ! index 16
+     '     CH4_COL + FixedCl --> LCH4_COLbyCl + DummyCO                                                   ', & ! index 17
+     '    CH4_COL + FixedO1D --> LCH4_COLbyO1D + DummyCO                                                  ', & ! index 18
+     '               CH4_COL --> LCH4_COLbySoil + DummyCO                                                 ', & ! index 19
+     '     CH4_LIV + FixedOH --> LCH4_LIVbyOH + DummyCO                                                   ', & ! index 20
+     '     CH4_LIV + FixedCl --> LCH4_LIVbyCl + DummyCO                                                   ', & ! index 21
+     '    CH4_LIV + FixedO1D --> LCH4_LIVbyO1D + DummyCO                                                  ', & ! index 22
+     '               CH4_LIV --> LCH4_LIVbySoil + DummyCO                                                 ', & ! index 23
+     '     CH4_LDF + FixedOH --> LCH4_LDFbyOH + DummyCO                                                   ', & ! index 24
+     '     CH4_LDF + FixedCl --> LCH4_LDFbyCl + DummyCO                                                   ', & ! index 25
+     '    CH4_LDF + FixedO1D --> LCH4_LDFbyO1D + DummyCO                                                  ', & ! index 26
+     '               CH4_LDF --> LCH4_LDFbySoil + DummyCO                                                 ', & ! index 27
+     '     CH4_WST + FixedOH --> LCH4_WSTbyOH + DummyCO                                                   ', & ! index 28
+     '     CH4_WST + FixedCl --> LCH4_WSTbyCl + DummyCO                                                   ', & ! index 29
+     '    CH4_WST + FixedO1D --> LCH4_WSTbyO1D + DummyCO                                                  ' /) ! index up to 30
   CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_1 = (/ &
-     '           CH4_WST --> LCH4_WSTbySoil + DummyCO                                                     ', & ! index 31
-     ' CH4_RIC + FixedOH --> LCH4_RICbyOH + DummyCO                                                       ', & ! index 32
-     ' CH4_RIC + FixedCl --> LCH4_RICbyCl + DummyCO                                                       ', & ! index 33
-     'CH4_RIC + FixedO1D --> LCH4_RICbyO1D + DummyCO                                                      ', & ! index 34
-     '           CH4_RIC --> LCH4_RICbySoil + DummyCO                                                     ', & ! index 35
-     ' CH4_OTA + FixedOH --> LCH4_OTAbyOH + DummyCO                                                       ', & ! index 36
-     ' CH4_OTA + FixedCl --> LCH4_OTAbyCl + DummyCO                                                       ', & ! index 37
-     'CH4_OTA + FixedO1D --> LCH4_OTAbyO1D + DummyCO                                                      ', & ! index 38
-     '           CH4_OTA --> LCH4_OTAbySoil + DummyCO                                                     ', & ! index 39
-     ' CH4_BBN + FixedOH --> LCH4_BBNbyOH + DummyCO                                                       ', & ! index 40
-     ' CH4_BBN + FixedCl --> LCH4_BBNbyCl + DummyCO                                                       ', & ! index 41
-     'CH4_BBN + FixedO1D --> LCH4_BBNbyO1D + DummyCO                                                      ', & ! index 42
-     '           CH4_BBN --> LCH4_BBNbySoil + DummyCO                                                     ', & ! index 43
-     ' CH4_WTL + FixedOH --> LCH4_WTLbyOH + DummyCO                                                       ', & ! index 44
-     ' CH4_WTL + FixedCl --> LCH4_WTLbyCl + DummyCO                                                       ', & ! index 45
-     'CH4_WTL + FixedO1D --> LCH4_WTLbyO1D + DummyCO                                                      ', & ! index 46
-     '           CH4_WTL --> LCH4_WTLbySoil + DummyCO                                                     ', & ! index 47
-     ' CH4_SEE + FixedOH --> LCH4_SEEbyOH + DummyCO                                                       ', & ! index 48
-     ' CH4_SEE + FixedCl --> LCH4_SEEbyCl + DummyCO                                                       ', & ! index 49
-     'CH4_SEE + FixedO1D --> LCH4_SEEbyO1D + DummyCO                                                      ', & ! index 50
-     '           CH4_SEE --> LCH4_SEEbySoil + DummyCO                                                     ', & ! index 51
-     ' CH4_LAK + FixedOH --> LCH4_LAKbyOH + DummyCO                                                       ', & ! index 52
-     ' CH4_LAK + FixedCl --> LCH4_LAKbyCl + DummyCO                                                       ', & ! index 53
-     'CH4_LAK + FixedO1D --> LCH4_LAKbyO1D + DummyCO                                                      ', & ! index 54
-     '           CH4_LAK --> LCH4_LAKbySoil + DummyCO                                                     ', & ! index 55
-     ' CH4_TER + FixedOH --> LCH4_TERbyOH + DummyCO                                                       ', & ! index 56
-     ' CH4_TER + FixedCl --> LCH4_TERbyCl + DummyCO                                                       ', & ! index 57
-     'CH4_TER + FixedO1D --> LCH4_TERbyO1D + DummyCO                                                      ', & ! index 58
-     '           CH4_TER --> LCH4_TERbySoil + DummyCO                                                     ', & ! index 59
-     ' CH4_RES + FixedOH --> LCH4_RESbyOH + DummyCO                                                       ' /) ! index up to 60
+     '               CH4_WST --> LCH4_WSTbySoil + DummyCO                                                 ', & ! index 31
+     '     CH4_RIC + FixedOH --> LCH4_RICbyOH + DummyCO                                                   ', & ! index 32
+     '     CH4_RIC + FixedCl --> LCH4_RICbyCl + DummyCO                                                   ', & ! index 33
+     '    CH4_RIC + FixedO1D --> LCH4_RICbyO1D + DummyCO                                                  ', & ! index 34
+     '               CH4_RIC --> LCH4_RICbySoil + DummyCO                                                 ', & ! index 35
+     '     CH4_OTA + FixedOH --> LCH4_OTAbyOH + DummyCO                                                   ', & ! index 36
+     '     CH4_OTA + FixedCl --> LCH4_OTAbyCl + DummyCO                                                   ', & ! index 37
+     '    CH4_OTA + FixedO1D --> LCH4_OTAbyO1D + DummyCO                                                  ', & ! index 38
+     '               CH4_OTA --> LCH4_OTAbySoil + DummyCO                                                 ', & ! index 39
+     '     CH4_BBN + FixedOH --> LCH4_BBNbyOH + DummyCO                                                   ', & ! index 40
+     '     CH4_BBN + FixedCl --> LCH4_BBNbyCl + DummyCO                                                   ', & ! index 41
+     '    CH4_BBN + FixedO1D --> LCH4_BBNbyO1D + DummyCO                                                  ', & ! index 42
+     '               CH4_BBN --> LCH4_BBNbySoil + DummyCO                                                 ', & ! index 43
+     '     CH4_WTL + FixedOH --> LCH4_WTLbyOH + DummyCO                                                   ', & ! index 44
+     '     CH4_WTL + FixedCl --> LCH4_WTLbyCl + DummyCO                                                   ', & ! index 45
+     '    CH4_WTL + FixedO1D --> LCH4_WTLbyO1D + DummyCO                                                  ', & ! index 46
+     '               CH4_WTL --> LCH4_WTLbySoil + DummyCO                                                 ', & ! index 47
+     '     CH4_SEE + FixedOH --> LCH4_SEEbyOH + DummyCO                                                   ', & ! index 48
+     '     CH4_SEE + FixedCl --> LCH4_SEEbyCl + DummyCO                                                   ', & ! index 49
+     '    CH4_SEE + FixedO1D --> LCH4_SEEbyO1D + DummyCO                                                  ', & ! index 50
+     '               CH4_SEE --> LCH4_SEEbySoil + DummyCO                                                 ', & ! index 51
+     '     CH4_LAK + FixedOH --> LCH4_LAKbyOH + DummyCO                                                   ', & ! index 52
+     '     CH4_LAK + FixedCl --> LCH4_LAKbyCl + DummyCO                                                   ', & ! index 53
+     '    CH4_LAK + FixedO1D --> LCH4_LAKbyO1D + DummyCO                                                  ', & ! index 54
+     '               CH4_LAK --> LCH4_LAKbySoil + DummyCO                                                 ', & ! index 55
+     '     CH4_TER + FixedOH --> LCH4_TERbyOH + DummyCO                                                   ', & ! index 56
+     '     CH4_TER + FixedCl --> LCH4_TERbyCl + DummyCO                                                   ', & ! index 57
+     '    CH4_TER + FixedO1D --> LCH4_TERbyO1D + DummyCO                                                  ', & ! index 58
+     '               CH4_TER --> LCH4_TERbySoil + DummyCO                                                 ', & ! index 59
+     '     CH4_RES + FixedOH --> LCH4_RESbyOH + DummyCO                                                   ' /) ! index up to 60
   CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_2 = (/ &
-     ' CH4_RES + FixedCl --> LCH4_RESbyCl + DummyCO                                                       ', & ! index 61
-     'CH4_RES + FixedO1D --> LCH4_RESbyO1D + DummyCO                                                      ', & ! index 62
-     '           CH4_RES --> LCH4_RESbySoil + DummyCO                                                     ', & ! index 63
-     ' CH4_USA + FixedOH --> LCH4_USAbyOH + DummyCO                                                       ', & ! index 64
-     ' CH4_USA + FixedCl --> LCH4_USAbyCl + DummyCO                                                       ', & ! index 65
-     'CH4_USA + FixedO1D --> LCH4_USAbyO1D + DummyCO                                                      ', & ! index 66
-     '           CH4_USA --> LCH4_USAbySoil + DummyCO                                                     ', & ! index 67
-     ' CH4_CAN + FixedOH --> LCH4_CANbyOH + DummyCO                                                       ', & ! index 68
-     ' CH4_CAN + FixedCl --> LCH4_CANbyCl + DummyCO                                                       ', & ! index 69
-     'CH4_CAN + FixedO1D --> LCH4_CANbyO1D + DummyCO                                                      ', & ! index 70
-     '           CH4_CAN --> LCH4_CANbySoil + DummyCO                                                     ', & ! index 71
-     ' CH4_MEX + FixedOH --> LCH4_MEXbyOH + DummyCO                                                       ', & ! index 72
-     ' CH4_MEX + FixedCl --> LCH4_MEXbyCl + DummyCO                                                       ', & ! index 73
-     'CH4_MEX + FixedO1D --> LCH4_MEXbyO1D + DummyCO                                                      ', & ! index 74
-     '           CH4_MEX --> LCH4_MEXbySoil + DummyCO                                                     ', & ! index 75
-     ' CH4_CAC + FixedOH --> LCH4_CACbyOH + DummyCO                                                       ', & ! index 76
-     ' CH4_CAC + FixedCl --> LCH4_CACbyCl + DummyCO                                                       ', & ! index 77
-     'CH4_CAC + FixedO1D --> LCH4_CACbyO1D + DummyCO                                                      ', & ! index 78
-     '           CH4_CAC --> LCH4_CACbySoil + DummyCO                                                     ', & ! index 79
-     ' CH4_BRA + FixedOH --> LCH4_BRAbyOH + DummyCO                                                       ', & ! index 80
-     ' CH4_BRA + FixedCl --> LCH4_BRAbyCl + DummyCO                                                       ', & ! index 81
-     'CH4_BRA + FixedO1D --> LCH4_BRAbyO1D + DummyCO                                                      ', & ! index 82
-     '           CH4_BRA --> LCH4_BRAbySoil + DummyCO                                                     ', & ! index 83
-     ' CH4_NSA + FixedOH --> LCH4_NSAbyOH + DummyCO                                                       ', & ! index 84
-     ' CH4_NSA + FixedCl --> LCH4_NSAbyCl + DummyCO                                                       ', & ! index 85
-     'CH4_NSA + FixedO1D --> LCH4_NSAbyO1D + DummyCO                                                      ', & ! index 86
-     '           CH4_NSA --> LCH4_NSAbySoil + DummyCO                                                     ', & ! index 87
-     ' CH4_SCN + FixedOH --> LCH4_SCNbyOH + DummyCO                                                       ', & ! index 88
-     ' CH4_SCN + FixedCl --> LCH4_SCNbyCl + DummyCO                                                       ', & ! index 89
-     'CH4_SCN + FixedO1D --> LCH4_SCNbyO1D + DummyCO                                                      ' /) ! index up to 90
+     '     CH4_RES + FixedCl --> LCH4_RESbyCl + DummyCO                                                   ', & ! index 61
+     '    CH4_RES + FixedO1D --> LCH4_RESbyO1D + DummyCO                                                  ', & ! index 62
+     '               CH4_RES --> LCH4_RESbySoil + DummyCO                                                 ', & ! index 63
+     '     CH4_USA + FixedOH --> LCH4_USAbyOH + DummyCO                                                   ', & ! index 64
+     '     CH4_USA + FixedCl --> LCH4_USAbyCl + DummyCO                                                   ', & ! index 65
+     '    CH4_USA + FixedO1D --> LCH4_USAbyO1D + DummyCO                                                  ', & ! index 66
+     '               CH4_USA --> LCH4_USAbySoil + DummyCO                                                 ', & ! index 67
+     '     CH4_CAN + FixedOH --> LCH4_CANbyOH + DummyCO                                                   ', & ! index 68
+     '     CH4_CAN + FixedCl --> LCH4_CANbyCl + DummyCO                                                   ', & ! index 69
+     '    CH4_CAN + FixedO1D --> LCH4_CANbyO1D + DummyCO                                                  ', & ! index 70
+     '               CH4_CAN --> LCH4_CANbySoil + DummyCO                                                 ', & ! index 71
+     '     CH4_MEX + FixedOH --> LCH4_MEXbyOH + DummyCO                                                   ', & ! index 72
+     '     CH4_MEX + FixedCl --> LCH4_MEXbyCl + DummyCO                                                   ', & ! index 73
+     '    CH4_MEX + FixedO1D --> LCH4_MEXbyO1D + DummyCO                                                  ', & ! index 74
+     '               CH4_MEX --> LCH4_MEXbySoil + DummyCO                                                 ', & ! index 75
+     '     CH4_CAC + FixedOH --> LCH4_CACbyOH + DummyCO                                                   ', & ! index 76
+     '     CH4_CAC + FixedCl --> LCH4_CACbyCl + DummyCO                                                   ', & ! index 77
+     '    CH4_CAC + FixedO1D --> LCH4_CACbyO1D + DummyCO                                                  ', & ! index 78
+     '               CH4_CAC --> LCH4_CACbySoil + DummyCO                                                 ', & ! index 79
+     '     CH4_BRA + FixedOH --> LCH4_BRAbyOH + DummyCO                                                   ', & ! index 80
+     '     CH4_BRA + FixedCl --> LCH4_BRAbyCl + DummyCO                                                   ', & ! index 81
+     '    CH4_BRA + FixedO1D --> LCH4_BRAbyO1D + DummyCO                                                  ', & ! index 82
+     '               CH4_BRA --> LCH4_BRAbySoil + DummyCO                                                 ', & ! index 83
+     '     CH4_NSA + FixedOH --> LCH4_NSAbyOH + DummyCO                                                   ', & ! index 84
+     '     CH4_NSA + FixedCl --> LCH4_NSAbyCl + DummyCO                                                   ', & ! index 85
+     '    CH4_NSA + FixedO1D --> LCH4_NSAbyO1D + DummyCO                                                  ', & ! index 86
+     '               CH4_NSA --> LCH4_NSAbySoil + DummyCO                                                 ', & ! index 87
+     '     CH4_SCN + FixedOH --> LCH4_SCNbyOH + DummyCO                                                   ', & ! index 88
+     '     CH4_SCN + FixedCl --> LCH4_SCNbyCl + DummyCO                                                   ', & ! index 89
+     '    CH4_SCN + FixedO1D --> LCH4_SCNbyO1D + DummyCO                                                  ' /) ! index up to 90
   CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_3 = (/ &
-     '           CH4_SCN --> LCH4_SCNbySoil + DummyCO                                                     ', & ! index 91
-     ' CH4_WEU + FixedOH --> LCH4_WEUbyOH + DummyCO                                                       ', & ! index 92
-     ' CH4_WEU + FixedCl --> LCH4_WEUbyCl + DummyCO                                                       ', & ! index 93
-     'CH4_WEU + FixedO1D --> LCH4_WEUbyO1D + DummyCO                                                      ', & ! index 94
-     '           CH4_WEU --> LCH4_WEUbySoil + DummyCO                                                     ', & ! index 95
-     ' CH4_EEU + FixedOH --> LCH4_EEUbyOH + DummyCO                                                       ', & ! index 96
-     ' CH4_EEU + FixedCl --> LCH4_EEUbyCl + DummyCO                                                       ', & ! index 97
-     'CH4_EEU + FixedO1D --> LCH4_EEUbyO1D + DummyCO                                                      ', & ! index 98
-     '           CH4_EEU --> LCH4_EEUbySoil + DummyCO                                                     ', & ! index 99
-     ' CH4_RUS + FixedOH --> LCH4_RUSbyOH + DummyCO                                                       ', & ! index 100
-     ' CH4_RUS + FixedCl --> LCH4_RUSbyCl + DummyCO                                                       ', & ! index 101
-     'CH4_RUS + FixedO1D --> LCH4_RUSbyO1D + DummyCO                                                      ', & ! index 102
-     '           CH4_RUS --> LCH4_RUSbySoil + DummyCO                                                     ', & ! index 103
-     ' CH4_MDE + FixedOH --> LCH4_MDEbyOH + DummyCO                                                       ', & ! index 104
-     ' CH4_MDE + FixedCl --> LCH4_MDEbyCl + DummyCO                                                       ', & ! index 105
-     'CH4_MDE + FixedO1D --> LCH4_MDEbyO1D + DummyCO                                                      ', & ! index 106
-     '           CH4_MDE --> LCH4_MDEbySoil + DummyCO                                                     ', & ! index 107
-     ' CH4_NAF + FixedOH --> LCH4_NAFbyOH + DummyCO                                                       ', & ! index 108
-     ' CH4_NAF + FixedCl --> LCH4_NAFbyCl + DummyCO                                                       ', & ! index 109
-     'CH4_NAF + FixedO1D --> LCH4_NAFbyO1D + DummyCO                                                      ', & ! index 110
-     '           CH4_NAF --> LCH4_NAFbySoil + DummyCO                                                     ', & ! index 111
-     ' CH4_WAF + FixedOH --> LCH4_WAFbyOH + DummyCO                                                       ', & ! index 112
-     ' CH4_WAF + FixedCl --> LCH4_WAFbyCl + DummyCO                                                       ', & ! index 113
-     'CH4_WAF + FixedO1D --> LCH4_WAFbyO1D + DummyCO                                                      ', & ! index 114
-     '           CH4_WAF --> LCH4_WAFbySoil + DummyCO                                                     ', & ! index 115
-     ' CH4_CAF + FixedOH --> LCH4_CAFbyOH + DummyCO                                                       ', & ! index 116
-     ' CH4_CAF + FixedCl --> LCH4_CAFbyCl + DummyCO                                                       ', & ! index 117
-     'CH4_CAF + FixedO1D --> LCH4_CAFbyO1D + DummyCO                                                      ', & ! index 118
-     '           CH4_CAF --> LCH4_CAFbySoil + DummyCO                                                     ', & ! index 119
-     ' CH4_EAF + FixedOH --> LCH4_EAFbyOH + DummyCO                                                       ' /) ! index up to 120
+     '               CH4_SCN --> LCH4_SCNbySoil + DummyCO                                                 ', & ! index 91
+     '     CH4_WEU + FixedOH --> LCH4_WEUbyOH + DummyCO                                                   ', & ! index 92
+     '     CH4_WEU + FixedCl --> LCH4_WEUbyCl + DummyCO                                                   ', & ! index 93
+     '    CH4_WEU + FixedO1D --> LCH4_WEUbyO1D + DummyCO                                                  ', & ! index 94
+     '               CH4_WEU --> LCH4_WEUbySoil + DummyCO                                                 ', & ! index 95
+     '     CH4_EEU + FixedOH --> LCH4_EEUbyOH + DummyCO                                                   ', & ! index 96
+     '     CH4_EEU + FixedCl --> LCH4_EEUbyCl + DummyCO                                                   ', & ! index 97
+     '    CH4_EEU + FixedO1D --> LCH4_EEUbyO1D + DummyCO                                                  ', & ! index 98
+     '               CH4_EEU --> LCH4_EEUbySoil + DummyCO                                                 ', & ! index 99
+     '     CH4_RUS + FixedOH --> LCH4_RUSbyOH + DummyCO                                                   ', & ! index 100
+     '     CH4_RUS + FixedCl --> LCH4_RUSbyCl + DummyCO                                                   ', & ! index 101
+     '    CH4_RUS + FixedO1D --> LCH4_RUSbyO1D + DummyCO                                                  ', & ! index 102
+     '               CH4_RUS --> LCH4_RUSbySoil + DummyCO                                                 ', & ! index 103
+     '     CH4_MDE + FixedOH --> LCH4_MDEbyOH + DummyCO                                                   ', & ! index 104
+     '     CH4_MDE + FixedCl --> LCH4_MDEbyCl + DummyCO                                                   ', & ! index 105
+     '    CH4_MDE + FixedO1D --> LCH4_MDEbyO1D + DummyCO                                                  ', & ! index 106
+     '               CH4_MDE --> LCH4_MDEbySoil + DummyCO                                                 ', & ! index 107
+     '     CH4_NAF + FixedOH --> LCH4_NAFbyOH + DummyCO                                                   ', & ! index 108
+     '     CH4_NAF + FixedCl --> LCH4_NAFbyCl + DummyCO                                                   ', & ! index 109
+     '    CH4_NAF + FixedO1D --> LCH4_NAFbyO1D + DummyCO                                                  ', & ! index 110
+     '               CH4_NAF --> LCH4_NAFbySoil + DummyCO                                                 ', & ! index 111
+     '     CH4_WAF + FixedOH --> LCH4_WAFbyOH + DummyCO                                                   ', & ! index 112
+     '     CH4_WAF + FixedCl --> LCH4_WAFbyCl + DummyCO                                                   ', & ! index 113
+     '    CH4_WAF + FixedO1D --> LCH4_WAFbyO1D + DummyCO                                                  ', & ! index 114
+     '               CH4_WAF --> LCH4_WAFbySoil + DummyCO                                                 ', & ! index 115
+     '     CH4_CAF + FixedOH --> LCH4_CAFbyOH + DummyCO                                                   ', & ! index 116
+     '     CH4_CAF + FixedCl --> LCH4_CAFbyCl + DummyCO                                                   ', & ! index 117
+     '    CH4_CAF + FixedO1D --> LCH4_CAFbyO1D + DummyCO                                                  ', & ! index 118
+     '               CH4_CAF --> LCH4_CAFbySoil + DummyCO                                                 ', & ! index 119
+     '     CH4_EAF + FixedOH --> LCH4_EAFbyOH + DummyCO                                                   ' /) ! index up to 120
   CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_4 = (/ &
-     ' CH4_EAF + FixedCl --> LCH4_EAFbyCl + DummyCO                                                       ', & ! index 121
-     'CH4_EAF + FixedO1D --> LCH4_EAFbyO1D + DummyCO                                                      ', & ! index 122
-     '           CH4_EAF --> LCH4_EAFbySoil + DummyCO                                                     ', & ! index 123
-     ' CH4_SIO + FixedOH --> LCH4_SIObyOH + DummyCO                                                       ', & ! index 124
-     ' CH4_SIO + FixedCl --> LCH4_SIObyCl + DummyCO                                                       ', & ! index 125
-     'CH4_SIO + FixedO1D --> LCH4_SIObyO1D + DummyCO                                                      ', & ! index 126
-     '           CH4_SIO --> LCH4_SIObySoil + DummyCO                                                     ', & ! index 127
-     ' CH4_SAC + FixedOH --> LCH4_SACbyOH + DummyCO                                                       ', & ! index 128
-     ' CH4_SAC + FixedCl --> LCH4_SACbyCl + DummyCO                                                       ', & ! index 129
-     'CH4_SAC + FixedO1D --> LCH4_SACbyO1D + DummyCO                                                      ', & ! index 130
-     '           CH4_SAC --> LCH4_SACbySoil + DummyCO                                                     ', & ! index 131
-     ' CH4_CAS + FixedOH --> LCH4_CASbyOH + DummyCO                                                       ', & ! index 132
-     ' CH4_CAS + FixedCl --> LCH4_CASbyCl + DummyCO                                                       ', & ! index 133
-     'CH4_CAS + FixedO1D --> LCH4_CASbyO1D + DummyCO                                                      ', & ! index 134
-     '           CH4_CAS --> LCH4_CASbySoil + DummyCO                                                     ', & ! index 135
-     ' CH4_IND + FixedOH --> LCH4_INDbyOH + DummyCO                                                       ', & ! index 136
-     ' CH4_IND + FixedCl --> LCH4_INDbyCl + DummyCO                                                       ', & ! index 137
-     'CH4_IND + FixedO1D --> LCH4_INDbyO1D + DummyCO                                                      ', & ! index 138
-     '           CH4_IND --> LCH4_INDbySoil + DummyCO                                                     ', & ! index 139
-     ' CH4_SAS + FixedOH --> LCH4_SASbyOH + DummyCO                                                       ', & ! index 140
-     ' CH4_SAS + FixedCl --> LCH4_SASbyCl + DummyCO                                                       ', & ! index 141
-     'CH4_SAS + FixedO1D --> LCH4_SASbyO1D + DummyCO                                                      ', & ! index 142
-     '           CH4_SAS --> LCH4_SASbySoil + DummyCO                                                     ', & ! index 143
-     ' CH4_CHN + FixedOH --> LCH4_CHNbyOH + DummyCO                                                       ', & ! index 144
-     ' CH4_CHN + FixedCl --> LCH4_CHNbyCl + DummyCO                                                       ', & ! index 145
-     'CH4_CHN + FixedO1D --> LCH4_CHNbyO1D + DummyCO                                                      ', & ! index 146
-     '           CH4_CHN --> LCH4_CHNbySoil + DummyCO                                                     ', & ! index 147
-     ' CH4_EAS + FixedOH --> LCH4_EASbyOH + DummyCO                                                       ', & ! index 148
-     ' CH4_EAS + FixedCl --> LCH4_EASbyCl + DummyCO                                                       ', & ! index 149
-     'CH4_EAS + FixedO1D --> LCH4_EASbyO1D + DummyCO                                                      ' /) ! index up to 150
-  CHARACTER(LEN=100), PARAMETER, DIMENSION(13) :: EQN_NAMES_5 = (/ &
-     '           CH4_EAS --> LCH4_EASbySoil + DummyCO                                                     ', & ! index 151
-     ' CH4_SEA + FixedOH --> LCH4_SEAbyOH + DummyCO                                                       ', & ! index 152
-     ' CH4_SEA + FixedCl --> LCH4_SEAbyCl + DummyCO                                                       ', & ! index 153
-     'CH4_SEA + FixedO1D --> LCH4_SEAbyO1D + DummyCO                                                      ', & ! index 154
-     '           CH4_SEA --> LCH4_SEAbySoil + DummyCO                                                     ', & ! index 155
-     ' CH4_OCE + FixedOH --> LCH4_OCEbyOH + DummyCO                                                       ', & ! index 156
-     ' CH4_OCE + FixedCl --> LCH4_OCEbyCl + DummyCO                                                       ', & ! index 157
-     'CH4_OCE + FixedO1D --> LCH4_OCEbyO1D + DummyCO                                                      ', & ! index 158
-     '           CH4_OCE --> LCH4_OCEbySoil + DummyCO                                                     ', & ! index 159
-     ' CH4_ROW + FixedOH --> LCH4_ROWbyOH + DummyCO                                                       ', & ! index 160
-     ' CH4_ROW + FixedCl --> LCH4_ROWbyCl + DummyCO                                                       ', & ! index 161
-     'CH4_ROW + FixedO1D --> LCH4_ROWbyO1D + DummyCO                                                      ', & ! index 162
-     '           CH4_ROW --> LCH4_ROWbySoil + DummyCO                                                     ' /) ! index up to 163
-  CHARACTER(LEN=100), PARAMETER, DIMENSION(163) :: EQN_NAMES = (/&
+     '     CH4_EAF + FixedCl --> LCH4_EAFbyCl + DummyCO                                                   ', & ! index 121
+     '    CH4_EAF + FixedO1D --> LCH4_EAFbyO1D + DummyCO                                                  ', & ! index 122
+     '               CH4_EAF --> LCH4_EAFbySoil + DummyCO                                                 ', & ! index 123
+     '     CH4_SIO + FixedOH --> LCH4_SIObyOH + DummyCO                                                   ', & ! index 124
+     '     CH4_SIO + FixedCl --> LCH4_SIObyCl + DummyCO                                                   ', & ! index 125
+     '    CH4_SIO + FixedO1D --> LCH4_SIObyO1D + DummyCO                                                  ', & ! index 126
+     '               CH4_SIO --> LCH4_SIObySoil + DummyCO                                                 ', & ! index 127
+     '     CH4_SAC + FixedOH --> LCH4_SACbyOH + DummyCO                                                   ', & ! index 128
+     '     CH4_SAC + FixedCl --> LCH4_SACbyCl + DummyCO                                                   ', & ! index 129
+     '    CH4_SAC + FixedO1D --> LCH4_SACbyO1D + DummyCO                                                  ', & ! index 130
+     '               CH4_SAC --> LCH4_SACbySoil + DummyCO                                                 ', & ! index 131
+     '     CH4_CAS + FixedOH --> LCH4_CASbyOH + DummyCO                                                   ', & ! index 132
+     '     CH4_CAS + FixedCl --> LCH4_CASbyCl + DummyCO                                                   ', & ! index 133
+     '    CH4_CAS + FixedO1D --> LCH4_CASbyO1D + DummyCO                                                  ', & ! index 134
+     '               CH4_CAS --> LCH4_CASbySoil + DummyCO                                                 ', & ! index 135
+     '     CH4_IND + FixedOH --> LCH4_INDbyOH + DummyCO                                                   ', & ! index 136
+     '     CH4_IND + FixedCl --> LCH4_INDbyCl + DummyCO                                                   ', & ! index 137
+     '    CH4_IND + FixedO1D --> LCH4_INDbyO1D + DummyCO                                                  ', & ! index 138
+     '               CH4_IND --> LCH4_INDbySoil + DummyCO                                                 ', & ! index 139
+     '     CH4_SAS + FixedOH --> LCH4_SASbyOH + DummyCO                                                   ', & ! index 140
+     '     CH4_SAS + FixedCl --> LCH4_SASbyCl + DummyCO                                                   ', & ! index 141
+     '    CH4_SAS + FixedO1D --> LCH4_SASbyO1D + DummyCO                                                  ', & ! index 142
+     '               CH4_SAS --> LCH4_SASbySoil + DummyCO                                                 ', & ! index 143
+     '     CH4_CHN + FixedOH --> LCH4_CHNbyOH + DummyCO                                                   ', & ! index 144
+     '     CH4_CHN + FixedCl --> LCH4_CHNbyCl + DummyCO                                                   ', & ! index 145
+     '    CH4_CHN + FixedO1D --> LCH4_CHNbyO1D + DummyCO                                                  ', & ! index 146
+     '               CH4_CHN --> LCH4_CHNbySoil + DummyCO                                                 ', & ! index 147
+     '     CH4_EAS + FixedOH --> LCH4_EASbyOH + DummyCO                                                   ', & ! index 148
+     '     CH4_EAS + FixedCl --> LCH4_EASbyCl + DummyCO                                                   ', & ! index 149
+     '    CH4_EAS + FixedO1D --> LCH4_EASbyO1D + DummyCO                                                  ' /) ! index up to 150
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_5 = (/ &
+     '               CH4_EAS --> LCH4_EASbySoil + DummyCO                                                 ', & ! index 151
+     '     CH4_SEA + FixedOH --> LCH4_SEAbyOH + DummyCO                                                   ', & ! index 152
+     '     CH4_SEA + FixedCl --> LCH4_SEAbyCl + DummyCO                                                   ', & ! index 153
+     '    CH4_SEA + FixedO1D --> LCH4_SEAbyO1D + DummyCO                                                  ', & ! index 154
+     '               CH4_SEA --> LCH4_SEAbySoil + DummyCO                                                 ', & ! index 155
+     '     CH4_OCE + FixedOH --> LCH4_OCEbyOH + DummyCO                                                   ', & ! index 156
+     '     CH4_OCE + FixedCl --> LCH4_OCEbyCl + DummyCO                                                   ', & ! index 157
+     '    CH4_OCE + FixedO1D --> LCH4_OCEbyO1D + DummyCO                                                  ', & ! index 158
+     '               CH4_OCE --> LCH4_OCEbySoil + DummyCO                                                 ', & ! index 159
+     '     CH4_ROW + FixedOH --> LCH4_ROWbyOH + DummyCO                                                   ', & ! index 160
+     '     CH4_ROW + FixedCl --> LCH4_ROWbyCl + DummyCO                                                   ', & ! index 161
+     '    CH4_ROW + FixedO1D --> LCH4_ROWbyO1D + DummyCO                                                  ', & ! index 162
+     '               CH4_ROW --> LCH4_ROWbySoil + DummyCO                                                 ', & ! index 163
+     ' CH4_USA_OIL + FixedOH --> LCH4_USA_OILbyOH + DummyCO                                               ', & ! index 164
+     ' CH4_USA_OIL + FixedCl --> LCH4_USA_OILbyCl + DummyCO                                               ', & ! index 165
+     'CH4_USA_OIL + FixedO1D --> LCH4_USA_OILbyO1D + DummyCO                                              ', & ! index 166
+     '           CH4_USA_OIL --> LCH4_USA_OILbySoil + DummyCO                                             ', & ! index 167
+     ' CH4_USA_GAS + FixedOH --> LCH4_USA_GASbyOH + DummyCO                                               ', & ! index 168
+     ' CH4_USA_GAS + FixedCl --> LCH4_USA_GASbyCl + DummyCO                                               ', & ! index 169
+     'CH4_USA_GAS + FixedO1D --> LCH4_USA_GASbyO1D + DummyCO                                              ', & ! index 170
+     '           CH4_USA_GAS --> LCH4_USA_GASbySoil + DummyCO                                             ', & ! index 171
+     ' CH4_USA_COL + FixedOH --> LCH4_USA_COLbyOH + DummyCO                                               ', & ! index 172
+     ' CH4_USA_COL + FixedCl --> LCH4_USA_COLbyCl + DummyCO                                               ', & ! index 173
+     'CH4_USA_COL + FixedO1D --> LCH4_USA_COLbyO1D + DummyCO                                              ', & ! index 174
+     '           CH4_USA_COL --> LCH4_USA_COLbySoil + DummyCO                                             ', & ! index 175
+     ' CH4_USA_LIV + FixedOH --> LCH4_USA_LIVbyOH + DummyCO                                               ', & ! index 176
+     ' CH4_USA_LIV + FixedCl --> LCH4_USA_LIVbyCl + DummyCO                                               ', & ! index 177
+     'CH4_USA_LIV + FixedO1D --> LCH4_USA_LIVbyO1D + DummyCO                                              ', & ! index 178
+     '           CH4_USA_LIV --> LCH4_USA_LIVbySoil + DummyCO                                             ', & ! index 179
+     ' CH4_USA_LDF + FixedOH --> LCH4_USA_LDFbyOH + DummyCO                                               ' /) ! index up to 180
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_6 = (/ &
+     ' CH4_USA_LDF + FixedCl --> LCH4_USA_LDFbyCl + DummyCO                                               ', & ! index 181
+     'CH4_USA_LDF + FixedO1D --> LCH4_USA_LDFbyO1D + DummyCO                                              ', & ! index 182
+     '           CH4_USA_LDF --> LCH4_USA_LDFbySoil + DummyCO                                             ', & ! index 183
+     ' CH4_USA_WST + FixedOH --> LCH4_USA_WSTbyOH + DummyCO                                               ', & ! index 184
+     ' CH4_USA_WST + FixedCl --> LCH4_USA_WSTbyCl + DummyCO                                               ', & ! index 185
+     'CH4_USA_WST + FixedO1D --> LCH4_USA_WSTbyO1D + DummyCO                                              ', & ! index 186
+     '           CH4_USA_WST --> LCH4_USA_WSTbySoil + DummyCO                                             ', & ! index 187
+     ' CH4_USA_RIC + FixedOH --> LCH4_USA_RICbyOH + DummyCO                                               ', & ! index 188
+     ' CH4_USA_RIC + FixedCl --> LCH4_USA_RICbyCl + DummyCO                                               ', & ! index 189
+     'CH4_USA_RIC + FixedO1D --> LCH4_USA_RICbyO1D + DummyCO                                              ', & ! index 190
+     '           CH4_USA_RIC --> LCH4_USA_RICbySoil + DummyCO                                             ', & ! index 191
+     ' CH4_USA_OTA + FixedOH --> LCH4_USA_OTAbyOH + DummyCO                                               ', & ! index 192
+     ' CH4_USA_OTA + FixedCl --> LCH4_USA_OTAbyCl + DummyCO                                               ', & ! index 193
+     'CH4_USA_OTA + FixedO1D --> LCH4_USA_OTAbyO1D + DummyCO                                              ', & ! index 194
+     '           CH4_USA_OTA --> LCH4_USA_OTAbySoil + DummyCO                                             ', & ! index 195
+     ' CH4_USA_BBN + FixedOH --> LCH4_USA_BBNbyOH + DummyCO                                               ', & ! index 196
+     ' CH4_USA_BBN + FixedCl --> LCH4_USA_BBNbyCl + DummyCO                                               ', & ! index 197
+     'CH4_USA_BBN + FixedO1D --> LCH4_USA_BBNbyO1D + DummyCO                                              ', & ! index 198
+     '           CH4_USA_BBN --> LCH4_USA_BBNbySoil + DummyCO                                             ', & ! index 199
+     ' CH4_USA_WTL + FixedOH --> LCH4_USA_WTLbyOH + DummyCO                                               ', & ! index 200
+     ' CH4_USA_WTL + FixedCl --> LCH4_USA_WTLbyCl + DummyCO                                               ', & ! index 201
+     'CH4_USA_WTL + FixedO1D --> LCH4_USA_WTLbyO1D + DummyCO                                              ', & ! index 202
+     '           CH4_USA_WTL --> LCH4_USA_WTLbySoil + DummyCO                                             ', & ! index 203
+     ' CH4_USA_SEE + FixedOH --> LCH4_USA_SEEbyOH + DummyCO                                               ', & ! index 204
+     ' CH4_USA_SEE + FixedCl --> LCH4_USA_SEEbyCl + DummyCO                                               ', & ! index 205
+     'CH4_USA_SEE + FixedO1D --> LCH4_USA_SEEbyO1D + DummyCO                                              ', & ! index 206
+     '           CH4_USA_SEE --> LCH4_USA_SEEbySoil + DummyCO                                             ', & ! index 207
+     ' CH4_USA_LAK + FixedOH --> LCH4_USA_LAKbyOH + DummyCO                                               ', & ! index 208
+     ' CH4_USA_LAK + FixedCl --> LCH4_USA_LAKbyCl + DummyCO                                               ', & ! index 209
+     'CH4_USA_LAK + FixedO1D --> LCH4_USA_LAKbyO1D + DummyCO                                              ' /) ! index up to 210
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_7 = (/ &
+     '           CH4_USA_LAK --> LCH4_USA_LAKbySoil + DummyCO                                             ', & ! index 211
+     ' CH4_USA_TER + FixedOH --> LCH4_USA_TERbyOH + DummyCO                                               ', & ! index 212
+     ' CH4_USA_TER + FixedCl --> LCH4_USA_TERbyCl + DummyCO                                               ', & ! index 213
+     'CH4_USA_TER + FixedO1D --> LCH4_USA_TERbyO1D + DummyCO                                              ', & ! index 214
+     '           CH4_USA_TER --> LCH4_USA_TERbySoil + DummyCO                                             ', & ! index 215
+     ' CH4_USA_RES + FixedOH --> LCH4_USA_RESbyOH + DummyCO                                               ', & ! index 216
+     ' CH4_USA_RES + FixedCl --> LCH4_USA_RESbyCl + DummyCO                                               ', & ! index 217
+     'CH4_USA_RES + FixedO1D --> LCH4_USA_RESbyO1D + DummyCO                                              ', & ! index 218
+     '           CH4_USA_RES --> LCH4_USA_RESbySoil + DummyCO                                             ', & ! index 219
+     ' CH4_CAN_OIL + FixedOH --> LCH4_CAN_OILbyOH + DummyCO                                               ', & ! index 220
+     ' CH4_CAN_OIL + FixedCl --> LCH4_CAN_OILbyCl + DummyCO                                               ', & ! index 221
+     'CH4_CAN_OIL + FixedO1D --> LCH4_CAN_OILbyO1D + DummyCO                                              ', & ! index 222
+     '           CH4_CAN_OIL --> LCH4_CAN_OILbySoil + DummyCO                                             ', & ! index 223
+     ' CH4_CAN_GAS + FixedOH --> LCH4_CAN_GASbyOH + DummyCO                                               ', & ! index 224
+     ' CH4_CAN_GAS + FixedCl --> LCH4_CAN_GASbyCl + DummyCO                                               ', & ! index 225
+     'CH4_CAN_GAS + FixedO1D --> LCH4_CAN_GASbyO1D + DummyCO                                              ', & ! index 226
+     '           CH4_CAN_GAS --> LCH4_CAN_GASbySoil + DummyCO                                             ', & ! index 227
+     ' CH4_CAN_COL + FixedOH --> LCH4_CAN_COLbyOH + DummyCO                                               ', & ! index 228
+     ' CH4_CAN_COL + FixedCl --> LCH4_CAN_COLbyCl + DummyCO                                               ', & ! index 229
+     'CH4_CAN_COL + FixedO1D --> LCH4_CAN_COLbyO1D + DummyCO                                              ', & ! index 230
+     '           CH4_CAN_COL --> LCH4_CAN_COLbySoil + DummyCO                                             ', & ! index 231
+     ' CH4_CAN_LIV + FixedOH --> LCH4_CAN_LIVbyOH + DummyCO                                               ', & ! index 232
+     ' CH4_CAN_LIV + FixedCl --> LCH4_CAN_LIVbyCl + DummyCO                                               ', & ! index 233
+     'CH4_CAN_LIV + FixedO1D --> LCH4_CAN_LIVbyO1D + DummyCO                                              ', & ! index 234
+     '           CH4_CAN_LIV --> LCH4_CAN_LIVbySoil + DummyCO                                             ', & ! index 235
+     ' CH4_CAN_LDF + FixedOH --> LCH4_CAN_LDFbyOH + DummyCO                                               ', & ! index 236
+     ' CH4_CAN_LDF + FixedCl --> LCH4_CAN_LDFbyCl + DummyCO                                               ', & ! index 237
+     'CH4_CAN_LDF + FixedO1D --> LCH4_CAN_LDFbyO1D + DummyCO                                              ', & ! index 238
+     '           CH4_CAN_LDF --> LCH4_CAN_LDFbySoil + DummyCO                                             ', & ! index 239
+     ' CH4_CAN_WST + FixedOH --> LCH4_CAN_WSTbyOH + DummyCO                                               ' /) ! index up to 240
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_8 = (/ &
+     ' CH4_CAN_WST + FixedCl --> LCH4_CAN_WSTbyCl + DummyCO                                               ', & ! index 241
+     'CH4_CAN_WST + FixedO1D --> LCH4_CAN_WSTbyO1D + DummyCO                                              ', & ! index 242
+     '           CH4_CAN_WST --> LCH4_CAN_WSTbySoil + DummyCO                                             ', & ! index 243
+     ' CH4_CAN_RIC + FixedOH --> LCH4_CAN_RICbyOH + DummyCO                                               ', & ! index 244
+     ' CH4_CAN_RIC + FixedCl --> LCH4_CAN_RICbyCl + DummyCO                                               ', & ! index 245
+     'CH4_CAN_RIC + FixedO1D --> LCH4_CAN_RICbyO1D + DummyCO                                              ', & ! index 246
+     '           CH4_CAN_RIC --> LCH4_CAN_RICbySoil + DummyCO                                             ', & ! index 247
+     ' CH4_CAN_OTA + FixedOH --> LCH4_CAN_OTAbyOH + DummyCO                                               ', & ! index 248
+     ' CH4_CAN_OTA + FixedCl --> LCH4_CAN_OTAbyCl + DummyCO                                               ', & ! index 249
+     'CH4_CAN_OTA + FixedO1D --> LCH4_CAN_OTAbyO1D + DummyCO                                              ', & ! index 250
+     '           CH4_CAN_OTA --> LCH4_CAN_OTAbySoil + DummyCO                                             ', & ! index 251
+     ' CH4_CAN_BBN + FixedOH --> LCH4_CAN_BBNbyOH + DummyCO                                               ', & ! index 252
+     ' CH4_CAN_BBN + FixedCl --> LCH4_CAN_BBNbyCl + DummyCO                                               ', & ! index 253
+     'CH4_CAN_BBN + FixedO1D --> LCH4_CAN_BBNbyO1D + DummyCO                                              ', & ! index 254
+     '           CH4_CAN_BBN --> LCH4_CAN_BBNbySoil + DummyCO                                             ', & ! index 255
+     ' CH4_CAN_WTL + FixedOH --> LCH4_CAN_WTLbyOH + DummyCO                                               ', & ! index 256
+     ' CH4_CAN_WTL + FixedCl --> LCH4_CAN_WTLbyCl + DummyCO                                               ', & ! index 257
+     'CH4_CAN_WTL + FixedO1D --> LCH4_CAN_WTLbyO1D + DummyCO                                              ', & ! index 258
+     '           CH4_CAN_WTL --> LCH4_CAN_WTLbySoil + DummyCO                                             ', & ! index 259
+     ' CH4_CAN_SEE + FixedOH --> LCH4_CAN_SEEbyOH + DummyCO                                               ', & ! index 260
+     ' CH4_CAN_SEE + FixedCl --> LCH4_CAN_SEEbyCl + DummyCO                                               ', & ! index 261
+     'CH4_CAN_SEE + FixedO1D --> LCH4_CAN_SEEbyO1D + DummyCO                                              ', & ! index 262
+     '           CH4_CAN_SEE --> LCH4_CAN_SEEbySoil + DummyCO                                             ', & ! index 263
+     ' CH4_CAN_LAK + FixedOH --> LCH4_CAN_LAKbyOH + DummyCO                                               ', & ! index 264
+     ' CH4_CAN_LAK + FixedCl --> LCH4_CAN_LAKbyCl + DummyCO                                               ', & ! index 265
+     'CH4_CAN_LAK + FixedO1D --> LCH4_CAN_LAKbyO1D + DummyCO                                              ', & ! index 266
+     '           CH4_CAN_LAK --> LCH4_CAN_LAKbySoil + DummyCO                                             ', & ! index 267
+     ' CH4_CAN_TER + FixedOH --> LCH4_CAN_TERbyOH + DummyCO                                               ', & ! index 268
+     ' CH4_CAN_TER + FixedCl --> LCH4_CAN_TERbyCl + DummyCO                                               ', & ! index 269
+     'CH4_CAN_TER + FixedO1D --> LCH4_CAN_TERbyO1D + DummyCO                                              ' /) ! index up to 270
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_9 = (/ &
+     '           CH4_CAN_TER --> LCH4_CAN_TERbySoil + DummyCO                                             ', & ! index 271
+     ' CH4_CAN_RES + FixedOH --> LCH4_CAN_RESbyOH + DummyCO                                               ', & ! index 272
+     ' CH4_CAN_RES + FixedCl --> LCH4_CAN_RESbyCl + DummyCO                                               ', & ! index 273
+     'CH4_CAN_RES + FixedO1D --> LCH4_CAN_RESbyO1D + DummyCO                                              ', & ! index 274
+     '           CH4_CAN_RES --> LCH4_CAN_RESbySoil + DummyCO                                             ', & ! index 275
+     ' CH4_MEX_OIL + FixedOH --> LCH4_MEX_OILbyOH + DummyCO                                               ', & ! index 276
+     ' CH4_MEX_OIL + FixedCl --> LCH4_MEX_OILbyCl + DummyCO                                               ', & ! index 277
+     'CH4_MEX_OIL + FixedO1D --> LCH4_MEX_OILbyO1D + DummyCO                                              ', & ! index 278
+     '           CH4_MEX_OIL --> LCH4_MEX_OILbySoil + DummyCO                                             ', & ! index 279
+     ' CH4_MEX_GAS + FixedOH --> LCH4_MEX_GASbyOH + DummyCO                                               ', & ! index 280
+     ' CH4_MEX_GAS + FixedCl --> LCH4_MEX_GASbyCl + DummyCO                                               ', & ! index 281
+     'CH4_MEX_GAS + FixedO1D --> LCH4_MEX_GASbyO1D + DummyCO                                              ', & ! index 282
+     '           CH4_MEX_GAS --> LCH4_MEX_GASbySoil + DummyCO                                             ', & ! index 283
+     ' CH4_MEX_COL + FixedOH --> LCH4_MEX_COLbyOH + DummyCO                                               ', & ! index 284
+     ' CH4_MEX_COL + FixedCl --> LCH4_MEX_COLbyCl + DummyCO                                               ', & ! index 285
+     'CH4_MEX_COL + FixedO1D --> LCH4_MEX_COLbyO1D + DummyCO                                              ', & ! index 286
+     '           CH4_MEX_COL --> LCH4_MEX_COLbySoil + DummyCO                                             ', & ! index 287
+     ' CH4_MEX_LIV + FixedOH --> LCH4_MEX_LIVbyOH + DummyCO                                               ', & ! index 288
+     ' CH4_MEX_LIV + FixedCl --> LCH4_MEX_LIVbyCl + DummyCO                                               ', & ! index 289
+     'CH4_MEX_LIV + FixedO1D --> LCH4_MEX_LIVbyO1D + DummyCO                                              ', & ! index 290
+     '           CH4_MEX_LIV --> LCH4_MEX_LIVbySoil + DummyCO                                             ', & ! index 291
+     ' CH4_MEX_LDF + FixedOH --> LCH4_MEX_LDFbyOH + DummyCO                                               ', & ! index 292
+     ' CH4_MEX_LDF + FixedCl --> LCH4_MEX_LDFbyCl + DummyCO                                               ', & ! index 293
+     'CH4_MEX_LDF + FixedO1D --> LCH4_MEX_LDFbyO1D + DummyCO                                              ', & ! index 294
+     '           CH4_MEX_LDF --> LCH4_MEX_LDFbySoil + DummyCO                                             ', & ! index 295
+     ' CH4_MEX_WST + FixedOH --> LCH4_MEX_WSTbyOH + DummyCO                                               ', & ! index 296
+     ' CH4_MEX_WST + FixedCl --> LCH4_MEX_WSTbyCl + DummyCO                                               ', & ! index 297
+     'CH4_MEX_WST + FixedO1D --> LCH4_MEX_WSTbyO1D + DummyCO                                              ', & ! index 298
+     '           CH4_MEX_WST --> LCH4_MEX_WSTbySoil + DummyCO                                             ', & ! index 299
+     ' CH4_MEX_RIC + FixedOH --> LCH4_MEX_RICbyOH + DummyCO                                               ' /) ! index up to 300
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_10 = (/ &
+     ' CH4_MEX_RIC + FixedCl --> LCH4_MEX_RICbyCl + DummyCO                                               ', & ! index 301
+     'CH4_MEX_RIC + FixedO1D --> LCH4_MEX_RICbyO1D + DummyCO                                              ', & ! index 302
+     '           CH4_MEX_RIC --> LCH4_MEX_RICbySoil + DummyCO                                             ', & ! index 303
+     ' CH4_MEX_OTA + FixedOH --> LCH4_MEX_OTAbyOH + DummyCO                                               ', & ! index 304
+     ' CH4_MEX_OTA + FixedCl --> LCH4_MEX_OTAbyCl + DummyCO                                               ', & ! index 305
+     'CH4_MEX_OTA + FixedO1D --> LCH4_MEX_OTAbyO1D + DummyCO                                              ', & ! index 306
+     '           CH4_MEX_OTA --> LCH4_MEX_OTAbySoil + DummyCO                                             ', & ! index 307
+     ' CH4_MEX_BBN + FixedOH --> LCH4_MEX_BBNbyOH + DummyCO                                               ', & ! index 308
+     ' CH4_MEX_BBN + FixedCl --> LCH4_MEX_BBNbyCl + DummyCO                                               ', & ! index 309
+     'CH4_MEX_BBN + FixedO1D --> LCH4_MEX_BBNbyO1D + DummyCO                                              ', & ! index 310
+     '           CH4_MEX_BBN --> LCH4_MEX_BBNbySoil + DummyCO                                             ', & ! index 311
+     ' CH4_MEX_WTL + FixedOH --> LCH4_MEX_WTLbyOH + DummyCO                                               ', & ! index 312
+     ' CH4_MEX_WTL + FixedCl --> LCH4_MEX_WTLbyCl + DummyCO                                               ', & ! index 313
+     'CH4_MEX_WTL + FixedO1D --> LCH4_MEX_WTLbyO1D + DummyCO                                              ', & ! index 314
+     '           CH4_MEX_WTL --> LCH4_MEX_WTLbySoil + DummyCO                                             ', & ! index 315
+     ' CH4_MEX_SEE + FixedOH --> LCH4_MEX_SEEbyOH + DummyCO                                               ', & ! index 316
+     ' CH4_MEX_SEE + FixedCl --> LCH4_MEX_SEEbyCl + DummyCO                                               ', & ! index 317
+     'CH4_MEX_SEE + FixedO1D --> LCH4_MEX_SEEbyO1D + DummyCO                                              ', & ! index 318
+     '           CH4_MEX_SEE --> LCH4_MEX_SEEbySoil + DummyCO                                             ', & ! index 319
+     ' CH4_MEX_LAK + FixedOH --> LCH4_MEX_LAKbyOH + DummyCO                                               ', & ! index 320
+     ' CH4_MEX_LAK + FixedCl --> LCH4_MEX_LAKbyCl + DummyCO                                               ', & ! index 321
+     'CH4_MEX_LAK + FixedO1D --> LCH4_MEX_LAKbyO1D + DummyCO                                              ', & ! index 322
+     '           CH4_MEX_LAK --> LCH4_MEX_LAKbySoil + DummyCO                                             ', & ! index 323
+     ' CH4_MEX_TER + FixedOH --> LCH4_MEX_TERbyOH + DummyCO                                               ', & ! index 324
+     ' CH4_MEX_TER + FixedCl --> LCH4_MEX_TERbyCl + DummyCO                                               ', & ! index 325
+     'CH4_MEX_TER + FixedO1D --> LCH4_MEX_TERbyO1D + DummyCO                                              ', & ! index 326
+     '           CH4_MEX_TER --> LCH4_MEX_TERbySoil + DummyCO                                             ', & ! index 327
+     ' CH4_MEX_RES + FixedOH --> LCH4_MEX_RESbyOH + DummyCO                                               ', & ! index 328
+     ' CH4_MEX_RES + FixedCl --> LCH4_MEX_RESbyCl + DummyCO                                               ', & ! index 329
+     'CH4_MEX_RES + FixedO1D --> LCH4_MEX_RESbyO1D + DummyCO                                              ' /) ! index up to 330
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_11 = (/ &
+     '           CH4_MEX_RES --> LCH4_MEX_RESbySoil + DummyCO                                             ', & ! index 331
+     ' CH4_CAC_OIL + FixedOH --> LCH4_CAC_OILbyOH + DummyCO                                               ', & ! index 332
+     ' CH4_CAC_OIL + FixedCl --> LCH4_CAC_OILbyCl + DummyCO                                               ', & ! index 333
+     'CH4_CAC_OIL + FixedO1D --> LCH4_CAC_OILbyO1D + DummyCO                                              ', & ! index 334
+     '           CH4_CAC_OIL --> LCH4_CAC_OILbySoil + DummyCO                                             ', & ! index 335
+     ' CH4_CAC_GAS + FixedOH --> LCH4_CAC_GASbyOH + DummyCO                                               ', & ! index 336
+     ' CH4_CAC_GAS + FixedCl --> LCH4_CAC_GASbyCl + DummyCO                                               ', & ! index 337
+     'CH4_CAC_GAS + FixedO1D --> LCH4_CAC_GASbyO1D + DummyCO                                              ', & ! index 338
+     '           CH4_CAC_GAS --> LCH4_CAC_GASbySoil + DummyCO                                             ', & ! index 339
+     ' CH4_CAC_COL + FixedOH --> LCH4_CAC_COLbyOH + DummyCO                                               ', & ! index 340
+     ' CH4_CAC_COL + FixedCl --> LCH4_CAC_COLbyCl + DummyCO                                               ', & ! index 341
+     'CH4_CAC_COL + FixedO1D --> LCH4_CAC_COLbyO1D + DummyCO                                              ', & ! index 342
+     '           CH4_CAC_COL --> LCH4_CAC_COLbySoil + DummyCO                                             ', & ! index 343
+     ' CH4_CAC_LIV + FixedOH --> LCH4_CAC_LIVbyOH + DummyCO                                               ', & ! index 344
+     ' CH4_CAC_LIV + FixedCl --> LCH4_CAC_LIVbyCl + DummyCO                                               ', & ! index 345
+     'CH4_CAC_LIV + FixedO1D --> LCH4_CAC_LIVbyO1D + DummyCO                                              ', & ! index 346
+     '           CH4_CAC_LIV --> LCH4_CAC_LIVbySoil + DummyCO                                             ', & ! index 347
+     ' CH4_CAC_LDF + FixedOH --> LCH4_CAC_LDFbyOH + DummyCO                                               ', & ! index 348
+     ' CH4_CAC_LDF + FixedCl --> LCH4_CAC_LDFbyCl + DummyCO                                               ', & ! index 349
+     'CH4_CAC_LDF + FixedO1D --> LCH4_CAC_LDFbyO1D + DummyCO                                              ', & ! index 350
+     '           CH4_CAC_LDF --> LCH4_CAC_LDFbySoil + DummyCO                                             ', & ! index 351
+     ' CH4_CAC_WST + FixedOH --> LCH4_CAC_WSTbyOH + DummyCO                                               ', & ! index 352
+     ' CH4_CAC_WST + FixedCl --> LCH4_CAC_WSTbyCl + DummyCO                                               ', & ! index 353
+     'CH4_CAC_WST + FixedO1D --> LCH4_CAC_WSTbyO1D + DummyCO                                              ', & ! index 354
+     '           CH4_CAC_WST --> LCH4_CAC_WSTbySoil + DummyCO                                             ', & ! index 355
+     ' CH4_CAC_RIC + FixedOH --> LCH4_CAC_RICbyOH + DummyCO                                               ', & ! index 356
+     ' CH4_CAC_RIC + FixedCl --> LCH4_CAC_RICbyCl + DummyCO                                               ', & ! index 357
+     'CH4_CAC_RIC + FixedO1D --> LCH4_CAC_RICbyO1D + DummyCO                                              ', & ! index 358
+     '           CH4_CAC_RIC --> LCH4_CAC_RICbySoil + DummyCO                                             ', & ! index 359
+     ' CH4_CAC_OTA + FixedOH --> LCH4_CAC_OTAbyOH + DummyCO                                               ' /) ! index up to 360
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_12 = (/ &
+     ' CH4_CAC_OTA + FixedCl --> LCH4_CAC_OTAbyCl + DummyCO                                               ', & ! index 361
+     'CH4_CAC_OTA + FixedO1D --> LCH4_CAC_OTAbyO1D + DummyCO                                              ', & ! index 362
+     '           CH4_CAC_OTA --> LCH4_CAC_OTAbySoil + DummyCO                                             ', & ! index 363
+     ' CH4_CAC_BBN + FixedOH --> LCH4_CAC_BBNbyOH + DummyCO                                               ', & ! index 364
+     ' CH4_CAC_BBN + FixedCl --> LCH4_CAC_BBNbyCl + DummyCO                                               ', & ! index 365
+     'CH4_CAC_BBN + FixedO1D --> LCH4_CAC_BBNbyO1D + DummyCO                                              ', & ! index 366
+     '           CH4_CAC_BBN --> LCH4_CAC_BBNbySoil + DummyCO                                             ', & ! index 367
+     ' CH4_CAC_WTL + FixedOH --> LCH4_CAC_WTLbyOH + DummyCO                                               ', & ! index 368
+     ' CH4_CAC_WTL + FixedCl --> LCH4_CAC_WTLbyCl + DummyCO                                               ', & ! index 369
+     'CH4_CAC_WTL + FixedO1D --> LCH4_CAC_WTLbyO1D + DummyCO                                              ', & ! index 370
+     '           CH4_CAC_WTL --> LCH4_CAC_WTLbySoil + DummyCO                                             ', & ! index 371
+     ' CH4_CAC_SEE + FixedOH --> LCH4_CAC_SEEbyOH + DummyCO                                               ', & ! index 372
+     ' CH4_CAC_SEE + FixedCl --> LCH4_CAC_SEEbyCl + DummyCO                                               ', & ! index 373
+     'CH4_CAC_SEE + FixedO1D --> LCH4_CAC_SEEbyO1D + DummyCO                                              ', & ! index 374
+     '           CH4_CAC_SEE --> LCH4_CAC_SEEbySoil + DummyCO                                             ', & ! index 375
+     ' CH4_CAC_LAK + FixedOH --> LCH4_CAC_LAKbyOH + DummyCO                                               ', & ! index 376
+     ' CH4_CAC_LAK + FixedCl --> LCH4_CAC_LAKbyCl + DummyCO                                               ', & ! index 377
+     'CH4_CAC_LAK + FixedO1D --> LCH4_CAC_LAKbyO1D + DummyCO                                              ', & ! index 378
+     '           CH4_CAC_LAK --> LCH4_CAC_LAKbySoil + DummyCO                                             ', & ! index 379
+     ' CH4_CAC_TER + FixedOH --> LCH4_CAC_TERbyOH + DummyCO                                               ', & ! index 380
+     ' CH4_CAC_TER + FixedCl --> LCH4_CAC_TERbyCl + DummyCO                                               ', & ! index 381
+     'CH4_CAC_TER + FixedO1D --> LCH4_CAC_TERbyO1D + DummyCO                                              ', & ! index 382
+     '           CH4_CAC_TER --> LCH4_CAC_TERbySoil + DummyCO                                             ', & ! index 383
+     ' CH4_CAC_RES + FixedOH --> LCH4_CAC_RESbyOH + DummyCO                                               ', & ! index 384
+     ' CH4_CAC_RES + FixedCl --> LCH4_CAC_RESbyCl + DummyCO                                               ', & ! index 385
+     'CH4_CAC_RES + FixedO1D --> LCH4_CAC_RESbyO1D + DummyCO                                              ', & ! index 386
+     '           CH4_CAC_RES --> LCH4_CAC_RESbySoil + DummyCO                                             ', & ! index 387
+     ' CH4_BRA_OIL + FixedOH --> LCH4_BRA_OILbyOH + DummyCO                                               ', & ! index 388
+     ' CH4_BRA_OIL + FixedCl --> LCH4_BRA_OILbyCl + DummyCO                                               ', & ! index 389
+     'CH4_BRA_OIL + FixedO1D --> LCH4_BRA_OILbyO1D + DummyCO                                              ' /) ! index up to 390
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_13 = (/ &
+     '           CH4_BRA_OIL --> LCH4_BRA_OILbySoil + DummyCO                                             ', & ! index 391
+     ' CH4_BRA_GAS + FixedOH --> LCH4_BRA_GASbyOH + DummyCO                                               ', & ! index 392
+     ' CH4_BRA_GAS + FixedCl --> LCH4_BRA_GASbyCl + DummyCO                                               ', & ! index 393
+     'CH4_BRA_GAS + FixedO1D --> LCH4_BRA_GASbyO1D + DummyCO                                              ', & ! index 394
+     '           CH4_BRA_GAS --> LCH4_BRA_GASbySoil + DummyCO                                             ', & ! index 395
+     ' CH4_BRA_COL + FixedOH --> LCH4_BRA_COLbyOH + DummyCO                                               ', & ! index 396
+     ' CH4_BRA_COL + FixedCl --> LCH4_BRA_COLbyCl + DummyCO                                               ', & ! index 397
+     'CH4_BRA_COL + FixedO1D --> LCH4_BRA_COLbyO1D + DummyCO                                              ', & ! index 398
+     '           CH4_BRA_COL --> LCH4_BRA_COLbySoil + DummyCO                                             ', & ! index 399
+     ' CH4_BRA_LIV + FixedOH --> LCH4_BRA_LIVbyOH + DummyCO                                               ', & ! index 400
+     ' CH4_BRA_LIV + FixedCl --> LCH4_BRA_LIVbyCl + DummyCO                                               ', & ! index 401
+     'CH4_BRA_LIV + FixedO1D --> LCH4_BRA_LIVbyO1D + DummyCO                                              ', & ! index 402
+     '           CH4_BRA_LIV --> LCH4_BRA_LIVbySoil + DummyCO                                             ', & ! index 403
+     ' CH4_BRA_LDF + FixedOH --> LCH4_BRA_LDFbyOH + DummyCO                                               ', & ! index 404
+     ' CH4_BRA_LDF + FixedCl --> LCH4_BRA_LDFbyCl + DummyCO                                               ', & ! index 405
+     'CH4_BRA_LDF + FixedO1D --> LCH4_BRA_LDFbyO1D + DummyCO                                              ', & ! index 406
+     '           CH4_BRA_LDF --> LCH4_BRA_LDFbySoil + DummyCO                                             ', & ! index 407
+     ' CH4_BRA_WST + FixedOH --> LCH4_BRA_WSTbyOH + DummyCO                                               ', & ! index 408
+     ' CH4_BRA_WST + FixedCl --> LCH4_BRA_WSTbyCl + DummyCO                                               ', & ! index 409
+     'CH4_BRA_WST + FixedO1D --> LCH4_BRA_WSTbyO1D + DummyCO                                              ', & ! index 410
+     '           CH4_BRA_WST --> LCH4_BRA_WSTbySoil + DummyCO                                             ', & ! index 411
+     ' CH4_BRA_RIC + FixedOH --> LCH4_BRA_RICbyOH + DummyCO                                               ', & ! index 412
+     ' CH4_BRA_RIC + FixedCl --> LCH4_BRA_RICbyCl + DummyCO                                               ', & ! index 413
+     'CH4_BRA_RIC + FixedO1D --> LCH4_BRA_RICbyO1D + DummyCO                                              ', & ! index 414
+     '           CH4_BRA_RIC --> LCH4_BRA_RICbySoil + DummyCO                                             ', & ! index 415
+     ' CH4_BRA_OTA + FixedOH --> LCH4_BRA_OTAbyOH + DummyCO                                               ', & ! index 416
+     ' CH4_BRA_OTA + FixedCl --> LCH4_BRA_OTAbyCl + DummyCO                                               ', & ! index 417
+     'CH4_BRA_OTA + FixedO1D --> LCH4_BRA_OTAbyO1D + DummyCO                                              ', & ! index 418
+     '           CH4_BRA_OTA --> LCH4_BRA_OTAbySoil + DummyCO                                             ', & ! index 419
+     ' CH4_BRA_BBN + FixedOH --> LCH4_BRA_BBNbyOH + DummyCO                                               ' /) ! index up to 420
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_14 = (/ &
+     ' CH4_BRA_BBN + FixedCl --> LCH4_BRA_BBNbyCl + DummyCO                                               ', & ! index 421
+     'CH4_BRA_BBN + FixedO1D --> LCH4_BRA_BBNbyO1D + DummyCO                                              ', & ! index 422
+     '           CH4_BRA_BBN --> LCH4_BRA_BBNbySoil + DummyCO                                             ', & ! index 423
+     ' CH4_BRA_WTL + FixedOH --> LCH4_BRA_WTLbyOH + DummyCO                                               ', & ! index 424
+     ' CH4_BRA_WTL + FixedCl --> LCH4_BRA_WTLbyCl + DummyCO                                               ', & ! index 425
+     'CH4_BRA_WTL + FixedO1D --> LCH4_BRA_WTLbyO1D + DummyCO                                              ', & ! index 426
+     '           CH4_BRA_WTL --> LCH4_BRA_WTLbySoil + DummyCO                                             ', & ! index 427
+     ' CH4_BRA_SEE + FixedOH --> LCH4_BRA_SEEbyOH + DummyCO                                               ', & ! index 428
+     ' CH4_BRA_SEE + FixedCl --> LCH4_BRA_SEEbyCl + DummyCO                                               ', & ! index 429
+     'CH4_BRA_SEE + FixedO1D --> LCH4_BRA_SEEbyO1D + DummyCO                                              ', & ! index 430
+     '           CH4_BRA_SEE --> LCH4_BRA_SEEbySoil + DummyCO                                             ', & ! index 431
+     ' CH4_BRA_LAK + FixedOH --> LCH4_BRA_LAKbyOH + DummyCO                                               ', & ! index 432
+     ' CH4_BRA_LAK + FixedCl --> LCH4_BRA_LAKbyCl + DummyCO                                               ', & ! index 433
+     'CH4_BRA_LAK + FixedO1D --> LCH4_BRA_LAKbyO1D + DummyCO                                              ', & ! index 434
+     '           CH4_BRA_LAK --> LCH4_BRA_LAKbySoil + DummyCO                                             ', & ! index 435
+     ' CH4_BRA_TER + FixedOH --> LCH4_BRA_TERbyOH + DummyCO                                               ', & ! index 436
+     ' CH4_BRA_TER + FixedCl --> LCH4_BRA_TERbyCl + DummyCO                                               ', & ! index 437
+     'CH4_BRA_TER + FixedO1D --> LCH4_BRA_TERbyO1D + DummyCO                                              ', & ! index 438
+     '           CH4_BRA_TER --> LCH4_BRA_TERbySoil + DummyCO                                             ', & ! index 439
+     ' CH4_BRA_RES + FixedOH --> LCH4_BRA_RESbyOH + DummyCO                                               ', & ! index 440
+     ' CH4_BRA_RES + FixedCl --> LCH4_BRA_RESbyCl + DummyCO                                               ', & ! index 441
+     'CH4_BRA_RES + FixedO1D --> LCH4_BRA_RESbyO1D + DummyCO                                              ', & ! index 442
+     '           CH4_BRA_RES --> LCH4_BRA_RESbySoil + DummyCO                                             ', & ! index 443
+     ' CH4_NSA_OIL + FixedOH --> LCH4_NSA_OILbyOH + DummyCO                                               ', & ! index 444
+     ' CH4_NSA_OIL + FixedCl --> LCH4_NSA_OILbyCl + DummyCO                                               ', & ! index 445
+     'CH4_NSA_OIL + FixedO1D --> LCH4_NSA_OILbyO1D + DummyCO                                              ', & ! index 446
+     '           CH4_NSA_OIL --> LCH4_NSA_OILbySoil + DummyCO                                             ', & ! index 447
+     ' CH4_NSA_GAS + FixedOH --> LCH4_NSA_GASbyOH + DummyCO                                               ', & ! index 448
+     ' CH4_NSA_GAS + FixedCl --> LCH4_NSA_GASbyCl + DummyCO                                               ', & ! index 449
+     'CH4_NSA_GAS + FixedO1D --> LCH4_NSA_GASbyO1D + DummyCO                                              ' /) ! index up to 450
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_15 = (/ &
+     '           CH4_NSA_GAS --> LCH4_NSA_GASbySoil + DummyCO                                             ', & ! index 451
+     ' CH4_NSA_COL + FixedOH --> LCH4_NSA_COLbyOH + DummyCO                                               ', & ! index 452
+     ' CH4_NSA_COL + FixedCl --> LCH4_NSA_COLbyCl + DummyCO                                               ', & ! index 453
+     'CH4_NSA_COL + FixedO1D --> LCH4_NSA_COLbyO1D + DummyCO                                              ', & ! index 454
+     '           CH4_NSA_COL --> LCH4_NSA_COLbySoil + DummyCO                                             ', & ! index 455
+     ' CH4_NSA_LIV + FixedOH --> LCH4_NSA_LIVbyOH + DummyCO                                               ', & ! index 456
+     ' CH4_NSA_LIV + FixedCl --> LCH4_NSA_LIVbyCl + DummyCO                                               ', & ! index 457
+     'CH4_NSA_LIV + FixedO1D --> LCH4_NSA_LIVbyO1D + DummyCO                                              ', & ! index 458
+     '           CH4_NSA_LIV --> LCH4_NSA_LIVbySoil + DummyCO                                             ', & ! index 459
+     ' CH4_NSA_LDF + FixedOH --> LCH4_NSA_LDFbyOH + DummyCO                                               ', & ! index 460
+     ' CH4_NSA_LDF + FixedCl --> LCH4_NSA_LDFbyCl + DummyCO                                               ', & ! index 461
+     'CH4_NSA_LDF + FixedO1D --> LCH4_NSA_LDFbyO1D + DummyCO                                              ', & ! index 462
+     '           CH4_NSA_LDF --> LCH4_NSA_LDFbySoil + DummyCO                                             ', & ! index 463
+     ' CH4_NSA_WST + FixedOH --> LCH4_NSA_WSTbyOH + DummyCO                                               ', & ! index 464
+     ' CH4_NSA_WST + FixedCl --> LCH4_NSA_WSTbyCl + DummyCO                                               ', & ! index 465
+     'CH4_NSA_WST + FixedO1D --> LCH4_NSA_WSTbyO1D + DummyCO                                              ', & ! index 466
+     '           CH4_NSA_WST --> LCH4_NSA_WSTbySoil + DummyCO                                             ', & ! index 467
+     ' CH4_NSA_RIC + FixedOH --> LCH4_NSA_RICbyOH + DummyCO                                               ', & ! index 468
+     ' CH4_NSA_RIC + FixedCl --> LCH4_NSA_RICbyCl + DummyCO                                               ', & ! index 469
+     'CH4_NSA_RIC + FixedO1D --> LCH4_NSA_RICbyO1D + DummyCO                                              ', & ! index 470
+     '           CH4_NSA_RIC --> LCH4_NSA_RICbySoil + DummyCO                                             ', & ! index 471
+     ' CH4_NSA_OTA + FixedOH --> LCH4_NSA_OTAbyOH + DummyCO                                               ', & ! index 472
+     ' CH4_NSA_OTA + FixedCl --> LCH4_NSA_OTAbyCl + DummyCO                                               ', & ! index 473
+     'CH4_NSA_OTA + FixedO1D --> LCH4_NSA_OTAbyO1D + DummyCO                                              ', & ! index 474
+     '           CH4_NSA_OTA --> LCH4_NSA_OTAbySoil + DummyCO                                             ', & ! index 475
+     ' CH4_NSA_BBN + FixedOH --> LCH4_NSA_BBNbyOH + DummyCO                                               ', & ! index 476
+     ' CH4_NSA_BBN + FixedCl --> LCH4_NSA_BBNbyCl + DummyCO                                               ', & ! index 477
+     'CH4_NSA_BBN + FixedO1D --> LCH4_NSA_BBNbyO1D + DummyCO                                              ', & ! index 478
+     '           CH4_NSA_BBN --> LCH4_NSA_BBNbySoil + DummyCO                                             ', & ! index 479
+     ' CH4_NSA_WTL + FixedOH --> LCH4_NSA_WTLbyOH + DummyCO                                               ' /) ! index up to 480
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_16 = (/ &
+     ' CH4_NSA_WTL + FixedCl --> LCH4_NSA_WTLbyCl + DummyCO                                               ', & ! index 481
+     'CH4_NSA_WTL + FixedO1D --> LCH4_NSA_WTLbyO1D + DummyCO                                              ', & ! index 482
+     '           CH4_NSA_WTL --> LCH4_NSA_WTLbySoil + DummyCO                                             ', & ! index 483
+     ' CH4_NSA_SEE + FixedOH --> LCH4_NSA_SEEbyOH + DummyCO                                               ', & ! index 484
+     ' CH4_NSA_SEE + FixedCl --> LCH4_NSA_SEEbyCl + DummyCO                                               ', & ! index 485
+     'CH4_NSA_SEE + FixedO1D --> LCH4_NSA_SEEbyO1D + DummyCO                                              ', & ! index 486
+     '           CH4_NSA_SEE --> LCH4_NSA_SEEbySoil + DummyCO                                             ', & ! index 487
+     ' CH4_NSA_LAK + FixedOH --> LCH4_NSA_LAKbyOH + DummyCO                                               ', & ! index 488
+     ' CH4_NSA_LAK + FixedCl --> LCH4_NSA_LAKbyCl + DummyCO                                               ', & ! index 489
+     'CH4_NSA_LAK + FixedO1D --> LCH4_NSA_LAKbyO1D + DummyCO                                              ', & ! index 490
+     '           CH4_NSA_LAK --> LCH4_NSA_LAKbySoil + DummyCO                                             ', & ! index 491
+     ' CH4_NSA_TER + FixedOH --> LCH4_NSA_TERbyOH + DummyCO                                               ', & ! index 492
+     ' CH4_NSA_TER + FixedCl --> LCH4_NSA_TERbyCl + DummyCO                                               ', & ! index 493
+     'CH4_NSA_TER + FixedO1D --> LCH4_NSA_TERbyO1D + DummyCO                                              ', & ! index 494
+     '           CH4_NSA_TER --> LCH4_NSA_TERbySoil + DummyCO                                             ', & ! index 495
+     ' CH4_NSA_RES + FixedOH --> LCH4_NSA_RESbyOH + DummyCO                                               ', & ! index 496
+     ' CH4_NSA_RES + FixedCl --> LCH4_NSA_RESbyCl + DummyCO                                               ', & ! index 497
+     'CH4_NSA_RES + FixedO1D --> LCH4_NSA_RESbyO1D + DummyCO                                              ', & ! index 498
+     '           CH4_NSA_RES --> LCH4_NSA_RESbySoil + DummyCO                                             ', & ! index 499
+     ' CH4_SCN_OIL + FixedOH --> LCH4_SCN_OILbyOH + DummyCO                                               ', & ! index 500
+     ' CH4_SCN_OIL + FixedCl --> LCH4_SCN_OILbyCl + DummyCO                                               ', & ! index 501
+     'CH4_SCN_OIL + FixedO1D --> LCH4_SCN_OILbyO1D + DummyCO                                              ', & ! index 502
+     '           CH4_SCN_OIL --> LCH4_SCN_OILbySoil + DummyCO                                             ', & ! index 503
+     ' CH4_SCN_GAS + FixedOH --> LCH4_SCN_GASbyOH + DummyCO                                               ', & ! index 504
+     ' CH4_SCN_GAS + FixedCl --> LCH4_SCN_GASbyCl + DummyCO                                               ', & ! index 505
+     'CH4_SCN_GAS + FixedO1D --> LCH4_SCN_GASbyO1D + DummyCO                                              ', & ! index 506
+     '           CH4_SCN_GAS --> LCH4_SCN_GASbySoil + DummyCO                                             ', & ! index 507
+     ' CH4_SCN_COL + FixedOH --> LCH4_SCN_COLbyOH + DummyCO                                               ', & ! index 508
+     ' CH4_SCN_COL + FixedCl --> LCH4_SCN_COLbyCl + DummyCO                                               ', & ! index 509
+     'CH4_SCN_COL + FixedO1D --> LCH4_SCN_COLbyO1D + DummyCO                                              ' /) ! index up to 510
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_17 = (/ &
+     '           CH4_SCN_COL --> LCH4_SCN_COLbySoil + DummyCO                                             ', & ! index 511
+     ' CH4_SCN_LIV + FixedOH --> LCH4_SCN_LIVbyOH + DummyCO                                               ', & ! index 512
+     ' CH4_SCN_LIV + FixedCl --> LCH4_SCN_LIVbyCl + DummyCO                                               ', & ! index 513
+     'CH4_SCN_LIV + FixedO1D --> LCH4_SCN_LIVbyO1D + DummyCO                                              ', & ! index 514
+     '           CH4_SCN_LIV --> LCH4_SCN_LIVbySoil + DummyCO                                             ', & ! index 515
+     ' CH4_SCN_LDF + FixedOH --> LCH4_SCN_LDFbyOH + DummyCO                                               ', & ! index 516
+     ' CH4_SCN_LDF + FixedCl --> LCH4_SCN_LDFbyCl + DummyCO                                               ', & ! index 517
+     'CH4_SCN_LDF + FixedO1D --> LCH4_SCN_LDFbyO1D + DummyCO                                              ', & ! index 518
+     '           CH4_SCN_LDF --> LCH4_SCN_LDFbySoil + DummyCO                                             ', & ! index 519
+     ' CH4_SCN_WST + FixedOH --> LCH4_SCN_WSTbyOH + DummyCO                                               ', & ! index 520
+     ' CH4_SCN_WST + FixedCl --> LCH4_SCN_WSTbyCl + DummyCO                                               ', & ! index 521
+     'CH4_SCN_WST + FixedO1D --> LCH4_SCN_WSTbyO1D + DummyCO                                              ', & ! index 522
+     '           CH4_SCN_WST --> LCH4_SCN_WSTbySoil + DummyCO                                             ', & ! index 523
+     ' CH4_SCN_RIC + FixedOH --> LCH4_SCN_RICbyOH + DummyCO                                               ', & ! index 524
+     ' CH4_SCN_RIC + FixedCl --> LCH4_SCN_RICbyCl + DummyCO                                               ', & ! index 525
+     'CH4_SCN_RIC + FixedO1D --> LCH4_SCN_RICbyO1D + DummyCO                                              ', & ! index 526
+     '           CH4_SCN_RIC --> LCH4_SCN_RICbySoil + DummyCO                                             ', & ! index 527
+     ' CH4_SCN_OTA + FixedOH --> LCH4_SCN_OTAbyOH + DummyCO                                               ', & ! index 528
+     ' CH4_SCN_OTA + FixedCl --> LCH4_SCN_OTAbyCl + DummyCO                                               ', & ! index 529
+     'CH4_SCN_OTA + FixedO1D --> LCH4_SCN_OTAbyO1D + DummyCO                                              ', & ! index 530
+     '           CH4_SCN_OTA --> LCH4_SCN_OTAbySoil + DummyCO                                             ', & ! index 531
+     ' CH4_SCN_BBN + FixedOH --> LCH4_SCN_BBNbyOH + DummyCO                                               ', & ! index 532
+     ' CH4_SCN_BBN + FixedCl --> LCH4_SCN_BBNbyCl + DummyCO                                               ', & ! index 533
+     'CH4_SCN_BBN + FixedO1D --> LCH4_SCN_BBNbyO1D + DummyCO                                              ', & ! index 534
+     '           CH4_SCN_BBN --> LCH4_SCN_BBNbySoil + DummyCO                                             ', & ! index 535
+     ' CH4_SCN_WTL + FixedOH --> LCH4_SCN_WTLbyOH + DummyCO                                               ', & ! index 536
+     ' CH4_SCN_WTL + FixedCl --> LCH4_SCN_WTLbyCl + DummyCO                                               ', & ! index 537
+     'CH4_SCN_WTL + FixedO1D --> LCH4_SCN_WTLbyO1D + DummyCO                                              ', & ! index 538
+     '           CH4_SCN_WTL --> LCH4_SCN_WTLbySoil + DummyCO                                             ', & ! index 539
+     ' CH4_SCN_SEE + FixedOH --> LCH4_SCN_SEEbyOH + DummyCO                                               ' /) ! index up to 540
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_18 = (/ &
+     ' CH4_SCN_SEE + FixedCl --> LCH4_SCN_SEEbyCl + DummyCO                                               ', & ! index 541
+     'CH4_SCN_SEE + FixedO1D --> LCH4_SCN_SEEbyO1D + DummyCO                                              ', & ! index 542
+     '           CH4_SCN_SEE --> LCH4_SCN_SEEbySoil + DummyCO                                             ', & ! index 543
+     ' CH4_SCN_LAK + FixedOH --> LCH4_SCN_LAKbyOH + DummyCO                                               ', & ! index 544
+     ' CH4_SCN_LAK + FixedCl --> LCH4_SCN_LAKbyCl + DummyCO                                               ', & ! index 545
+     'CH4_SCN_LAK + FixedO1D --> LCH4_SCN_LAKbyO1D + DummyCO                                              ', & ! index 546
+     '           CH4_SCN_LAK --> LCH4_SCN_LAKbySoil + DummyCO                                             ', & ! index 547
+     ' CH4_SCN_TER + FixedOH --> LCH4_SCN_TERbyOH + DummyCO                                               ', & ! index 548
+     ' CH4_SCN_TER + FixedCl --> LCH4_SCN_TERbyCl + DummyCO                                               ', & ! index 549
+     'CH4_SCN_TER + FixedO1D --> LCH4_SCN_TERbyO1D + DummyCO                                              ', & ! index 550
+     '           CH4_SCN_TER --> LCH4_SCN_TERbySoil + DummyCO                                             ', & ! index 551
+     ' CH4_SCN_RES + FixedOH --> LCH4_SCN_RESbyOH + DummyCO                                               ', & ! index 552
+     ' CH4_SCN_RES + FixedCl --> LCH4_SCN_RESbyCl + DummyCO                                               ', & ! index 553
+     'CH4_SCN_RES + FixedO1D --> LCH4_SCN_RESbyO1D + DummyCO                                              ', & ! index 554
+     '           CH4_SCN_RES --> LCH4_SCN_RESbySoil + DummyCO                                             ', & ! index 555
+     ' CH4_WEU_OIL + FixedOH --> LCH4_WEU_OILbyOH + DummyCO                                               ', & ! index 556
+     ' CH4_WEU_OIL + FixedCl --> LCH4_WEU_OILbyCl + DummyCO                                               ', & ! index 557
+     'CH4_WEU_OIL + FixedO1D --> LCH4_WEU_OILbyO1D + DummyCO                                              ', & ! index 558
+     '           CH4_WEU_OIL --> LCH4_WEU_OILbySoil + DummyCO                                             ', & ! index 559
+     ' CH4_WEU_GAS + FixedOH --> LCH4_WEU_GASbyOH + DummyCO                                               ', & ! index 560
+     ' CH4_WEU_GAS + FixedCl --> LCH4_WEU_GASbyCl + DummyCO                                               ', & ! index 561
+     'CH4_WEU_GAS + FixedO1D --> LCH4_WEU_GASbyO1D + DummyCO                                              ', & ! index 562
+     '           CH4_WEU_GAS --> LCH4_WEU_GASbySoil + DummyCO                                             ', & ! index 563
+     ' CH4_WEU_COL + FixedOH --> LCH4_WEU_COLbyOH + DummyCO                                               ', & ! index 564
+     ' CH4_WEU_COL + FixedCl --> LCH4_WEU_COLbyCl + DummyCO                                               ', & ! index 565
+     'CH4_WEU_COL + FixedO1D --> LCH4_WEU_COLbyO1D + DummyCO                                              ', & ! index 566
+     '           CH4_WEU_COL --> LCH4_WEU_COLbySoil + DummyCO                                             ', & ! index 567
+     ' CH4_WEU_LIV + FixedOH --> LCH4_WEU_LIVbyOH + DummyCO                                               ', & ! index 568
+     ' CH4_WEU_LIV + FixedCl --> LCH4_WEU_LIVbyCl + DummyCO                                               ', & ! index 569
+     'CH4_WEU_LIV + FixedO1D --> LCH4_WEU_LIVbyO1D + DummyCO                                              ' /) ! index up to 570
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_19 = (/ &
+     '           CH4_WEU_LIV --> LCH4_WEU_LIVbySoil + DummyCO                                             ', & ! index 571
+     ' CH4_WEU_LDF + FixedOH --> LCH4_WEU_LDFbyOH + DummyCO                                               ', & ! index 572
+     ' CH4_WEU_LDF + FixedCl --> LCH4_WEU_LDFbyCl + DummyCO                                               ', & ! index 573
+     'CH4_WEU_LDF + FixedO1D --> LCH4_WEU_LDFbyO1D + DummyCO                                              ', & ! index 574
+     '           CH4_WEU_LDF --> LCH4_WEU_LDFbySoil + DummyCO                                             ', & ! index 575
+     ' CH4_WEU_WST + FixedOH --> LCH4_WEU_WSTbyOH + DummyCO                                               ', & ! index 576
+     ' CH4_WEU_WST + FixedCl --> LCH4_WEU_WSTbyCl + DummyCO                                               ', & ! index 577
+     'CH4_WEU_WST + FixedO1D --> LCH4_WEU_WSTbyO1D + DummyCO                                              ', & ! index 578
+     '           CH4_WEU_WST --> LCH4_WEU_WSTbySoil + DummyCO                                             ', & ! index 579
+     ' CH4_WEU_RIC + FixedOH --> LCH4_WEU_RICbyOH + DummyCO                                               ', & ! index 580
+     ' CH4_WEU_RIC + FixedCl --> LCH4_WEU_RICbyCl + DummyCO                                               ', & ! index 581
+     'CH4_WEU_RIC + FixedO1D --> LCH4_WEU_RICbyO1D + DummyCO                                              ', & ! index 582
+     '           CH4_WEU_RIC --> LCH4_WEU_RICbySoil + DummyCO                                             ', & ! index 583
+     ' CH4_WEU_OTA + FixedOH --> LCH4_WEU_OTAbyOH + DummyCO                                               ', & ! index 584
+     ' CH4_WEU_OTA + FixedCl --> LCH4_WEU_OTAbyCl + DummyCO                                               ', & ! index 585
+     'CH4_WEU_OTA + FixedO1D --> LCH4_WEU_OTAbyO1D + DummyCO                                              ', & ! index 586
+     '           CH4_WEU_OTA --> LCH4_WEU_OTAbySoil + DummyCO                                             ', & ! index 587
+     ' CH4_WEU_BBN + FixedOH --> LCH4_WEU_BBNbyOH + DummyCO                                               ', & ! index 588
+     ' CH4_WEU_BBN + FixedCl --> LCH4_WEU_BBNbyCl + DummyCO                                               ', & ! index 589
+     'CH4_WEU_BBN + FixedO1D --> LCH4_WEU_BBNbyO1D + DummyCO                                              ', & ! index 590
+     '           CH4_WEU_BBN --> LCH4_WEU_BBNbySoil + DummyCO                                             ', & ! index 591
+     ' CH4_WEU_WTL + FixedOH --> LCH4_WEU_WTLbyOH + DummyCO                                               ', & ! index 592
+     ' CH4_WEU_WTL + FixedCl --> LCH4_WEU_WTLbyCl + DummyCO                                               ', & ! index 593
+     'CH4_WEU_WTL + FixedO1D --> LCH4_WEU_WTLbyO1D + DummyCO                                              ', & ! index 594
+     '           CH4_WEU_WTL --> LCH4_WEU_WTLbySoil + DummyCO                                             ', & ! index 595
+     ' CH4_WEU_SEE + FixedOH --> LCH4_WEU_SEEbyOH + DummyCO                                               ', & ! index 596
+     ' CH4_WEU_SEE + FixedCl --> LCH4_WEU_SEEbyCl + DummyCO                                               ', & ! index 597
+     'CH4_WEU_SEE + FixedO1D --> LCH4_WEU_SEEbyO1D + DummyCO                                              ', & ! index 598
+     '           CH4_WEU_SEE --> LCH4_WEU_SEEbySoil + DummyCO                                             ', & ! index 599
+     ' CH4_WEU_LAK + FixedOH --> LCH4_WEU_LAKbyOH + DummyCO                                               ' /) ! index up to 600
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_20 = (/ &
+     ' CH4_WEU_LAK + FixedCl --> LCH4_WEU_LAKbyCl + DummyCO                                               ', & ! index 601
+     'CH4_WEU_LAK + FixedO1D --> LCH4_WEU_LAKbyO1D + DummyCO                                              ', & ! index 602
+     '           CH4_WEU_LAK --> LCH4_WEU_LAKbySoil + DummyCO                                             ', & ! index 603
+     ' CH4_WEU_TER + FixedOH --> LCH4_WEU_TERbyOH + DummyCO                                               ', & ! index 604
+     ' CH4_WEU_TER + FixedCl --> LCH4_WEU_TERbyCl + DummyCO                                               ', & ! index 605
+     'CH4_WEU_TER + FixedO1D --> LCH4_WEU_TERbyO1D + DummyCO                                              ', & ! index 606
+     '           CH4_WEU_TER --> LCH4_WEU_TERbySoil + DummyCO                                             ', & ! index 607
+     ' CH4_WEU_RES + FixedOH --> LCH4_WEU_RESbyOH + DummyCO                                               ', & ! index 608
+     ' CH4_WEU_RES + FixedCl --> LCH4_WEU_RESbyCl + DummyCO                                               ', & ! index 609
+     'CH4_WEU_RES + FixedO1D --> LCH4_WEU_RESbyO1D + DummyCO                                              ', & ! index 610
+     '           CH4_WEU_RES --> LCH4_WEU_RESbySoil + DummyCO                                             ', & ! index 611
+     ' CH4_EEU_OIL + FixedOH --> LCH4_EEU_OILbyOH + DummyCO                                               ', & ! index 612
+     ' CH4_EEU_OIL + FixedCl --> LCH4_EEU_OILbyCl + DummyCO                                               ', & ! index 613
+     'CH4_EEU_OIL + FixedO1D --> LCH4_EEU_OILbyO1D + DummyCO                                              ', & ! index 614
+     '           CH4_EEU_OIL --> LCH4_EEU_OILbySoil + DummyCO                                             ', & ! index 615
+     ' CH4_EEU_GAS + FixedOH --> LCH4_EEU_GASbyOH + DummyCO                                               ', & ! index 616
+     ' CH4_EEU_GAS + FixedCl --> LCH4_EEU_GASbyCl + DummyCO                                               ', & ! index 617
+     'CH4_EEU_GAS + FixedO1D --> LCH4_EEU_GASbyO1D + DummyCO                                              ', & ! index 618
+     '           CH4_EEU_GAS --> LCH4_EEU_GASbySoil + DummyCO                                             ', & ! index 619
+     ' CH4_EEU_COL + FixedOH --> LCH4_EEU_COLbyOH + DummyCO                                               ', & ! index 620
+     ' CH4_EEU_COL + FixedCl --> LCH4_EEU_COLbyCl + DummyCO                                               ', & ! index 621
+     'CH4_EEU_COL + FixedO1D --> LCH4_EEU_COLbyO1D + DummyCO                                              ', & ! index 622
+     '           CH4_EEU_COL --> LCH4_EEU_COLbySoil + DummyCO                                             ', & ! index 623
+     ' CH4_EEU_LIV + FixedOH --> LCH4_EEU_LIVbyOH + DummyCO                                               ', & ! index 624
+     ' CH4_EEU_LIV + FixedCl --> LCH4_EEU_LIVbyCl + DummyCO                                               ', & ! index 625
+     'CH4_EEU_LIV + FixedO1D --> LCH4_EEU_LIVbyO1D + DummyCO                                              ', & ! index 626
+     '           CH4_EEU_LIV --> LCH4_EEU_LIVbySoil + DummyCO                                             ', & ! index 627
+     ' CH4_EEU_LDF + FixedOH --> LCH4_EEU_LDFbyOH + DummyCO                                               ', & ! index 628
+     ' CH4_EEU_LDF + FixedCl --> LCH4_EEU_LDFbyCl + DummyCO                                               ', & ! index 629
+     'CH4_EEU_LDF + FixedO1D --> LCH4_EEU_LDFbyO1D + DummyCO                                              ' /) ! index up to 630
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_21 = (/ &
+     '           CH4_EEU_LDF --> LCH4_EEU_LDFbySoil + DummyCO                                             ', & ! index 631
+     ' CH4_EEU_WST + FixedOH --> LCH4_EEU_WSTbyOH + DummyCO                                               ', & ! index 632
+     ' CH4_EEU_WST + FixedCl --> LCH4_EEU_WSTbyCl + DummyCO                                               ', & ! index 633
+     'CH4_EEU_WST + FixedO1D --> LCH4_EEU_WSTbyO1D + DummyCO                                              ', & ! index 634
+     '           CH4_EEU_WST --> LCH4_EEU_WSTbySoil + DummyCO                                             ', & ! index 635
+     ' CH4_EEU_RIC + FixedOH --> LCH4_EEU_RICbyOH + DummyCO                                               ', & ! index 636
+     ' CH4_EEU_RIC + FixedCl --> LCH4_EEU_RICbyCl + DummyCO                                               ', & ! index 637
+     'CH4_EEU_RIC + FixedO1D --> LCH4_EEU_RICbyO1D + DummyCO                                              ', & ! index 638
+     '           CH4_EEU_RIC --> LCH4_EEU_RICbySoil + DummyCO                                             ', & ! index 639
+     ' CH4_EEU_OTA + FixedOH --> LCH4_EEU_OTAbyOH + DummyCO                                               ', & ! index 640
+     ' CH4_EEU_OTA + FixedCl --> LCH4_EEU_OTAbyCl + DummyCO                                               ', & ! index 641
+     'CH4_EEU_OTA + FixedO1D --> LCH4_EEU_OTAbyO1D + DummyCO                                              ', & ! index 642
+     '           CH4_EEU_OTA --> LCH4_EEU_OTAbySoil + DummyCO                                             ', & ! index 643
+     ' CH4_EEU_BBN + FixedOH --> LCH4_EEU_BBNbyOH + DummyCO                                               ', & ! index 644
+     ' CH4_EEU_BBN + FixedCl --> LCH4_EEU_BBNbyCl + DummyCO                                               ', & ! index 645
+     'CH4_EEU_BBN + FixedO1D --> LCH4_EEU_BBNbyO1D + DummyCO                                              ', & ! index 646
+     '           CH4_EEU_BBN --> LCH4_EEU_BBNbySoil + DummyCO                                             ', & ! index 647
+     ' CH4_EEU_WTL + FixedOH --> LCH4_EEU_WTLbyOH + DummyCO                                               ', & ! index 648
+     ' CH4_EEU_WTL + FixedCl --> LCH4_EEU_WTLbyCl + DummyCO                                               ', & ! index 649
+     'CH4_EEU_WTL + FixedO1D --> LCH4_EEU_WTLbyO1D + DummyCO                                              ', & ! index 650
+     '           CH4_EEU_WTL --> LCH4_EEU_WTLbySoil + DummyCO                                             ', & ! index 651
+     ' CH4_EEU_SEE + FixedOH --> LCH4_EEU_SEEbyOH + DummyCO                                               ', & ! index 652
+     ' CH4_EEU_SEE + FixedCl --> LCH4_EEU_SEEbyCl + DummyCO                                               ', & ! index 653
+     'CH4_EEU_SEE + FixedO1D --> LCH4_EEU_SEEbyO1D + DummyCO                                              ', & ! index 654
+     '           CH4_EEU_SEE --> LCH4_EEU_SEEbySoil + DummyCO                                             ', & ! index 655
+     ' CH4_EEU_LAK + FixedOH --> LCH4_EEU_LAKbyOH + DummyCO                                               ', & ! index 656
+     ' CH4_EEU_LAK + FixedCl --> LCH4_EEU_LAKbyCl + DummyCO                                               ', & ! index 657
+     'CH4_EEU_LAK + FixedO1D --> LCH4_EEU_LAKbyO1D + DummyCO                                              ', & ! index 658
+     '           CH4_EEU_LAK --> LCH4_EEU_LAKbySoil + DummyCO                                             ', & ! index 659
+     ' CH4_EEU_TER + FixedOH --> LCH4_EEU_TERbyOH + DummyCO                                               ' /) ! index up to 660
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_22 = (/ &
+     ' CH4_EEU_TER + FixedCl --> LCH4_EEU_TERbyCl + DummyCO                                               ', & ! index 661
+     'CH4_EEU_TER + FixedO1D --> LCH4_EEU_TERbyO1D + DummyCO                                              ', & ! index 662
+     '           CH4_EEU_TER --> LCH4_EEU_TERbySoil + DummyCO                                             ', & ! index 663
+     ' CH4_EEU_RES + FixedOH --> LCH4_EEU_RESbyOH + DummyCO                                               ', & ! index 664
+     ' CH4_EEU_RES + FixedCl --> LCH4_EEU_RESbyCl + DummyCO                                               ', & ! index 665
+     'CH4_EEU_RES + FixedO1D --> LCH4_EEU_RESbyO1D + DummyCO                                              ', & ! index 666
+     '           CH4_EEU_RES --> LCH4_EEU_RESbySoil + DummyCO                                             ', & ! index 667
+     ' CH4_RUS_OIL + FixedOH --> LCH4_RUS_OILbyOH + DummyCO                                               ', & ! index 668
+     ' CH4_RUS_OIL + FixedCl --> LCH4_RUS_OILbyCl + DummyCO                                               ', & ! index 669
+     'CH4_RUS_OIL + FixedO1D --> LCH4_RUS_OILbyO1D + DummyCO                                              ', & ! index 670
+     '           CH4_RUS_OIL --> LCH4_RUS_OILbySoil + DummyCO                                             ', & ! index 671
+     ' CH4_RUS_GAS + FixedOH --> LCH4_RUS_GASbyOH + DummyCO                                               ', & ! index 672
+     ' CH4_RUS_GAS + FixedCl --> LCH4_RUS_GASbyCl + DummyCO                                               ', & ! index 673
+     'CH4_RUS_GAS + FixedO1D --> LCH4_RUS_GASbyO1D + DummyCO                                              ', & ! index 674
+     '           CH4_RUS_GAS --> LCH4_RUS_GASbySoil + DummyCO                                             ', & ! index 675
+     ' CH4_RUS_COL + FixedOH --> LCH4_RUS_COLbyOH + DummyCO                                               ', & ! index 676
+     ' CH4_RUS_COL + FixedCl --> LCH4_RUS_COLbyCl + DummyCO                                               ', & ! index 677
+     'CH4_RUS_COL + FixedO1D --> LCH4_RUS_COLbyO1D + DummyCO                                              ', & ! index 678
+     '           CH4_RUS_COL --> LCH4_RUS_COLbySoil + DummyCO                                             ', & ! index 679
+     ' CH4_RUS_LIV + FixedOH --> LCH4_RUS_LIVbyOH + DummyCO                                               ', & ! index 680
+     ' CH4_RUS_LIV + FixedCl --> LCH4_RUS_LIVbyCl + DummyCO                                               ', & ! index 681
+     'CH4_RUS_LIV + FixedO1D --> LCH4_RUS_LIVbyO1D + DummyCO                                              ', & ! index 682
+     '           CH4_RUS_LIV --> LCH4_RUS_LIVbySoil + DummyCO                                             ', & ! index 683
+     ' CH4_RUS_LDF + FixedOH --> LCH4_RUS_LDFbyOH + DummyCO                                               ', & ! index 684
+     ' CH4_RUS_LDF + FixedCl --> LCH4_RUS_LDFbyCl + DummyCO                                               ', & ! index 685
+     'CH4_RUS_LDF + FixedO1D --> LCH4_RUS_LDFbyO1D + DummyCO                                              ', & ! index 686
+     '           CH4_RUS_LDF --> LCH4_RUS_LDFbySoil + DummyCO                                             ', & ! index 687
+     ' CH4_RUS_WST + FixedOH --> LCH4_RUS_WSTbyOH + DummyCO                                               ', & ! index 688
+     ' CH4_RUS_WST + FixedCl --> LCH4_RUS_WSTbyCl + DummyCO                                               ', & ! index 689
+     'CH4_RUS_WST + FixedO1D --> LCH4_RUS_WSTbyO1D + DummyCO                                              ' /) ! index up to 690
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_23 = (/ &
+     '           CH4_RUS_WST --> LCH4_RUS_WSTbySoil + DummyCO                                             ', & ! index 691
+     ' CH4_RUS_RIC + FixedOH --> LCH4_RUS_RICbyOH + DummyCO                                               ', & ! index 692
+     ' CH4_RUS_RIC + FixedCl --> LCH4_RUS_RICbyCl + DummyCO                                               ', & ! index 693
+     'CH4_RUS_RIC + FixedO1D --> LCH4_RUS_RICbyO1D + DummyCO                                              ', & ! index 694
+     '           CH4_RUS_RIC --> LCH4_RUS_RICbySoil + DummyCO                                             ', & ! index 695
+     ' CH4_RUS_OTA + FixedOH --> LCH4_RUS_OTAbyOH + DummyCO                                               ', & ! index 696
+     ' CH4_RUS_OTA + FixedCl --> LCH4_RUS_OTAbyCl + DummyCO                                               ', & ! index 697
+     'CH4_RUS_OTA + FixedO1D --> LCH4_RUS_OTAbyO1D + DummyCO                                              ', & ! index 698
+     '           CH4_RUS_OTA --> LCH4_RUS_OTAbySoil + DummyCO                                             ', & ! index 699
+     ' CH4_RUS_BBN + FixedOH --> LCH4_RUS_BBNbyOH + DummyCO                                               ', & ! index 700
+     ' CH4_RUS_BBN + FixedCl --> LCH4_RUS_BBNbyCl + DummyCO                                               ', & ! index 701
+     'CH4_RUS_BBN + FixedO1D --> LCH4_RUS_BBNbyO1D + DummyCO                                              ', & ! index 702
+     '           CH4_RUS_BBN --> LCH4_RUS_BBNbySoil + DummyCO                                             ', & ! index 703
+     ' CH4_RUS_WTL + FixedOH --> LCH4_RUS_WTLbyOH + DummyCO                                               ', & ! index 704
+     ' CH4_RUS_WTL + FixedCl --> LCH4_RUS_WTLbyCl + DummyCO                                               ', & ! index 705
+     'CH4_RUS_WTL + FixedO1D --> LCH4_RUS_WTLbyO1D + DummyCO                                              ', & ! index 706
+     '           CH4_RUS_WTL --> LCH4_RUS_WTLbySoil + DummyCO                                             ', & ! index 707
+     ' CH4_RUS_SEE + FixedOH --> LCH4_RUS_SEEbyOH + DummyCO                                               ', & ! index 708
+     ' CH4_RUS_SEE + FixedCl --> LCH4_RUS_SEEbyCl + DummyCO                                               ', & ! index 709
+     'CH4_RUS_SEE + FixedO1D --> LCH4_RUS_SEEbyO1D + DummyCO                                              ', & ! index 710
+     '           CH4_RUS_SEE --> LCH4_RUS_SEEbySoil + DummyCO                                             ', & ! index 711
+     ' CH4_RUS_LAK + FixedOH --> LCH4_RUS_LAKbyOH + DummyCO                                               ', & ! index 712
+     ' CH4_RUS_LAK + FixedCl --> LCH4_RUS_LAKbyCl + DummyCO                                               ', & ! index 713
+     'CH4_RUS_LAK + FixedO1D --> LCH4_RUS_LAKbyO1D + DummyCO                                              ', & ! index 714
+     '           CH4_RUS_LAK --> LCH4_RUS_LAKbySoil + DummyCO                                             ', & ! index 715
+     ' CH4_RUS_TER + FixedOH --> LCH4_RUS_TERbyOH + DummyCO                                               ', & ! index 716
+     ' CH4_RUS_TER + FixedCl --> LCH4_RUS_TERbyCl + DummyCO                                               ', & ! index 717
+     'CH4_RUS_TER + FixedO1D --> LCH4_RUS_TERbyO1D + DummyCO                                              ', & ! index 718
+     '           CH4_RUS_TER --> LCH4_RUS_TERbySoil + DummyCO                                             ', & ! index 719
+     ' CH4_RUS_RES + FixedOH --> LCH4_RUS_RESbyOH + DummyCO                                               ' /) ! index up to 720
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_24 = (/ &
+     ' CH4_RUS_RES + FixedCl --> LCH4_RUS_RESbyCl + DummyCO                                               ', & ! index 721
+     'CH4_RUS_RES + FixedO1D --> LCH4_RUS_RESbyO1D + DummyCO                                              ', & ! index 722
+     '           CH4_RUS_RES --> LCH4_RUS_RESbySoil + DummyCO                                             ', & ! index 723
+     ' CH4_MDE_OIL + FixedOH --> LCH4_MDE_OILbyOH + DummyCO                                               ', & ! index 724
+     ' CH4_MDE_OIL + FixedCl --> LCH4_MDE_OILbyCl + DummyCO                                               ', & ! index 725
+     'CH4_MDE_OIL + FixedO1D --> LCH4_MDE_OILbyO1D + DummyCO                                              ', & ! index 726
+     '           CH4_MDE_OIL --> LCH4_MDE_OILbySoil + DummyCO                                             ', & ! index 727
+     ' CH4_MDE_GAS + FixedOH --> LCH4_MDE_GASbyOH + DummyCO                                               ', & ! index 728
+     ' CH4_MDE_GAS + FixedCl --> LCH4_MDE_GASbyCl + DummyCO                                               ', & ! index 729
+     'CH4_MDE_GAS + FixedO1D --> LCH4_MDE_GASbyO1D + DummyCO                                              ', & ! index 730
+     '           CH4_MDE_GAS --> LCH4_MDE_GASbySoil + DummyCO                                             ', & ! index 731
+     ' CH4_MDE_COL + FixedOH --> LCH4_MDE_COLbyOH + DummyCO                                               ', & ! index 732
+     ' CH4_MDE_COL + FixedCl --> LCH4_MDE_COLbyCl + DummyCO                                               ', & ! index 733
+     'CH4_MDE_COL + FixedO1D --> LCH4_MDE_COLbyO1D + DummyCO                                              ', & ! index 734
+     '           CH4_MDE_COL --> LCH4_MDE_COLbySoil + DummyCO                                             ', & ! index 735
+     ' CH4_MDE_LIV + FixedOH --> LCH4_MDE_LIVbyOH + DummyCO                                               ', & ! index 736
+     ' CH4_MDE_LIV + FixedCl --> LCH4_MDE_LIVbyCl + DummyCO                                               ', & ! index 737
+     'CH4_MDE_LIV + FixedO1D --> LCH4_MDE_LIVbyO1D + DummyCO                                              ', & ! index 738
+     '           CH4_MDE_LIV --> LCH4_MDE_LIVbySoil + DummyCO                                             ', & ! index 739
+     ' CH4_MDE_LDF + FixedOH --> LCH4_MDE_LDFbyOH + DummyCO                                               ', & ! index 740
+     ' CH4_MDE_LDF + FixedCl --> LCH4_MDE_LDFbyCl + DummyCO                                               ', & ! index 741
+     'CH4_MDE_LDF + FixedO1D --> LCH4_MDE_LDFbyO1D + DummyCO                                              ', & ! index 742
+     '           CH4_MDE_LDF --> LCH4_MDE_LDFbySoil + DummyCO                                             ', & ! index 743
+     ' CH4_MDE_WST + FixedOH --> LCH4_MDE_WSTbyOH + DummyCO                                               ', & ! index 744
+     ' CH4_MDE_WST + FixedCl --> LCH4_MDE_WSTbyCl + DummyCO                                               ', & ! index 745
+     'CH4_MDE_WST + FixedO1D --> LCH4_MDE_WSTbyO1D + DummyCO                                              ', & ! index 746
+     '           CH4_MDE_WST --> LCH4_MDE_WSTbySoil + DummyCO                                             ', & ! index 747
+     ' CH4_MDE_RIC + FixedOH --> LCH4_MDE_RICbyOH + DummyCO                                               ', & ! index 748
+     ' CH4_MDE_RIC + FixedCl --> LCH4_MDE_RICbyCl + DummyCO                                               ', & ! index 749
+     'CH4_MDE_RIC + FixedO1D --> LCH4_MDE_RICbyO1D + DummyCO                                              ' /) ! index up to 750
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_25 = (/ &
+     '           CH4_MDE_RIC --> LCH4_MDE_RICbySoil + DummyCO                                             ', & ! index 751
+     ' CH4_MDE_OTA + FixedOH --> LCH4_MDE_OTAbyOH + DummyCO                                               ', & ! index 752
+     ' CH4_MDE_OTA + FixedCl --> LCH4_MDE_OTAbyCl + DummyCO                                               ', & ! index 753
+     'CH4_MDE_OTA + FixedO1D --> LCH4_MDE_OTAbyO1D + DummyCO                                              ', & ! index 754
+     '           CH4_MDE_OTA --> LCH4_MDE_OTAbySoil + DummyCO                                             ', & ! index 755
+     ' CH4_MDE_BBN + FixedOH --> LCH4_MDE_BBNbyOH + DummyCO                                               ', & ! index 756
+     ' CH4_MDE_BBN + FixedCl --> LCH4_MDE_BBNbyCl + DummyCO                                               ', & ! index 757
+     'CH4_MDE_BBN + FixedO1D --> LCH4_MDE_BBNbyO1D + DummyCO                                              ', & ! index 758
+     '           CH4_MDE_BBN --> LCH4_MDE_BBNbySoil + DummyCO                                             ', & ! index 759
+     ' CH4_MDE_WTL + FixedOH --> LCH4_MDE_WTLbyOH + DummyCO                                               ', & ! index 760
+     ' CH4_MDE_WTL + FixedCl --> LCH4_MDE_WTLbyCl + DummyCO                                               ', & ! index 761
+     'CH4_MDE_WTL + FixedO1D --> LCH4_MDE_WTLbyO1D + DummyCO                                              ', & ! index 762
+     '           CH4_MDE_WTL --> LCH4_MDE_WTLbySoil + DummyCO                                             ', & ! index 763
+     ' CH4_MDE_SEE + FixedOH --> LCH4_MDE_SEEbyOH + DummyCO                                               ', & ! index 764
+     ' CH4_MDE_SEE + FixedCl --> LCH4_MDE_SEEbyCl + DummyCO                                               ', & ! index 765
+     'CH4_MDE_SEE + FixedO1D --> LCH4_MDE_SEEbyO1D + DummyCO                                              ', & ! index 766
+     '           CH4_MDE_SEE --> LCH4_MDE_SEEbySoil + DummyCO                                             ', & ! index 767
+     ' CH4_MDE_LAK + FixedOH --> LCH4_MDE_LAKbyOH + DummyCO                                               ', & ! index 768
+     ' CH4_MDE_LAK + FixedCl --> LCH4_MDE_LAKbyCl + DummyCO                                               ', & ! index 769
+     'CH4_MDE_LAK + FixedO1D --> LCH4_MDE_LAKbyO1D + DummyCO                                              ', & ! index 770
+     '           CH4_MDE_LAK --> LCH4_MDE_LAKbySoil + DummyCO                                             ', & ! index 771
+     ' CH4_MDE_TER + FixedOH --> LCH4_MDE_TERbyOH + DummyCO                                               ', & ! index 772
+     ' CH4_MDE_TER + FixedCl --> LCH4_MDE_TERbyCl + DummyCO                                               ', & ! index 773
+     'CH4_MDE_TER + FixedO1D --> LCH4_MDE_TERbyO1D + DummyCO                                              ', & ! index 774
+     '           CH4_MDE_TER --> LCH4_MDE_TERbySoil + DummyCO                                             ', & ! index 775
+     ' CH4_MDE_RES + FixedOH --> LCH4_MDE_RESbyOH + DummyCO                                               ', & ! index 776
+     ' CH4_MDE_RES + FixedCl --> LCH4_MDE_RESbyCl + DummyCO                                               ', & ! index 777
+     'CH4_MDE_RES + FixedO1D --> LCH4_MDE_RESbyO1D + DummyCO                                              ', & ! index 778
+     '           CH4_MDE_RES --> LCH4_MDE_RESbySoil + DummyCO                                             ', & ! index 779
+     ' CH4_NAF_OIL + FixedOH --> LCH4_NAF_OILbyOH + DummyCO                                               ' /) ! index up to 780
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_26 = (/ &
+     ' CH4_NAF_OIL + FixedCl --> LCH4_NAF_OILbyCl + DummyCO                                               ', & ! index 781
+     'CH4_NAF_OIL + FixedO1D --> LCH4_NAF_OILbyO1D + DummyCO                                              ', & ! index 782
+     '           CH4_NAF_OIL --> LCH4_NAF_OILbySoil + DummyCO                                             ', & ! index 783
+     ' CH4_NAF_GAS + FixedOH --> LCH4_NAF_GASbyOH + DummyCO                                               ', & ! index 784
+     ' CH4_NAF_GAS + FixedCl --> LCH4_NAF_GASbyCl + DummyCO                                               ', & ! index 785
+     'CH4_NAF_GAS + FixedO1D --> LCH4_NAF_GASbyO1D + DummyCO                                              ', & ! index 786
+     '           CH4_NAF_GAS --> LCH4_NAF_GASbySoil + DummyCO                                             ', & ! index 787
+     ' CH4_NAF_COL + FixedOH --> LCH4_NAF_COLbyOH + DummyCO                                               ', & ! index 788
+     ' CH4_NAF_COL + FixedCl --> LCH4_NAF_COLbyCl + DummyCO                                               ', & ! index 789
+     'CH4_NAF_COL + FixedO1D --> LCH4_NAF_COLbyO1D + DummyCO                                              ', & ! index 790
+     '           CH4_NAF_COL --> LCH4_NAF_COLbySoil + DummyCO                                             ', & ! index 791
+     ' CH4_NAF_LIV + FixedOH --> LCH4_NAF_LIVbyOH + DummyCO                                               ', & ! index 792
+     ' CH4_NAF_LIV + FixedCl --> LCH4_NAF_LIVbyCl + DummyCO                                               ', & ! index 793
+     'CH4_NAF_LIV + FixedO1D --> LCH4_NAF_LIVbyO1D + DummyCO                                              ', & ! index 794
+     '           CH4_NAF_LIV --> LCH4_NAF_LIVbySoil + DummyCO                                             ', & ! index 795
+     ' CH4_NAF_LDF + FixedOH --> LCH4_NAF_LDFbyOH + DummyCO                                               ', & ! index 796
+     ' CH4_NAF_LDF + FixedCl --> LCH4_NAF_LDFbyCl + DummyCO                                               ', & ! index 797
+     'CH4_NAF_LDF + FixedO1D --> LCH4_NAF_LDFbyO1D + DummyCO                                              ', & ! index 798
+     '           CH4_NAF_LDF --> LCH4_NAF_LDFbySoil + DummyCO                                             ', & ! index 799
+     ' CH4_NAF_WST + FixedOH --> LCH4_NAF_WSTbyOH + DummyCO                                               ', & ! index 800
+     ' CH4_NAF_WST + FixedCl --> LCH4_NAF_WSTbyCl + DummyCO                                               ', & ! index 801
+     'CH4_NAF_WST + FixedO1D --> LCH4_NAF_WSTbyO1D + DummyCO                                              ', & ! index 802
+     '           CH4_NAF_WST --> LCH4_NAF_WSTbySoil + DummyCO                                             ', & ! index 803
+     ' CH4_NAF_RIC + FixedOH --> LCH4_NAF_RICbyOH + DummyCO                                               ', & ! index 804
+     ' CH4_NAF_RIC + FixedCl --> LCH4_NAF_RICbyCl + DummyCO                                               ', & ! index 805
+     'CH4_NAF_RIC + FixedO1D --> LCH4_NAF_RICbyO1D + DummyCO                                              ', & ! index 806
+     '           CH4_NAF_RIC --> LCH4_NAF_RICbySoil + DummyCO                                             ', & ! index 807
+     ' CH4_NAF_OTA + FixedOH --> LCH4_NAF_OTAbyOH + DummyCO                                               ', & ! index 808
+     ' CH4_NAF_OTA + FixedCl --> LCH4_NAF_OTAbyCl + DummyCO                                               ', & ! index 809
+     'CH4_NAF_OTA + FixedO1D --> LCH4_NAF_OTAbyO1D + DummyCO                                              ' /) ! index up to 810
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_27 = (/ &
+     '           CH4_NAF_OTA --> LCH4_NAF_OTAbySoil + DummyCO                                             ', & ! index 811
+     ' CH4_NAF_BBN + FixedOH --> LCH4_NAF_BBNbyOH + DummyCO                                               ', & ! index 812
+     ' CH4_NAF_BBN + FixedCl --> LCH4_NAF_BBNbyCl + DummyCO                                               ', & ! index 813
+     'CH4_NAF_BBN + FixedO1D --> LCH4_NAF_BBNbyO1D + DummyCO                                              ', & ! index 814
+     '           CH4_NAF_BBN --> LCH4_NAF_BBNbySoil + DummyCO                                             ', & ! index 815
+     ' CH4_NAF_WTL + FixedOH --> LCH4_NAF_WTLbyOH + DummyCO                                               ', & ! index 816
+     ' CH4_NAF_WTL + FixedCl --> LCH4_NAF_WTLbyCl + DummyCO                                               ', & ! index 817
+     'CH4_NAF_WTL + FixedO1D --> LCH4_NAF_WTLbyO1D + DummyCO                                              ', & ! index 818
+     '           CH4_NAF_WTL --> LCH4_NAF_WTLbySoil + DummyCO                                             ', & ! index 819
+     ' CH4_NAF_SEE + FixedOH --> LCH4_NAF_SEEbyOH + DummyCO                                               ', & ! index 820
+     ' CH4_NAF_SEE + FixedCl --> LCH4_NAF_SEEbyCl + DummyCO                                               ', & ! index 821
+     'CH4_NAF_SEE + FixedO1D --> LCH4_NAF_SEEbyO1D + DummyCO                                              ', & ! index 822
+     '           CH4_NAF_SEE --> LCH4_NAF_SEEbySoil + DummyCO                                             ', & ! index 823
+     ' CH4_NAF_LAK + FixedOH --> LCH4_NAF_LAKbyOH + DummyCO                                               ', & ! index 824
+     ' CH4_NAF_LAK + FixedCl --> LCH4_NAF_LAKbyCl + DummyCO                                               ', & ! index 825
+     'CH4_NAF_LAK + FixedO1D --> LCH4_NAF_LAKbyO1D + DummyCO                                              ', & ! index 826
+     '           CH4_NAF_LAK --> LCH4_NAF_LAKbySoil + DummyCO                                             ', & ! index 827
+     ' CH4_NAF_TER + FixedOH --> LCH4_NAF_TERbyOH + DummyCO                                               ', & ! index 828
+     ' CH4_NAF_TER + FixedCl --> LCH4_NAF_TERbyCl + DummyCO                                               ', & ! index 829
+     'CH4_NAF_TER + FixedO1D --> LCH4_NAF_TERbyO1D + DummyCO                                              ', & ! index 830
+     '           CH4_NAF_TER --> LCH4_NAF_TERbySoil + DummyCO                                             ', & ! index 831
+     ' CH4_NAF_RES + FixedOH --> LCH4_NAF_RESbyOH + DummyCO                                               ', & ! index 832
+     ' CH4_NAF_RES + FixedCl --> LCH4_NAF_RESbyCl + DummyCO                                               ', & ! index 833
+     'CH4_NAF_RES + FixedO1D --> LCH4_NAF_RESbyO1D + DummyCO                                              ', & ! index 834
+     '           CH4_NAF_RES --> LCH4_NAF_RESbySoil + DummyCO                                             ', & ! index 835
+     ' CH4_WAF_OIL + FixedOH --> LCH4_WAF_OILbyOH + DummyCO                                               ', & ! index 836
+     ' CH4_WAF_OIL + FixedCl --> LCH4_WAF_OILbyCl + DummyCO                                               ', & ! index 837
+     'CH4_WAF_OIL + FixedO1D --> LCH4_WAF_OILbyO1D + DummyCO                                              ', & ! index 838
+     '           CH4_WAF_OIL --> LCH4_WAF_OILbySoil + DummyCO                                             ', & ! index 839
+     ' CH4_WAF_GAS + FixedOH --> LCH4_WAF_GASbyOH + DummyCO                                               ' /) ! index up to 840
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_28 = (/ &
+     ' CH4_WAF_GAS + FixedCl --> LCH4_WAF_GASbyCl + DummyCO                                               ', & ! index 841
+     'CH4_WAF_GAS + FixedO1D --> LCH4_WAF_GASbyO1D + DummyCO                                              ', & ! index 842
+     '           CH4_WAF_GAS --> LCH4_WAF_GASbySoil + DummyCO                                             ', & ! index 843
+     ' CH4_WAF_COL + FixedOH --> LCH4_WAF_COLbyOH + DummyCO                                               ', & ! index 844
+     ' CH4_WAF_COL + FixedCl --> LCH4_WAF_COLbyCl + DummyCO                                               ', & ! index 845
+     'CH4_WAF_COL + FixedO1D --> LCH4_WAF_COLbyO1D + DummyCO                                              ', & ! index 846
+     '           CH4_WAF_COL --> LCH4_WAF_COLbySoil + DummyCO                                             ', & ! index 847
+     ' CH4_WAF_LIV + FixedOH --> LCH4_WAF_LIVbyOH + DummyCO                                               ', & ! index 848
+     ' CH4_WAF_LIV + FixedCl --> LCH4_WAF_LIVbyCl + DummyCO                                               ', & ! index 849
+     'CH4_WAF_LIV + FixedO1D --> LCH4_WAF_LIVbyO1D + DummyCO                                              ', & ! index 850
+     '           CH4_WAF_LIV --> LCH4_WAF_LIVbySoil + DummyCO                                             ', & ! index 851
+     ' CH4_WAF_LDF + FixedOH --> LCH4_WAF_LDFbyOH + DummyCO                                               ', & ! index 852
+     ' CH4_WAF_LDF + FixedCl --> LCH4_WAF_LDFbyCl + DummyCO                                               ', & ! index 853
+     'CH4_WAF_LDF + FixedO1D --> LCH4_WAF_LDFbyO1D + DummyCO                                              ', & ! index 854
+     '           CH4_WAF_LDF --> LCH4_WAF_LDFbySoil + DummyCO                                             ', & ! index 855
+     ' CH4_WAF_WST + FixedOH --> LCH4_WAF_WSTbyOH + DummyCO                                               ', & ! index 856
+     ' CH4_WAF_WST + FixedCl --> LCH4_WAF_WSTbyCl + DummyCO                                               ', & ! index 857
+     'CH4_WAF_WST + FixedO1D --> LCH4_WAF_WSTbyO1D + DummyCO                                              ', & ! index 858
+     '           CH4_WAF_WST --> LCH4_WAF_WSTbySoil + DummyCO                                             ', & ! index 859
+     ' CH4_WAF_RIC + FixedOH --> LCH4_WAF_RICbyOH + DummyCO                                               ', & ! index 860
+     ' CH4_WAF_RIC + FixedCl --> LCH4_WAF_RICbyCl + DummyCO                                               ', & ! index 861
+     'CH4_WAF_RIC + FixedO1D --> LCH4_WAF_RICbyO1D + DummyCO                                              ', & ! index 862
+     '           CH4_WAF_RIC --> LCH4_WAF_RICbySoil + DummyCO                                             ', & ! index 863
+     ' CH4_WAF_OTA + FixedOH --> LCH4_WAF_OTAbyOH + DummyCO                                               ', & ! index 864
+     ' CH4_WAF_OTA + FixedCl --> LCH4_WAF_OTAbyCl + DummyCO                                               ', & ! index 865
+     'CH4_WAF_OTA + FixedO1D --> LCH4_WAF_OTAbyO1D + DummyCO                                              ', & ! index 866
+     '           CH4_WAF_OTA --> LCH4_WAF_OTAbySoil + DummyCO                                             ', & ! index 867
+     ' CH4_WAF_BBN + FixedOH --> LCH4_WAF_BBNbyOH + DummyCO                                               ', & ! index 868
+     ' CH4_WAF_BBN + FixedCl --> LCH4_WAF_BBNbyCl + DummyCO                                               ', & ! index 869
+     'CH4_WAF_BBN + FixedO1D --> LCH4_WAF_BBNbyO1D + DummyCO                                              ' /) ! index up to 870
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_29 = (/ &
+     '           CH4_WAF_BBN --> LCH4_WAF_BBNbySoil + DummyCO                                             ', & ! index 871
+     ' CH4_WAF_WTL + FixedOH --> LCH4_WAF_WTLbyOH + DummyCO                                               ', & ! index 872
+     ' CH4_WAF_WTL + FixedCl --> LCH4_WAF_WTLbyCl + DummyCO                                               ', & ! index 873
+     'CH4_WAF_WTL + FixedO1D --> LCH4_WAF_WTLbyO1D + DummyCO                                              ', & ! index 874
+     '           CH4_WAF_WTL --> LCH4_WAF_WTLbySoil + DummyCO                                             ', & ! index 875
+     ' CH4_WAF_SEE + FixedOH --> LCH4_WAF_SEEbyOH + DummyCO                                               ', & ! index 876
+     ' CH4_WAF_SEE + FixedCl --> LCH4_WAF_SEEbyCl + DummyCO                                               ', & ! index 877
+     'CH4_WAF_SEE + FixedO1D --> LCH4_WAF_SEEbyO1D + DummyCO                                              ', & ! index 878
+     '           CH4_WAF_SEE --> LCH4_WAF_SEEbySoil + DummyCO                                             ', & ! index 879
+     ' CH4_WAF_LAK + FixedOH --> LCH4_WAF_LAKbyOH + DummyCO                                               ', & ! index 880
+     ' CH4_WAF_LAK + FixedCl --> LCH4_WAF_LAKbyCl + DummyCO                                               ', & ! index 881
+     'CH4_WAF_LAK + FixedO1D --> LCH4_WAF_LAKbyO1D + DummyCO                                              ', & ! index 882
+     '           CH4_WAF_LAK --> LCH4_WAF_LAKbySoil + DummyCO                                             ', & ! index 883
+     ' CH4_WAF_TER + FixedOH --> LCH4_WAF_TERbyOH + DummyCO                                               ', & ! index 884
+     ' CH4_WAF_TER + FixedCl --> LCH4_WAF_TERbyCl + DummyCO                                               ', & ! index 885
+     'CH4_WAF_TER + FixedO1D --> LCH4_WAF_TERbyO1D + DummyCO                                              ', & ! index 886
+     '           CH4_WAF_TER --> LCH4_WAF_TERbySoil + DummyCO                                             ', & ! index 887
+     ' CH4_WAF_RES + FixedOH --> LCH4_WAF_RESbyOH + DummyCO                                               ', & ! index 888
+     ' CH4_WAF_RES + FixedCl --> LCH4_WAF_RESbyCl + DummyCO                                               ', & ! index 889
+     'CH4_WAF_RES + FixedO1D --> LCH4_WAF_RESbyO1D + DummyCO                                              ', & ! index 890
+     '           CH4_WAF_RES --> LCH4_WAF_RESbySoil + DummyCO                                             ', & ! index 891
+     ' CH4_CAF_OIL + FixedOH --> LCH4_CAF_OILbyOH + DummyCO                                               ', & ! index 892
+     ' CH4_CAF_OIL + FixedCl --> LCH4_CAF_OILbyCl + DummyCO                                               ', & ! index 893
+     'CH4_CAF_OIL + FixedO1D --> LCH4_CAF_OILbyO1D + DummyCO                                              ', & ! index 894
+     '           CH4_CAF_OIL --> LCH4_CAF_OILbySoil + DummyCO                                             ', & ! index 895
+     ' CH4_CAF_GAS + FixedOH --> LCH4_CAF_GASbyOH + DummyCO                                               ', & ! index 896
+     ' CH4_CAF_GAS + FixedCl --> LCH4_CAF_GASbyCl + DummyCO                                               ', & ! index 897
+     'CH4_CAF_GAS + FixedO1D --> LCH4_CAF_GASbyO1D + DummyCO                                              ', & ! index 898
+     '           CH4_CAF_GAS --> LCH4_CAF_GASbySoil + DummyCO                                             ', & ! index 899
+     ' CH4_CAF_COL + FixedOH --> LCH4_CAF_COLbyOH + DummyCO                                               ' /) ! index up to 900
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_30 = (/ &
+     ' CH4_CAF_COL + FixedCl --> LCH4_CAF_COLbyCl + DummyCO                                               ', & ! index 901
+     'CH4_CAF_COL + FixedO1D --> LCH4_CAF_COLbyO1D + DummyCO                                              ', & ! index 902
+     '           CH4_CAF_COL --> LCH4_CAF_COLbySoil + DummyCO                                             ', & ! index 903
+     ' CH4_CAF_LIV + FixedOH --> LCH4_CAF_LIVbyOH + DummyCO                                               ', & ! index 904
+     ' CH4_CAF_LIV + FixedCl --> LCH4_CAF_LIVbyCl + DummyCO                                               ', & ! index 905
+     'CH4_CAF_LIV + FixedO1D --> LCH4_CAF_LIVbyO1D + DummyCO                                              ', & ! index 906
+     '           CH4_CAF_LIV --> LCH4_CAF_LIVbySoil + DummyCO                                             ', & ! index 907
+     ' CH4_CAF_LDF + FixedOH --> LCH4_CAF_LDFbyOH + DummyCO                                               ', & ! index 908
+     ' CH4_CAF_LDF + FixedCl --> LCH4_CAF_LDFbyCl + DummyCO                                               ', & ! index 909
+     'CH4_CAF_LDF + FixedO1D --> LCH4_CAF_LDFbyO1D + DummyCO                                              ', & ! index 910
+     '           CH4_CAF_LDF --> LCH4_CAF_LDFbySoil + DummyCO                                             ', & ! index 911
+     ' CH4_CAF_WST + FixedOH --> LCH4_CAF_WSTbyOH + DummyCO                                               ', & ! index 912
+     ' CH4_CAF_WST + FixedCl --> LCH4_CAF_WSTbyCl + DummyCO                                               ', & ! index 913
+     'CH4_CAF_WST + FixedO1D --> LCH4_CAF_WSTbyO1D + DummyCO                                              ', & ! index 914
+     '           CH4_CAF_WST --> LCH4_CAF_WSTbySoil + DummyCO                                             ', & ! index 915
+     ' CH4_CAF_RIC + FixedOH --> LCH4_CAF_RICbyOH + DummyCO                                               ', & ! index 916
+     ' CH4_CAF_RIC + FixedCl --> LCH4_CAF_RICbyCl + DummyCO                                               ', & ! index 917
+     'CH4_CAF_RIC + FixedO1D --> LCH4_CAF_RICbyO1D + DummyCO                                              ', & ! index 918
+     '           CH4_CAF_RIC --> LCH4_CAF_RICbySoil + DummyCO                                             ', & ! index 919
+     ' CH4_CAF_OTA + FixedOH --> LCH4_CAF_OTAbyOH + DummyCO                                               ', & ! index 920
+     ' CH4_CAF_OTA + FixedCl --> LCH4_CAF_OTAbyCl + DummyCO                                               ', & ! index 921
+     'CH4_CAF_OTA + FixedO1D --> LCH4_CAF_OTAbyO1D + DummyCO                                              ', & ! index 922
+     '           CH4_CAF_OTA --> LCH4_CAF_OTAbySoil + DummyCO                                             ', & ! index 923
+     ' CH4_CAF_BBN + FixedOH --> LCH4_CAF_BBNbyOH + DummyCO                                               ', & ! index 924
+     ' CH4_CAF_BBN + FixedCl --> LCH4_CAF_BBNbyCl + DummyCO                                               ', & ! index 925
+     'CH4_CAF_BBN + FixedO1D --> LCH4_CAF_BBNbyO1D + DummyCO                                              ', & ! index 926
+     '           CH4_CAF_BBN --> LCH4_CAF_BBNbySoil + DummyCO                                             ', & ! index 927
+     ' CH4_CAF_WTL + FixedOH --> LCH4_CAF_WTLbyOH + DummyCO                                               ', & ! index 928
+     ' CH4_CAF_WTL + FixedCl --> LCH4_CAF_WTLbyCl + DummyCO                                               ', & ! index 929
+     'CH4_CAF_WTL + FixedO1D --> LCH4_CAF_WTLbyO1D + DummyCO                                              ' /) ! index up to 930
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_31 = (/ &
+     '           CH4_CAF_WTL --> LCH4_CAF_WTLbySoil + DummyCO                                             ', & ! index 931
+     ' CH4_CAF_SEE + FixedOH --> LCH4_CAF_SEEbyOH + DummyCO                                               ', & ! index 932
+     ' CH4_CAF_SEE + FixedCl --> LCH4_CAF_SEEbyCl + DummyCO                                               ', & ! index 933
+     'CH4_CAF_SEE + FixedO1D --> LCH4_CAF_SEEbyO1D + DummyCO                                              ', & ! index 934
+     '           CH4_CAF_SEE --> LCH4_CAF_SEEbySoil + DummyCO                                             ', & ! index 935
+     ' CH4_CAF_LAK + FixedOH --> LCH4_CAF_LAKbyOH + DummyCO                                               ', & ! index 936
+     ' CH4_CAF_LAK + FixedCl --> LCH4_CAF_LAKbyCl + DummyCO                                               ', & ! index 937
+     'CH4_CAF_LAK + FixedO1D --> LCH4_CAF_LAKbyO1D + DummyCO                                              ', & ! index 938
+     '           CH4_CAF_LAK --> LCH4_CAF_LAKbySoil + DummyCO                                             ', & ! index 939
+     ' CH4_CAF_TER + FixedOH --> LCH4_CAF_TERbyOH + DummyCO                                               ', & ! index 940
+     ' CH4_CAF_TER + FixedCl --> LCH4_CAF_TERbyCl + DummyCO                                               ', & ! index 941
+     'CH4_CAF_TER + FixedO1D --> LCH4_CAF_TERbyO1D + DummyCO                                              ', & ! index 942
+     '           CH4_CAF_TER --> LCH4_CAF_TERbySoil + DummyCO                                             ', & ! index 943
+     ' CH4_CAF_RES + FixedOH --> LCH4_CAF_RESbyOH + DummyCO                                               ', & ! index 944
+     ' CH4_CAF_RES + FixedCl --> LCH4_CAF_RESbyCl + DummyCO                                               ', & ! index 945
+     'CH4_CAF_RES + FixedO1D --> LCH4_CAF_RESbyO1D + DummyCO                                              ', & ! index 946
+     '           CH4_CAF_RES --> LCH4_CAF_RESbySoil + DummyCO                                             ', & ! index 947
+     ' CH4_EAF_OIL + FixedOH --> LCH4_EAF_OILbyOH + DummyCO                                               ', & ! index 948
+     ' CH4_EAF_OIL + FixedCl --> LCH4_EAF_OILbyCl + DummyCO                                               ', & ! index 949
+     'CH4_EAF_OIL + FixedO1D --> LCH4_EAF_OILbyO1D + DummyCO                                              ', & ! index 950
+     '           CH4_EAF_OIL --> LCH4_EAF_OILbySoil + DummyCO                                             ', & ! index 951
+     ' CH4_EAF_GAS + FixedOH --> LCH4_EAF_GASbyOH + DummyCO                                               ', & ! index 952
+     ' CH4_EAF_GAS + FixedCl --> LCH4_EAF_GASbyCl + DummyCO                                               ', & ! index 953
+     'CH4_EAF_GAS + FixedO1D --> LCH4_EAF_GASbyO1D + DummyCO                                              ', & ! index 954
+     '           CH4_EAF_GAS --> LCH4_EAF_GASbySoil + DummyCO                                             ', & ! index 955
+     ' CH4_EAF_COL + FixedOH --> LCH4_EAF_COLbyOH + DummyCO                                               ', & ! index 956
+     ' CH4_EAF_COL + FixedCl --> LCH4_EAF_COLbyCl + DummyCO                                               ', & ! index 957
+     'CH4_EAF_COL + FixedO1D --> LCH4_EAF_COLbyO1D + DummyCO                                              ', & ! index 958
+     '           CH4_EAF_COL --> LCH4_EAF_COLbySoil + DummyCO                                             ', & ! index 959
+     ' CH4_EAF_LIV + FixedOH --> LCH4_EAF_LIVbyOH + DummyCO                                               ' /) ! index up to 960
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_32 = (/ &
+     ' CH4_EAF_LIV + FixedCl --> LCH4_EAF_LIVbyCl + DummyCO                                               ', & ! index 961
+     'CH4_EAF_LIV + FixedO1D --> LCH4_EAF_LIVbyO1D + DummyCO                                              ', & ! index 962
+     '           CH4_EAF_LIV --> LCH4_EAF_LIVbySoil + DummyCO                                             ', & ! index 963
+     ' CH4_EAF_LDF + FixedOH --> LCH4_EAF_LDFbyOH + DummyCO                                               ', & ! index 964
+     ' CH4_EAF_LDF + FixedCl --> LCH4_EAF_LDFbyCl + DummyCO                                               ', & ! index 965
+     'CH4_EAF_LDF + FixedO1D --> LCH4_EAF_LDFbyO1D + DummyCO                                              ', & ! index 966
+     '           CH4_EAF_LDF --> LCH4_EAF_LDFbySoil + DummyCO                                             ', & ! index 967
+     ' CH4_EAF_WST + FixedOH --> LCH4_EAF_WSTbyOH + DummyCO                                               ', & ! index 968
+     ' CH4_EAF_WST + FixedCl --> LCH4_EAF_WSTbyCl + DummyCO                                               ', & ! index 969
+     'CH4_EAF_WST + FixedO1D --> LCH4_EAF_WSTbyO1D + DummyCO                                              ', & ! index 970
+     '           CH4_EAF_WST --> LCH4_EAF_WSTbySoil + DummyCO                                             ', & ! index 971
+     ' CH4_EAF_RIC + FixedOH --> LCH4_EAF_RICbyOH + DummyCO                                               ', & ! index 972
+     ' CH4_EAF_RIC + FixedCl --> LCH4_EAF_RICbyCl + DummyCO                                               ', & ! index 973
+     'CH4_EAF_RIC + FixedO1D --> LCH4_EAF_RICbyO1D + DummyCO                                              ', & ! index 974
+     '           CH4_EAF_RIC --> LCH4_EAF_RICbySoil + DummyCO                                             ', & ! index 975
+     ' CH4_EAF_OTA + FixedOH --> LCH4_EAF_OTAbyOH + DummyCO                                               ', & ! index 976
+     ' CH4_EAF_OTA + FixedCl --> LCH4_EAF_OTAbyCl + DummyCO                                               ', & ! index 977
+     'CH4_EAF_OTA + FixedO1D --> LCH4_EAF_OTAbyO1D + DummyCO                                              ', & ! index 978
+     '           CH4_EAF_OTA --> LCH4_EAF_OTAbySoil + DummyCO                                             ', & ! index 979
+     ' CH4_EAF_BBN + FixedOH --> LCH4_EAF_BBNbyOH + DummyCO                                               ', & ! index 980
+     ' CH4_EAF_BBN + FixedCl --> LCH4_EAF_BBNbyCl + DummyCO                                               ', & ! index 981
+     'CH4_EAF_BBN + FixedO1D --> LCH4_EAF_BBNbyO1D + DummyCO                                              ', & ! index 982
+     '           CH4_EAF_BBN --> LCH4_EAF_BBNbySoil + DummyCO                                             ', & ! index 983
+     ' CH4_EAF_WTL + FixedOH --> LCH4_EAF_WTLbyOH + DummyCO                                               ', & ! index 984
+     ' CH4_EAF_WTL + FixedCl --> LCH4_EAF_WTLbyCl + DummyCO                                               ', & ! index 985
+     'CH4_EAF_WTL + FixedO1D --> LCH4_EAF_WTLbyO1D + DummyCO                                              ', & ! index 986
+     '           CH4_EAF_WTL --> LCH4_EAF_WTLbySoil + DummyCO                                             ', & ! index 987
+     ' CH4_EAF_SEE + FixedOH --> LCH4_EAF_SEEbyOH + DummyCO                                               ', & ! index 988
+     ' CH4_EAF_SEE + FixedCl --> LCH4_EAF_SEEbyCl + DummyCO                                               ', & ! index 989
+     'CH4_EAF_SEE + FixedO1D --> LCH4_EAF_SEEbyO1D + DummyCO                                              ' /) ! index up to 990
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_33 = (/ &
+     '           CH4_EAF_SEE --> LCH4_EAF_SEEbySoil + DummyCO                                             ', & ! index 991
+     ' CH4_EAF_LAK + FixedOH --> LCH4_EAF_LAKbyOH + DummyCO                                               ', & ! index 992
+     ' CH4_EAF_LAK + FixedCl --> LCH4_EAF_LAKbyCl + DummyCO                                               ', & ! index 993
+     'CH4_EAF_LAK + FixedO1D --> LCH4_EAF_LAKbyO1D + DummyCO                                              ', & ! index 994
+     '           CH4_EAF_LAK --> LCH4_EAF_LAKbySoil + DummyCO                                             ', & ! index 995
+     ' CH4_EAF_TER + FixedOH --> LCH4_EAF_TERbyOH + DummyCO                                               ', & ! index 996
+     ' CH4_EAF_TER + FixedCl --> LCH4_EAF_TERbyCl + DummyCO                                               ', & ! index 997
+     'CH4_EAF_TER + FixedO1D --> LCH4_EAF_TERbyO1D + DummyCO                                              ', & ! index 998
+     '           CH4_EAF_TER --> LCH4_EAF_TERbySoil + DummyCO                                             ', & ! index 999
+     ' CH4_EAF_RES + FixedOH --> LCH4_EAF_RESbyOH + DummyCO                                               ', & ! index 1000
+     ' CH4_EAF_RES + FixedCl --> LCH4_EAF_RESbyCl + DummyCO                                               ', & ! index 1001
+     'CH4_EAF_RES + FixedO1D --> LCH4_EAF_RESbyO1D + DummyCO                                              ', & ! index 1002
+     '           CH4_EAF_RES --> LCH4_EAF_RESbySoil + DummyCO                                             ', & ! index 1003
+     ' CH4_SIO_OIL + FixedOH --> LCH4_SIO_OILbyOH + DummyCO                                               ', & ! index 1004
+     ' CH4_SIO_OIL + FixedCl --> LCH4_SIO_OILbyCl + DummyCO                                               ', & ! index 1005
+     'CH4_SIO_OIL + FixedO1D --> LCH4_SIO_OILbyO1D + DummyCO                                              ', & ! index 1006
+     '           CH4_SIO_OIL --> LCH4_SIO_OILbySoil + DummyCO                                             ', & ! index 1007
+     ' CH4_SIO_GAS + FixedOH --> LCH4_SIO_GASbyOH + DummyCO                                               ', & ! index 1008
+     ' CH4_SIO_GAS + FixedCl --> LCH4_SIO_GASbyCl + DummyCO                                               ', & ! index 1009
+     'CH4_SIO_GAS + FixedO1D --> LCH4_SIO_GASbyO1D + DummyCO                                              ', & ! index 1010
+     '           CH4_SIO_GAS --> LCH4_SIO_GASbySoil + DummyCO                                             ', & ! index 1011
+     ' CH4_SIO_COL + FixedOH --> LCH4_SIO_COLbyOH + DummyCO                                               ', & ! index 1012
+     ' CH4_SIO_COL + FixedCl --> LCH4_SIO_COLbyCl + DummyCO                                               ', & ! index 1013
+     'CH4_SIO_COL + FixedO1D --> LCH4_SIO_COLbyO1D + DummyCO                                              ', & ! index 1014
+     '           CH4_SIO_COL --> LCH4_SIO_COLbySoil + DummyCO                                             ', & ! index 1015
+     ' CH4_SIO_LIV + FixedOH --> LCH4_SIO_LIVbyOH + DummyCO                                               ', & ! index 1016
+     ' CH4_SIO_LIV + FixedCl --> LCH4_SIO_LIVbyCl + DummyCO                                               ', & ! index 1017
+     'CH4_SIO_LIV + FixedO1D --> LCH4_SIO_LIVbyO1D + DummyCO                                              ', & ! index 1018
+     '           CH4_SIO_LIV --> LCH4_SIO_LIVbySoil + DummyCO                                             ', & ! index 1019
+     ' CH4_SIO_LDF + FixedOH --> LCH4_SIO_LDFbyOH + DummyCO                                               ' /) ! index up to 1020
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_34 = (/ &
+     ' CH4_SIO_LDF + FixedCl --> LCH4_SIO_LDFbyCl + DummyCO                                               ', & ! index 1021
+     'CH4_SIO_LDF + FixedO1D --> LCH4_SIO_LDFbyO1D + DummyCO                                              ', & ! index 1022
+     '           CH4_SIO_LDF --> LCH4_SIO_LDFbySoil + DummyCO                                             ', & ! index 1023
+     ' CH4_SIO_WST + FixedOH --> LCH4_SIO_WSTbyOH + DummyCO                                               ', & ! index 1024
+     ' CH4_SIO_WST + FixedCl --> LCH4_SIO_WSTbyCl + DummyCO                                               ', & ! index 1025
+     'CH4_SIO_WST + FixedO1D --> LCH4_SIO_WSTbyO1D + DummyCO                                              ', & ! index 1026
+     '           CH4_SIO_WST --> LCH4_SIO_WSTbySoil + DummyCO                                             ', & ! index 1027
+     ' CH4_SIO_RIC + FixedOH --> LCH4_SIO_RICbyOH + DummyCO                                               ', & ! index 1028
+     ' CH4_SIO_RIC + FixedCl --> LCH4_SIO_RICbyCl + DummyCO                                               ', & ! index 1029
+     'CH4_SIO_RIC + FixedO1D --> LCH4_SIO_RICbyO1D + DummyCO                                              ', & ! index 1030
+     '           CH4_SIO_RIC --> LCH4_SIO_RICbySoil + DummyCO                                             ', & ! index 1031
+     ' CH4_SIO_OTA + FixedOH --> LCH4_SIO_OTAbyOH + DummyCO                                               ', & ! index 1032
+     ' CH4_SIO_OTA + FixedCl --> LCH4_SIO_OTAbyCl + DummyCO                                               ', & ! index 1033
+     'CH4_SIO_OTA + FixedO1D --> LCH4_SIO_OTAbyO1D + DummyCO                                              ', & ! index 1034
+     '           CH4_SIO_OTA --> LCH4_SIO_OTAbySoil + DummyCO                                             ', & ! index 1035
+     ' CH4_SIO_BBN + FixedOH --> LCH4_SIO_BBNbyOH + DummyCO                                               ', & ! index 1036
+     ' CH4_SIO_BBN + FixedCl --> LCH4_SIO_BBNbyCl + DummyCO                                               ', & ! index 1037
+     'CH4_SIO_BBN + FixedO1D --> LCH4_SIO_BBNbyO1D + DummyCO                                              ', & ! index 1038
+     '           CH4_SIO_BBN --> LCH4_SIO_BBNbySoil + DummyCO                                             ', & ! index 1039
+     ' CH4_SIO_WTL + FixedOH --> LCH4_SIO_WTLbyOH + DummyCO                                               ', & ! index 1040
+     ' CH4_SIO_WTL + FixedCl --> LCH4_SIO_WTLbyCl + DummyCO                                               ', & ! index 1041
+     'CH4_SIO_WTL + FixedO1D --> LCH4_SIO_WTLbyO1D + DummyCO                                              ', & ! index 1042
+     '           CH4_SIO_WTL --> LCH4_SIO_WTLbySoil + DummyCO                                             ', & ! index 1043
+     ' CH4_SIO_SEE + FixedOH --> LCH4_SIO_SEEbyOH + DummyCO                                               ', & ! index 1044
+     ' CH4_SIO_SEE + FixedCl --> LCH4_SIO_SEEbyCl + DummyCO                                               ', & ! index 1045
+     'CH4_SIO_SEE + FixedO1D --> LCH4_SIO_SEEbyO1D + DummyCO                                              ', & ! index 1046
+     '           CH4_SIO_SEE --> LCH4_SIO_SEEbySoil + DummyCO                                             ', & ! index 1047
+     ' CH4_SIO_LAK + FixedOH --> LCH4_SIO_LAKbyOH + DummyCO                                               ', & ! index 1048
+     ' CH4_SIO_LAK + FixedCl --> LCH4_SIO_LAKbyCl + DummyCO                                               ', & ! index 1049
+     'CH4_SIO_LAK + FixedO1D --> LCH4_SIO_LAKbyO1D + DummyCO                                              ' /) ! index up to 1050
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_35 = (/ &
+     '           CH4_SIO_LAK --> LCH4_SIO_LAKbySoil + DummyCO                                             ', & ! index 1051
+     ' CH4_SIO_TER + FixedOH --> LCH4_SIO_TERbyOH + DummyCO                                               ', & ! index 1052
+     ' CH4_SIO_TER + FixedCl --> LCH4_SIO_TERbyCl + DummyCO                                               ', & ! index 1053
+     'CH4_SIO_TER + FixedO1D --> LCH4_SIO_TERbyO1D + DummyCO                                              ', & ! index 1054
+     '           CH4_SIO_TER --> LCH4_SIO_TERbySoil + DummyCO                                             ', & ! index 1055
+     ' CH4_SIO_RES + FixedOH --> LCH4_SIO_RESbyOH + DummyCO                                               ', & ! index 1056
+     ' CH4_SIO_RES + FixedCl --> LCH4_SIO_RESbyCl + DummyCO                                               ', & ! index 1057
+     'CH4_SIO_RES + FixedO1D --> LCH4_SIO_RESbyO1D + DummyCO                                              ', & ! index 1058
+     '           CH4_SIO_RES --> LCH4_SIO_RESbySoil + DummyCO                                             ', & ! index 1059
+     ' CH4_SAC_OIL + FixedOH --> LCH4_SAC_OILbyOH + DummyCO                                               ', & ! index 1060
+     ' CH4_SAC_OIL + FixedCl --> LCH4_SAC_OILbyCl + DummyCO                                               ', & ! index 1061
+     'CH4_SAC_OIL + FixedO1D --> LCH4_SAC_OILbyO1D + DummyCO                                              ', & ! index 1062
+     '           CH4_SAC_OIL --> LCH4_SAC_OILbySoil + DummyCO                                             ', & ! index 1063
+     ' CH4_SAC_GAS + FixedOH --> LCH4_SAC_GASbyOH + DummyCO                                               ', & ! index 1064
+     ' CH4_SAC_GAS + FixedCl --> LCH4_SAC_GASbyCl + DummyCO                                               ', & ! index 1065
+     'CH4_SAC_GAS + FixedO1D --> LCH4_SAC_GASbyO1D + DummyCO                                              ', & ! index 1066
+     '           CH4_SAC_GAS --> LCH4_SAC_GASbySoil + DummyCO                                             ', & ! index 1067
+     ' CH4_SAC_COL + FixedOH --> LCH4_SAC_COLbyOH + DummyCO                                               ', & ! index 1068
+     ' CH4_SAC_COL + FixedCl --> LCH4_SAC_COLbyCl + DummyCO                                               ', & ! index 1069
+     'CH4_SAC_COL + FixedO1D --> LCH4_SAC_COLbyO1D + DummyCO                                              ', & ! index 1070
+     '           CH4_SAC_COL --> LCH4_SAC_COLbySoil + DummyCO                                             ', & ! index 1071
+     ' CH4_SAC_LIV + FixedOH --> LCH4_SAC_LIVbyOH + DummyCO                                               ', & ! index 1072
+     ' CH4_SAC_LIV + FixedCl --> LCH4_SAC_LIVbyCl + DummyCO                                               ', & ! index 1073
+     'CH4_SAC_LIV + FixedO1D --> LCH4_SAC_LIVbyO1D + DummyCO                                              ', & ! index 1074
+     '           CH4_SAC_LIV --> LCH4_SAC_LIVbySoil + DummyCO                                             ', & ! index 1075
+     ' CH4_SAC_LDF + FixedOH --> LCH4_SAC_LDFbyOH + DummyCO                                               ', & ! index 1076
+     ' CH4_SAC_LDF + FixedCl --> LCH4_SAC_LDFbyCl + DummyCO                                               ', & ! index 1077
+     'CH4_SAC_LDF + FixedO1D --> LCH4_SAC_LDFbyO1D + DummyCO                                              ', & ! index 1078
+     '           CH4_SAC_LDF --> LCH4_SAC_LDFbySoil + DummyCO                                             ', & ! index 1079
+     ' CH4_SAC_WST + FixedOH --> LCH4_SAC_WSTbyOH + DummyCO                                               ' /) ! index up to 1080
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_36 = (/ &
+     ' CH4_SAC_WST + FixedCl --> LCH4_SAC_WSTbyCl + DummyCO                                               ', & ! index 1081
+     'CH4_SAC_WST + FixedO1D --> LCH4_SAC_WSTbyO1D + DummyCO                                              ', & ! index 1082
+     '           CH4_SAC_WST --> LCH4_SAC_WSTbySoil + DummyCO                                             ', & ! index 1083
+     ' CH4_SAC_RIC + FixedOH --> LCH4_SAC_RICbyOH + DummyCO                                               ', & ! index 1084
+     ' CH4_SAC_RIC + FixedCl --> LCH4_SAC_RICbyCl + DummyCO                                               ', & ! index 1085
+     'CH4_SAC_RIC + FixedO1D --> LCH4_SAC_RICbyO1D + DummyCO                                              ', & ! index 1086
+     '           CH4_SAC_RIC --> LCH4_SAC_RICbySoil + DummyCO                                             ', & ! index 1087
+     ' CH4_SAC_OTA + FixedOH --> LCH4_SAC_OTAbyOH + DummyCO                                               ', & ! index 1088
+     ' CH4_SAC_OTA + FixedCl --> LCH4_SAC_OTAbyCl + DummyCO                                               ', & ! index 1089
+     'CH4_SAC_OTA + FixedO1D --> LCH4_SAC_OTAbyO1D + DummyCO                                              ', & ! index 1090
+     '           CH4_SAC_OTA --> LCH4_SAC_OTAbySoil + DummyCO                                             ', & ! index 1091
+     ' CH4_SAC_BBN + FixedOH --> LCH4_SAC_BBNbyOH + DummyCO                                               ', & ! index 1092
+     ' CH4_SAC_BBN + FixedCl --> LCH4_SAC_BBNbyCl + DummyCO                                               ', & ! index 1093
+     'CH4_SAC_BBN + FixedO1D --> LCH4_SAC_BBNbyO1D + DummyCO                                              ', & ! index 1094
+     '           CH4_SAC_BBN --> LCH4_SAC_BBNbySoil + DummyCO                                             ', & ! index 1095
+     ' CH4_SAC_WTL + FixedOH --> LCH4_SAC_WTLbyOH + DummyCO                                               ', & ! index 1096
+     ' CH4_SAC_WTL + FixedCl --> LCH4_SAC_WTLbyCl + DummyCO                                               ', & ! index 1097
+     'CH4_SAC_WTL + FixedO1D --> LCH4_SAC_WTLbyO1D + DummyCO                                              ', & ! index 1098
+     '           CH4_SAC_WTL --> LCH4_SAC_WTLbySoil + DummyCO                                             ', & ! index 1099
+     ' CH4_SAC_SEE + FixedOH --> LCH4_SAC_SEEbyOH + DummyCO                                               ', & ! index 1100
+     ' CH4_SAC_SEE + FixedCl --> LCH4_SAC_SEEbyCl + DummyCO                                               ', & ! index 1101
+     'CH4_SAC_SEE + FixedO1D --> LCH4_SAC_SEEbyO1D + DummyCO                                              ', & ! index 1102
+     '           CH4_SAC_SEE --> LCH4_SAC_SEEbySoil + DummyCO                                             ', & ! index 1103
+     ' CH4_SAC_LAK + FixedOH --> LCH4_SAC_LAKbyOH + DummyCO                                               ', & ! index 1104
+     ' CH4_SAC_LAK + FixedCl --> LCH4_SAC_LAKbyCl + DummyCO                                               ', & ! index 1105
+     'CH4_SAC_LAK + FixedO1D --> LCH4_SAC_LAKbyO1D + DummyCO                                              ', & ! index 1106
+     '           CH4_SAC_LAK --> LCH4_SAC_LAKbySoil + DummyCO                                             ', & ! index 1107
+     ' CH4_SAC_TER + FixedOH --> LCH4_SAC_TERbyOH + DummyCO                                               ', & ! index 1108
+     ' CH4_SAC_TER + FixedCl --> LCH4_SAC_TERbyCl + DummyCO                                               ', & ! index 1109
+     'CH4_SAC_TER + FixedO1D --> LCH4_SAC_TERbyO1D + DummyCO                                              ' /) ! index up to 1110
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_37 = (/ &
+     '           CH4_SAC_TER --> LCH4_SAC_TERbySoil + DummyCO                                             ', & ! index 1111
+     ' CH4_SAC_RES + FixedOH --> LCH4_SAC_RESbyOH + DummyCO                                               ', & ! index 1112
+     ' CH4_SAC_RES + FixedCl --> LCH4_SAC_RESbyCl + DummyCO                                               ', & ! index 1113
+     'CH4_SAC_RES + FixedO1D --> LCH4_SAC_RESbyO1D + DummyCO                                              ', & ! index 1114
+     '           CH4_SAC_RES --> LCH4_SAC_RESbySoil + DummyCO                                             ', & ! index 1115
+     ' CH4_CAS_OIL + FixedOH --> LCH4_CAS_OILbyOH + DummyCO                                               ', & ! index 1116
+     ' CH4_CAS_OIL + FixedCl --> LCH4_CAS_OILbyCl + DummyCO                                               ', & ! index 1117
+     'CH4_CAS_OIL + FixedO1D --> LCH4_CAS_OILbyO1D + DummyCO                                              ', & ! index 1118
+     '           CH4_CAS_OIL --> LCH4_CAS_OILbySoil + DummyCO                                             ', & ! index 1119
+     ' CH4_CAS_GAS + FixedOH --> LCH4_CAS_GASbyOH + DummyCO                                               ', & ! index 1120
+     ' CH4_CAS_GAS + FixedCl --> LCH4_CAS_GASbyCl + DummyCO                                               ', & ! index 1121
+     'CH4_CAS_GAS + FixedO1D --> LCH4_CAS_GASbyO1D + DummyCO                                              ', & ! index 1122
+     '           CH4_CAS_GAS --> LCH4_CAS_GASbySoil + DummyCO                                             ', & ! index 1123
+     ' CH4_CAS_COL + FixedOH --> LCH4_CAS_COLbyOH + DummyCO                                               ', & ! index 1124
+     ' CH4_CAS_COL + FixedCl --> LCH4_CAS_COLbyCl + DummyCO                                               ', & ! index 1125
+     'CH4_CAS_COL + FixedO1D --> LCH4_CAS_COLbyO1D + DummyCO                                              ', & ! index 1126
+     '           CH4_CAS_COL --> LCH4_CAS_COLbySoil + DummyCO                                             ', & ! index 1127
+     ' CH4_CAS_LIV + FixedOH --> LCH4_CAS_LIVbyOH + DummyCO                                               ', & ! index 1128
+     ' CH4_CAS_LIV + FixedCl --> LCH4_CAS_LIVbyCl + DummyCO                                               ', & ! index 1129
+     'CH4_CAS_LIV + FixedO1D --> LCH4_CAS_LIVbyO1D + DummyCO                                              ', & ! index 1130
+     '           CH4_CAS_LIV --> LCH4_CAS_LIVbySoil + DummyCO                                             ', & ! index 1131
+     ' CH4_CAS_LDF + FixedOH --> LCH4_CAS_LDFbyOH + DummyCO                                               ', & ! index 1132
+     ' CH4_CAS_LDF + FixedCl --> LCH4_CAS_LDFbyCl + DummyCO                                               ', & ! index 1133
+     'CH4_CAS_LDF + FixedO1D --> LCH4_CAS_LDFbyO1D + DummyCO                                              ', & ! index 1134
+     '           CH4_CAS_LDF --> LCH4_CAS_LDFbySoil + DummyCO                                             ', & ! index 1135
+     ' CH4_CAS_WST + FixedOH --> LCH4_CAS_WSTbyOH + DummyCO                                               ', & ! index 1136
+     ' CH4_CAS_WST + FixedCl --> LCH4_CAS_WSTbyCl + DummyCO                                               ', & ! index 1137
+     'CH4_CAS_WST + FixedO1D --> LCH4_CAS_WSTbyO1D + DummyCO                                              ', & ! index 1138
+     '           CH4_CAS_WST --> LCH4_CAS_WSTbySoil + DummyCO                                             ', & ! index 1139
+     ' CH4_CAS_RIC + FixedOH --> LCH4_CAS_RICbyOH + DummyCO                                               ' /) ! index up to 1140
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_38 = (/ &
+     ' CH4_CAS_RIC + FixedCl --> LCH4_CAS_RICbyCl + DummyCO                                               ', & ! index 1141
+     'CH4_CAS_RIC + FixedO1D --> LCH4_CAS_RICbyO1D + DummyCO                                              ', & ! index 1142
+     '           CH4_CAS_RIC --> LCH4_CAS_RICbySoil + DummyCO                                             ', & ! index 1143
+     ' CH4_CAS_OTA + FixedOH --> LCH4_CAS_OTAbyOH + DummyCO                                               ', & ! index 1144
+     ' CH4_CAS_OTA + FixedCl --> LCH4_CAS_OTAbyCl + DummyCO                                               ', & ! index 1145
+     'CH4_CAS_OTA + FixedO1D --> LCH4_CAS_OTAbyO1D + DummyCO                                              ', & ! index 1146
+     '           CH4_CAS_OTA --> LCH4_CAS_OTAbySoil + DummyCO                                             ', & ! index 1147
+     ' CH4_CAS_BBN + FixedOH --> LCH4_CAS_BBNbyOH + DummyCO                                               ', & ! index 1148
+     ' CH4_CAS_BBN + FixedCl --> LCH4_CAS_BBNbyCl + DummyCO                                               ', & ! index 1149
+     'CH4_CAS_BBN + FixedO1D --> LCH4_CAS_BBNbyO1D + DummyCO                                              ', & ! index 1150
+     '           CH4_CAS_BBN --> LCH4_CAS_BBNbySoil + DummyCO                                             ', & ! index 1151
+     ' CH4_CAS_WTL + FixedOH --> LCH4_CAS_WTLbyOH + DummyCO                                               ', & ! index 1152
+     ' CH4_CAS_WTL + FixedCl --> LCH4_CAS_WTLbyCl + DummyCO                                               ', & ! index 1153
+     'CH4_CAS_WTL + FixedO1D --> LCH4_CAS_WTLbyO1D + DummyCO                                              ', & ! index 1154
+     '           CH4_CAS_WTL --> LCH4_CAS_WTLbySoil + DummyCO                                             ', & ! index 1155
+     ' CH4_CAS_SEE + FixedOH --> LCH4_CAS_SEEbyOH + DummyCO                                               ', & ! index 1156
+     ' CH4_CAS_SEE + FixedCl --> LCH4_CAS_SEEbyCl + DummyCO                                               ', & ! index 1157
+     'CH4_CAS_SEE + FixedO1D --> LCH4_CAS_SEEbyO1D + DummyCO                                              ', & ! index 1158
+     '           CH4_CAS_SEE --> LCH4_CAS_SEEbySoil + DummyCO                                             ', & ! index 1159
+     ' CH4_CAS_LAK + FixedOH --> LCH4_CAS_LAKbyOH + DummyCO                                               ', & ! index 1160
+     ' CH4_CAS_LAK + FixedCl --> LCH4_CAS_LAKbyCl + DummyCO                                               ', & ! index 1161
+     'CH4_CAS_LAK + FixedO1D --> LCH4_CAS_LAKbyO1D + DummyCO                                              ', & ! index 1162
+     '           CH4_CAS_LAK --> LCH4_CAS_LAKbySoil + DummyCO                                             ', & ! index 1163
+     ' CH4_CAS_TER + FixedOH --> LCH4_CAS_TERbyOH + DummyCO                                               ', & ! index 1164
+     ' CH4_CAS_TER + FixedCl --> LCH4_CAS_TERbyCl + DummyCO                                               ', & ! index 1165
+     'CH4_CAS_TER + FixedO1D --> LCH4_CAS_TERbyO1D + DummyCO                                              ', & ! index 1166
+     '           CH4_CAS_TER --> LCH4_CAS_TERbySoil + DummyCO                                             ', & ! index 1167
+     ' CH4_CAS_RES + FixedOH --> LCH4_CAS_RESbyOH + DummyCO                                               ', & ! index 1168
+     ' CH4_CAS_RES + FixedCl --> LCH4_CAS_RESbyCl + DummyCO                                               ', & ! index 1169
+     'CH4_CAS_RES + FixedO1D --> LCH4_CAS_RESbyO1D + DummyCO                                              ' /) ! index up to 1170
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_39 = (/ &
+     '           CH4_CAS_RES --> LCH4_CAS_RESbySoil + DummyCO                                             ', & ! index 1171
+     ' CH4_IND_OIL + FixedOH --> LCH4_IND_OILbyOH + DummyCO                                               ', & ! index 1172
+     ' CH4_IND_OIL + FixedCl --> LCH4_IND_OILbyCl + DummyCO                                               ', & ! index 1173
+     'CH4_IND_OIL + FixedO1D --> LCH4_IND_OILbyO1D + DummyCO                                              ', & ! index 1174
+     '           CH4_IND_OIL --> LCH4_IND_OILbySoil + DummyCO                                             ', & ! index 1175
+     ' CH4_IND_GAS + FixedOH --> LCH4_IND_GASbyOH + DummyCO                                               ', & ! index 1176
+     ' CH4_IND_GAS + FixedCl --> LCH4_IND_GASbyCl + DummyCO                                               ', & ! index 1177
+     'CH4_IND_GAS + FixedO1D --> LCH4_IND_GASbyO1D + DummyCO                                              ', & ! index 1178
+     '           CH4_IND_GAS --> LCH4_IND_GASbySoil + DummyCO                                             ', & ! index 1179
+     ' CH4_IND_COL + FixedOH --> LCH4_IND_COLbyOH + DummyCO                                               ', & ! index 1180
+     ' CH4_IND_COL + FixedCl --> LCH4_IND_COLbyCl + DummyCO                                               ', & ! index 1181
+     'CH4_IND_COL + FixedO1D --> LCH4_IND_COLbyO1D + DummyCO                                              ', & ! index 1182
+     '           CH4_IND_COL --> LCH4_IND_COLbySoil + DummyCO                                             ', & ! index 1183
+     ' CH4_IND_LIV + FixedOH --> LCH4_IND_LIVbyOH + DummyCO                                               ', & ! index 1184
+     ' CH4_IND_LIV + FixedCl --> LCH4_IND_LIVbyCl + DummyCO                                               ', & ! index 1185
+     'CH4_IND_LIV + FixedO1D --> LCH4_IND_LIVbyO1D + DummyCO                                              ', & ! index 1186
+     '           CH4_IND_LIV --> LCH4_IND_LIVbySoil + DummyCO                                             ', & ! index 1187
+     ' CH4_IND_LDF + FixedOH --> LCH4_IND_LDFbyOH + DummyCO                                               ', & ! index 1188
+     ' CH4_IND_LDF + FixedCl --> LCH4_IND_LDFbyCl + DummyCO                                               ', & ! index 1189
+     'CH4_IND_LDF + FixedO1D --> LCH4_IND_LDFbyO1D + DummyCO                                              ', & ! index 1190
+     '           CH4_IND_LDF --> LCH4_IND_LDFbySoil + DummyCO                                             ', & ! index 1191
+     ' CH4_IND_WST + FixedOH --> LCH4_IND_WSTbyOH + DummyCO                                               ', & ! index 1192
+     ' CH4_IND_WST + FixedCl --> LCH4_IND_WSTbyCl + DummyCO                                               ', & ! index 1193
+     'CH4_IND_WST + FixedO1D --> LCH4_IND_WSTbyO1D + DummyCO                                              ', & ! index 1194
+     '           CH4_IND_WST --> LCH4_IND_WSTbySoil + DummyCO                                             ', & ! index 1195
+     ' CH4_IND_RIC + FixedOH --> LCH4_IND_RICbyOH + DummyCO                                               ', & ! index 1196
+     ' CH4_IND_RIC + FixedCl --> LCH4_IND_RICbyCl + DummyCO                                               ', & ! index 1197
+     'CH4_IND_RIC + FixedO1D --> LCH4_IND_RICbyO1D + DummyCO                                              ', & ! index 1198
+     '           CH4_IND_RIC --> LCH4_IND_RICbySoil + DummyCO                                             ', & ! index 1199
+     ' CH4_IND_OTA + FixedOH --> LCH4_IND_OTAbyOH + DummyCO                                               ' /) ! index up to 1200
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_40 = (/ &
+     ' CH4_IND_OTA + FixedCl --> LCH4_IND_OTAbyCl + DummyCO                                               ', & ! index 1201
+     'CH4_IND_OTA + FixedO1D --> LCH4_IND_OTAbyO1D + DummyCO                                              ', & ! index 1202
+     '           CH4_IND_OTA --> LCH4_IND_OTAbySoil + DummyCO                                             ', & ! index 1203
+     ' CH4_IND_BBN + FixedOH --> LCH4_IND_BBNbyOH + DummyCO                                               ', & ! index 1204
+     ' CH4_IND_BBN + FixedCl --> LCH4_IND_BBNbyCl + DummyCO                                               ', & ! index 1205
+     'CH4_IND_BBN + FixedO1D --> LCH4_IND_BBNbyO1D + DummyCO                                              ', & ! index 1206
+     '           CH4_IND_BBN --> LCH4_IND_BBNbySoil + DummyCO                                             ', & ! index 1207
+     ' CH4_IND_WTL + FixedOH --> LCH4_IND_WTLbyOH + DummyCO                                               ', & ! index 1208
+     ' CH4_IND_WTL + FixedCl --> LCH4_IND_WTLbyCl + DummyCO                                               ', & ! index 1209
+     'CH4_IND_WTL + FixedO1D --> LCH4_IND_WTLbyO1D + DummyCO                                              ', & ! index 1210
+     '           CH4_IND_WTL --> LCH4_IND_WTLbySoil + DummyCO                                             ', & ! index 1211
+     ' CH4_IND_SEE + FixedOH --> LCH4_IND_SEEbyOH + DummyCO                                               ', & ! index 1212
+     ' CH4_IND_SEE + FixedCl --> LCH4_IND_SEEbyCl + DummyCO                                               ', & ! index 1213
+     'CH4_IND_SEE + FixedO1D --> LCH4_IND_SEEbyO1D + DummyCO                                              ', & ! index 1214
+     '           CH4_IND_SEE --> LCH4_IND_SEEbySoil + DummyCO                                             ', & ! index 1215
+     ' CH4_IND_LAK + FixedOH --> LCH4_IND_LAKbyOH + DummyCO                                               ', & ! index 1216
+     ' CH4_IND_LAK + FixedCl --> LCH4_IND_LAKbyCl + DummyCO                                               ', & ! index 1217
+     'CH4_IND_LAK + FixedO1D --> LCH4_IND_LAKbyO1D + DummyCO                                              ', & ! index 1218
+     '           CH4_IND_LAK --> LCH4_IND_LAKbySoil + DummyCO                                             ', & ! index 1219
+     ' CH4_IND_TER + FixedOH --> LCH4_IND_TERbyOH + DummyCO                                               ', & ! index 1220
+     ' CH4_IND_TER + FixedCl --> LCH4_IND_TERbyCl + DummyCO                                               ', & ! index 1221
+     'CH4_IND_TER + FixedO1D --> LCH4_IND_TERbyO1D + DummyCO                                              ', & ! index 1222
+     '           CH4_IND_TER --> LCH4_IND_TERbySoil + DummyCO                                             ', & ! index 1223
+     ' CH4_IND_RES + FixedOH --> LCH4_IND_RESbyOH + DummyCO                                               ', & ! index 1224
+     ' CH4_IND_RES + FixedCl --> LCH4_IND_RESbyCl + DummyCO                                               ', & ! index 1225
+     'CH4_IND_RES + FixedO1D --> LCH4_IND_RESbyO1D + DummyCO                                              ', & ! index 1226
+     '           CH4_IND_RES --> LCH4_IND_RESbySoil + DummyCO                                             ', & ! index 1227
+     ' CH4_SAS_OIL + FixedOH --> LCH4_SAS_OILbyOH + DummyCO                                               ', & ! index 1228
+     ' CH4_SAS_OIL + FixedCl --> LCH4_SAS_OILbyCl + DummyCO                                               ', & ! index 1229
+     'CH4_SAS_OIL + FixedO1D --> LCH4_SAS_OILbyO1D + DummyCO                                              ' /) ! index up to 1230
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_41 = (/ &
+     '           CH4_SAS_OIL --> LCH4_SAS_OILbySoil + DummyCO                                             ', & ! index 1231
+     ' CH4_SAS_GAS + FixedOH --> LCH4_SAS_GASbyOH + DummyCO                                               ', & ! index 1232
+     ' CH4_SAS_GAS + FixedCl --> LCH4_SAS_GASbyCl + DummyCO                                               ', & ! index 1233
+     'CH4_SAS_GAS + FixedO1D --> LCH4_SAS_GASbyO1D + DummyCO                                              ', & ! index 1234
+     '           CH4_SAS_GAS --> LCH4_SAS_GASbySoil + DummyCO                                             ', & ! index 1235
+     ' CH4_SAS_COL + FixedOH --> LCH4_SAS_COLbyOH + DummyCO                                               ', & ! index 1236
+     ' CH4_SAS_COL + FixedCl --> LCH4_SAS_COLbyCl + DummyCO                                               ', & ! index 1237
+     'CH4_SAS_COL + FixedO1D --> LCH4_SAS_COLbyO1D + DummyCO                                              ', & ! index 1238
+     '           CH4_SAS_COL --> LCH4_SAS_COLbySoil + DummyCO                                             ', & ! index 1239
+     ' CH4_SAS_LIV + FixedOH --> LCH4_SAS_LIVbyOH + DummyCO                                               ', & ! index 1240
+     ' CH4_SAS_LIV + FixedCl --> LCH4_SAS_LIVbyCl + DummyCO                                               ', & ! index 1241
+     'CH4_SAS_LIV + FixedO1D --> LCH4_SAS_LIVbyO1D + DummyCO                                              ', & ! index 1242
+     '           CH4_SAS_LIV --> LCH4_SAS_LIVbySoil + DummyCO                                             ', & ! index 1243
+     ' CH4_SAS_LDF + FixedOH --> LCH4_SAS_LDFbyOH + DummyCO                                               ', & ! index 1244
+     ' CH4_SAS_LDF + FixedCl --> LCH4_SAS_LDFbyCl + DummyCO                                               ', & ! index 1245
+     'CH4_SAS_LDF + FixedO1D --> LCH4_SAS_LDFbyO1D + DummyCO                                              ', & ! index 1246
+     '           CH4_SAS_LDF --> LCH4_SAS_LDFbySoil + DummyCO                                             ', & ! index 1247
+     ' CH4_SAS_WST + FixedOH --> LCH4_SAS_WSTbyOH + DummyCO                                               ', & ! index 1248
+     ' CH4_SAS_WST + FixedCl --> LCH4_SAS_WSTbyCl + DummyCO                                               ', & ! index 1249
+     'CH4_SAS_WST + FixedO1D --> LCH4_SAS_WSTbyO1D + DummyCO                                              ', & ! index 1250
+     '           CH4_SAS_WST --> LCH4_SAS_WSTbySoil + DummyCO                                             ', & ! index 1251
+     ' CH4_SAS_RIC + FixedOH --> LCH4_SAS_RICbyOH + DummyCO                                               ', & ! index 1252
+     ' CH4_SAS_RIC + FixedCl --> LCH4_SAS_RICbyCl + DummyCO                                               ', & ! index 1253
+     'CH4_SAS_RIC + FixedO1D --> LCH4_SAS_RICbyO1D + DummyCO                                              ', & ! index 1254
+     '           CH4_SAS_RIC --> LCH4_SAS_RICbySoil + DummyCO                                             ', & ! index 1255
+     ' CH4_SAS_OTA + FixedOH --> LCH4_SAS_OTAbyOH + DummyCO                                               ', & ! index 1256
+     ' CH4_SAS_OTA + FixedCl --> LCH4_SAS_OTAbyCl + DummyCO                                               ', & ! index 1257
+     'CH4_SAS_OTA + FixedO1D --> LCH4_SAS_OTAbyO1D + DummyCO                                              ', & ! index 1258
+     '           CH4_SAS_OTA --> LCH4_SAS_OTAbySoil + DummyCO                                             ', & ! index 1259
+     ' CH4_SAS_BBN + FixedOH --> LCH4_SAS_BBNbyOH + DummyCO                                               ' /) ! index up to 1260
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_42 = (/ &
+     ' CH4_SAS_BBN + FixedCl --> LCH4_SAS_BBNbyCl + DummyCO                                               ', & ! index 1261
+     'CH4_SAS_BBN + FixedO1D --> LCH4_SAS_BBNbyO1D + DummyCO                                              ', & ! index 1262
+     '           CH4_SAS_BBN --> LCH4_SAS_BBNbySoil + DummyCO                                             ', & ! index 1263
+     ' CH4_SAS_WTL + FixedOH --> LCH4_SAS_WTLbyOH + DummyCO                                               ', & ! index 1264
+     ' CH4_SAS_WTL + FixedCl --> LCH4_SAS_WTLbyCl + DummyCO                                               ', & ! index 1265
+     'CH4_SAS_WTL + FixedO1D --> LCH4_SAS_WTLbyO1D + DummyCO                                              ', & ! index 1266
+     '           CH4_SAS_WTL --> LCH4_SAS_WTLbySoil + DummyCO                                             ', & ! index 1267
+     ' CH4_SAS_SEE + FixedOH --> LCH4_SAS_SEEbyOH + DummyCO                                               ', & ! index 1268
+     ' CH4_SAS_SEE + FixedCl --> LCH4_SAS_SEEbyCl + DummyCO                                               ', & ! index 1269
+     'CH4_SAS_SEE + FixedO1D --> LCH4_SAS_SEEbyO1D + DummyCO                                              ', & ! index 1270
+     '           CH4_SAS_SEE --> LCH4_SAS_SEEbySoil + DummyCO                                             ', & ! index 1271
+     ' CH4_SAS_LAK + FixedOH --> LCH4_SAS_LAKbyOH + DummyCO                                               ', & ! index 1272
+     ' CH4_SAS_LAK + FixedCl --> LCH4_SAS_LAKbyCl + DummyCO                                               ', & ! index 1273
+     'CH4_SAS_LAK + FixedO1D --> LCH4_SAS_LAKbyO1D + DummyCO                                              ', & ! index 1274
+     '           CH4_SAS_LAK --> LCH4_SAS_LAKbySoil + DummyCO                                             ', & ! index 1275
+     ' CH4_SAS_TER + FixedOH --> LCH4_SAS_TERbyOH + DummyCO                                               ', & ! index 1276
+     ' CH4_SAS_TER + FixedCl --> LCH4_SAS_TERbyCl + DummyCO                                               ', & ! index 1277
+     'CH4_SAS_TER + FixedO1D --> LCH4_SAS_TERbyO1D + DummyCO                                              ', & ! index 1278
+     '           CH4_SAS_TER --> LCH4_SAS_TERbySoil + DummyCO                                             ', & ! index 1279
+     ' CH4_SAS_RES + FixedOH --> LCH4_SAS_RESbyOH + DummyCO                                               ', & ! index 1280
+     ' CH4_SAS_RES + FixedCl --> LCH4_SAS_RESbyCl + DummyCO                                               ', & ! index 1281
+     'CH4_SAS_RES + FixedO1D --> LCH4_SAS_RESbyO1D + DummyCO                                              ', & ! index 1282
+     '           CH4_SAS_RES --> LCH4_SAS_RESbySoil + DummyCO                                             ', & ! index 1283
+     ' CH4_CHN_OIL + FixedOH --> LCH4_CHN_OILbyOH + DummyCO                                               ', & ! index 1284
+     ' CH4_CHN_OIL + FixedCl --> LCH4_CHN_OILbyCl + DummyCO                                               ', & ! index 1285
+     'CH4_CHN_OIL + FixedO1D --> LCH4_CHN_OILbyO1D + DummyCO                                              ', & ! index 1286
+     '           CH4_CHN_OIL --> LCH4_CHN_OILbySoil + DummyCO                                             ', & ! index 1287
+     ' CH4_CHN_GAS + FixedOH --> LCH4_CHN_GASbyOH + DummyCO                                               ', & ! index 1288
+     ' CH4_CHN_GAS + FixedCl --> LCH4_CHN_GASbyCl + DummyCO                                               ', & ! index 1289
+     'CH4_CHN_GAS + FixedO1D --> LCH4_CHN_GASbyO1D + DummyCO                                              ' /) ! index up to 1290
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_43 = (/ &
+     '           CH4_CHN_GAS --> LCH4_CHN_GASbySoil + DummyCO                                             ', & ! index 1291
+     ' CH4_CHN_COL + FixedOH --> LCH4_CHN_COLbyOH + DummyCO                                               ', & ! index 1292
+     ' CH4_CHN_COL + FixedCl --> LCH4_CHN_COLbyCl + DummyCO                                               ', & ! index 1293
+     'CH4_CHN_COL + FixedO1D --> LCH4_CHN_COLbyO1D + DummyCO                                              ', & ! index 1294
+     '           CH4_CHN_COL --> LCH4_CHN_COLbySoil + DummyCO                                             ', & ! index 1295
+     ' CH4_CHN_LIV + FixedOH --> LCH4_CHN_LIVbyOH + DummyCO                                               ', & ! index 1296
+     ' CH4_CHN_LIV + FixedCl --> LCH4_CHN_LIVbyCl + DummyCO                                               ', & ! index 1297
+     'CH4_CHN_LIV + FixedO1D --> LCH4_CHN_LIVbyO1D + DummyCO                                              ', & ! index 1298
+     '           CH4_CHN_LIV --> LCH4_CHN_LIVbySoil + DummyCO                                             ', & ! index 1299
+     ' CH4_CHN_LDF + FixedOH --> LCH4_CHN_LDFbyOH + DummyCO                                               ', & ! index 1300
+     ' CH4_CHN_LDF + FixedCl --> LCH4_CHN_LDFbyCl + DummyCO                                               ', & ! index 1301
+     'CH4_CHN_LDF + FixedO1D --> LCH4_CHN_LDFbyO1D + DummyCO                                              ', & ! index 1302
+     '           CH4_CHN_LDF --> LCH4_CHN_LDFbySoil + DummyCO                                             ', & ! index 1303
+     ' CH4_CHN_WST + FixedOH --> LCH4_CHN_WSTbyOH + DummyCO                                               ', & ! index 1304
+     ' CH4_CHN_WST + FixedCl --> LCH4_CHN_WSTbyCl + DummyCO                                               ', & ! index 1305
+     'CH4_CHN_WST + FixedO1D --> LCH4_CHN_WSTbyO1D + DummyCO                                              ', & ! index 1306
+     '           CH4_CHN_WST --> LCH4_CHN_WSTbySoil + DummyCO                                             ', & ! index 1307
+     ' CH4_CHN_RIC + FixedOH --> LCH4_CHN_RICbyOH + DummyCO                                               ', & ! index 1308
+     ' CH4_CHN_RIC + FixedCl --> LCH4_CHN_RICbyCl + DummyCO                                               ', & ! index 1309
+     'CH4_CHN_RIC + FixedO1D --> LCH4_CHN_RICbyO1D + DummyCO                                              ', & ! index 1310
+     '           CH4_CHN_RIC --> LCH4_CHN_RICbySoil + DummyCO                                             ', & ! index 1311
+     ' CH4_CHN_OTA + FixedOH --> LCH4_CHN_OTAbyOH + DummyCO                                               ', & ! index 1312
+     ' CH4_CHN_OTA + FixedCl --> LCH4_CHN_OTAbyCl + DummyCO                                               ', & ! index 1313
+     'CH4_CHN_OTA + FixedO1D --> LCH4_CHN_OTAbyO1D + DummyCO                                              ', & ! index 1314
+     '           CH4_CHN_OTA --> LCH4_CHN_OTAbySoil + DummyCO                                             ', & ! index 1315
+     ' CH4_CHN_BBN + FixedOH --> LCH4_CHN_BBNbyOH + DummyCO                                               ', & ! index 1316
+     ' CH4_CHN_BBN + FixedCl --> LCH4_CHN_BBNbyCl + DummyCO                                               ', & ! index 1317
+     'CH4_CHN_BBN + FixedO1D --> LCH4_CHN_BBNbyO1D + DummyCO                                              ', & ! index 1318
+     '           CH4_CHN_BBN --> LCH4_CHN_BBNbySoil + DummyCO                                             ', & ! index 1319
+     ' CH4_CHN_WTL + FixedOH --> LCH4_CHN_WTLbyOH + DummyCO                                               ' /) ! index up to 1320
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_44 = (/ &
+     ' CH4_CHN_WTL + FixedCl --> LCH4_CHN_WTLbyCl + DummyCO                                               ', & ! index 1321
+     'CH4_CHN_WTL + FixedO1D --> LCH4_CHN_WTLbyO1D + DummyCO                                              ', & ! index 1322
+     '           CH4_CHN_WTL --> LCH4_CHN_WTLbySoil + DummyCO                                             ', & ! index 1323
+     ' CH4_CHN_SEE + FixedOH --> LCH4_CHN_SEEbyOH + DummyCO                                               ', & ! index 1324
+     ' CH4_CHN_SEE + FixedCl --> LCH4_CHN_SEEbyCl + DummyCO                                               ', & ! index 1325
+     'CH4_CHN_SEE + FixedO1D --> LCH4_CHN_SEEbyO1D + DummyCO                                              ', & ! index 1326
+     '           CH4_CHN_SEE --> LCH4_CHN_SEEbySoil + DummyCO                                             ', & ! index 1327
+     ' CH4_CHN_LAK + FixedOH --> LCH4_CHN_LAKbyOH + DummyCO                                               ', & ! index 1328
+     ' CH4_CHN_LAK + FixedCl --> LCH4_CHN_LAKbyCl + DummyCO                                               ', & ! index 1329
+     'CH4_CHN_LAK + FixedO1D --> LCH4_CHN_LAKbyO1D + DummyCO                                              ', & ! index 1330
+     '           CH4_CHN_LAK --> LCH4_CHN_LAKbySoil + DummyCO                                             ', & ! index 1331
+     ' CH4_CHN_TER + FixedOH --> LCH4_CHN_TERbyOH + DummyCO                                               ', & ! index 1332
+     ' CH4_CHN_TER + FixedCl --> LCH4_CHN_TERbyCl + DummyCO                                               ', & ! index 1333
+     'CH4_CHN_TER + FixedO1D --> LCH4_CHN_TERbyO1D + DummyCO                                              ', & ! index 1334
+     '           CH4_CHN_TER --> LCH4_CHN_TERbySoil + DummyCO                                             ', & ! index 1335
+     ' CH4_CHN_RES + FixedOH --> LCH4_CHN_RESbyOH + DummyCO                                               ', & ! index 1336
+     ' CH4_CHN_RES + FixedCl --> LCH4_CHN_RESbyCl + DummyCO                                               ', & ! index 1337
+     'CH4_CHN_RES + FixedO1D --> LCH4_CHN_RESbyO1D + DummyCO                                              ', & ! index 1338
+     '           CH4_CHN_RES --> LCH4_CHN_RESbySoil + DummyCO                                             ', & ! index 1339
+     ' CH4_EAS_OIL + FixedOH --> LCH4_EAS_OILbyOH + DummyCO                                               ', & ! index 1340
+     ' CH4_EAS_OIL + FixedCl --> LCH4_EAS_OILbyCl + DummyCO                                               ', & ! index 1341
+     'CH4_EAS_OIL + FixedO1D --> LCH4_EAS_OILbyO1D + DummyCO                                              ', & ! index 1342
+     '           CH4_EAS_OIL --> LCH4_EAS_OILbySoil + DummyCO                                             ', & ! index 1343
+     ' CH4_EAS_GAS + FixedOH --> LCH4_EAS_GASbyOH + DummyCO                                               ', & ! index 1344
+     ' CH4_EAS_GAS + FixedCl --> LCH4_EAS_GASbyCl + DummyCO                                               ', & ! index 1345
+     'CH4_EAS_GAS + FixedO1D --> LCH4_EAS_GASbyO1D + DummyCO                                              ', & ! index 1346
+     '           CH4_EAS_GAS --> LCH4_EAS_GASbySoil + DummyCO                                             ', & ! index 1347
+     ' CH4_EAS_COL + FixedOH --> LCH4_EAS_COLbyOH + DummyCO                                               ', & ! index 1348
+     ' CH4_EAS_COL + FixedCl --> LCH4_EAS_COLbyCl + DummyCO                                               ', & ! index 1349
+     'CH4_EAS_COL + FixedO1D --> LCH4_EAS_COLbyO1D + DummyCO                                              ' /) ! index up to 1350
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_45 = (/ &
+     '           CH4_EAS_COL --> LCH4_EAS_COLbySoil + DummyCO                                             ', & ! index 1351
+     ' CH4_EAS_LIV + FixedOH --> LCH4_EAS_LIVbyOH + DummyCO                                               ', & ! index 1352
+     ' CH4_EAS_LIV + FixedCl --> LCH4_EAS_LIVbyCl + DummyCO                                               ', & ! index 1353
+     'CH4_EAS_LIV + FixedO1D --> LCH4_EAS_LIVbyO1D + DummyCO                                              ', & ! index 1354
+     '           CH4_EAS_LIV --> LCH4_EAS_LIVbySoil + DummyCO                                             ', & ! index 1355
+     ' CH4_EAS_LDF + FixedOH --> LCH4_EAS_LDFbyOH + DummyCO                                               ', & ! index 1356
+     ' CH4_EAS_LDF + FixedCl --> LCH4_EAS_LDFbyCl + DummyCO                                               ', & ! index 1357
+     'CH4_EAS_LDF + FixedO1D --> LCH4_EAS_LDFbyO1D + DummyCO                                              ', & ! index 1358
+     '           CH4_EAS_LDF --> LCH4_EAS_LDFbySoil + DummyCO                                             ', & ! index 1359
+     ' CH4_EAS_WST + FixedOH --> LCH4_EAS_WSTbyOH + DummyCO                                               ', & ! index 1360
+     ' CH4_EAS_WST + FixedCl --> LCH4_EAS_WSTbyCl + DummyCO                                               ', & ! index 1361
+     'CH4_EAS_WST + FixedO1D --> LCH4_EAS_WSTbyO1D + DummyCO                                              ', & ! index 1362
+     '           CH4_EAS_WST --> LCH4_EAS_WSTbySoil + DummyCO                                             ', & ! index 1363
+     ' CH4_EAS_RIC + FixedOH --> LCH4_EAS_RICbyOH + DummyCO                                               ', & ! index 1364
+     ' CH4_EAS_RIC + FixedCl --> LCH4_EAS_RICbyCl + DummyCO                                               ', & ! index 1365
+     'CH4_EAS_RIC + FixedO1D --> LCH4_EAS_RICbyO1D + DummyCO                                              ', & ! index 1366
+     '           CH4_EAS_RIC --> LCH4_EAS_RICbySoil + DummyCO                                             ', & ! index 1367
+     ' CH4_EAS_OTA + FixedOH --> LCH4_EAS_OTAbyOH + DummyCO                                               ', & ! index 1368
+     ' CH4_EAS_OTA + FixedCl --> LCH4_EAS_OTAbyCl + DummyCO                                               ', & ! index 1369
+     'CH4_EAS_OTA + FixedO1D --> LCH4_EAS_OTAbyO1D + DummyCO                                              ', & ! index 1370
+     '           CH4_EAS_OTA --> LCH4_EAS_OTAbySoil + DummyCO                                             ', & ! index 1371
+     ' CH4_EAS_BBN + FixedOH --> LCH4_EAS_BBNbyOH + DummyCO                                               ', & ! index 1372
+     ' CH4_EAS_BBN + FixedCl --> LCH4_EAS_BBNbyCl + DummyCO                                               ', & ! index 1373
+     'CH4_EAS_BBN + FixedO1D --> LCH4_EAS_BBNbyO1D + DummyCO                                              ', & ! index 1374
+     '           CH4_EAS_BBN --> LCH4_EAS_BBNbySoil + DummyCO                                             ', & ! index 1375
+     ' CH4_EAS_WTL + FixedOH --> LCH4_EAS_WTLbyOH + DummyCO                                               ', & ! index 1376
+     ' CH4_EAS_WTL + FixedCl --> LCH4_EAS_WTLbyCl + DummyCO                                               ', & ! index 1377
+     'CH4_EAS_WTL + FixedO1D --> LCH4_EAS_WTLbyO1D + DummyCO                                              ', & ! index 1378
+     '           CH4_EAS_WTL --> LCH4_EAS_WTLbySoil + DummyCO                                             ', & ! index 1379
+     ' CH4_EAS_SEE + FixedOH --> LCH4_EAS_SEEbyOH + DummyCO                                               ' /) ! index up to 1380
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_46 = (/ &
+     ' CH4_EAS_SEE + FixedCl --> LCH4_EAS_SEEbyCl + DummyCO                                               ', & ! index 1381
+     'CH4_EAS_SEE + FixedO1D --> LCH4_EAS_SEEbyO1D + DummyCO                                              ', & ! index 1382
+     '           CH4_EAS_SEE --> LCH4_EAS_SEEbySoil + DummyCO                                             ', & ! index 1383
+     ' CH4_EAS_LAK + FixedOH --> LCH4_EAS_LAKbyOH + DummyCO                                               ', & ! index 1384
+     ' CH4_EAS_LAK + FixedCl --> LCH4_EAS_LAKbyCl + DummyCO                                               ', & ! index 1385
+     'CH4_EAS_LAK + FixedO1D --> LCH4_EAS_LAKbyO1D + DummyCO                                              ', & ! index 1386
+     '           CH4_EAS_LAK --> LCH4_EAS_LAKbySoil + DummyCO                                             ', & ! index 1387
+     ' CH4_EAS_TER + FixedOH --> LCH4_EAS_TERbyOH + DummyCO                                               ', & ! index 1388
+     ' CH4_EAS_TER + FixedCl --> LCH4_EAS_TERbyCl + DummyCO                                               ', & ! index 1389
+     'CH4_EAS_TER + FixedO1D --> LCH4_EAS_TERbyO1D + DummyCO                                              ', & ! index 1390
+     '           CH4_EAS_TER --> LCH4_EAS_TERbySoil + DummyCO                                             ', & ! index 1391
+     ' CH4_EAS_RES + FixedOH --> LCH4_EAS_RESbyOH + DummyCO                                               ', & ! index 1392
+     ' CH4_EAS_RES + FixedCl --> LCH4_EAS_RESbyCl + DummyCO                                               ', & ! index 1393
+     'CH4_EAS_RES + FixedO1D --> LCH4_EAS_RESbyO1D + DummyCO                                              ', & ! index 1394
+     '           CH4_EAS_RES --> LCH4_EAS_RESbySoil + DummyCO                                             ', & ! index 1395
+     ' CH4_SEA_OIL + FixedOH --> LCH4_SEA_OILbyOH + DummyCO                                               ', & ! index 1396
+     ' CH4_SEA_OIL + FixedCl --> LCH4_SEA_OILbyCl + DummyCO                                               ', & ! index 1397
+     'CH4_SEA_OIL + FixedO1D --> LCH4_SEA_OILbyO1D + DummyCO                                              ', & ! index 1398
+     '           CH4_SEA_OIL --> LCH4_SEA_OILbySoil + DummyCO                                             ', & ! index 1399
+     ' CH4_SEA_GAS + FixedOH --> LCH4_SEA_GASbyOH + DummyCO                                               ', & ! index 1400
+     ' CH4_SEA_GAS + FixedCl --> LCH4_SEA_GASbyCl + DummyCO                                               ', & ! index 1401
+     'CH4_SEA_GAS + FixedO1D --> LCH4_SEA_GASbyO1D + DummyCO                                              ', & ! index 1402
+     '           CH4_SEA_GAS --> LCH4_SEA_GASbySoil + DummyCO                                             ', & ! index 1403
+     ' CH4_SEA_COL + FixedOH --> LCH4_SEA_COLbyOH + DummyCO                                               ', & ! index 1404
+     ' CH4_SEA_COL + FixedCl --> LCH4_SEA_COLbyCl + DummyCO                                               ', & ! index 1405
+     'CH4_SEA_COL + FixedO1D --> LCH4_SEA_COLbyO1D + DummyCO                                              ', & ! index 1406
+     '           CH4_SEA_COL --> LCH4_SEA_COLbySoil + DummyCO                                             ', & ! index 1407
+     ' CH4_SEA_LIV + FixedOH --> LCH4_SEA_LIVbyOH + DummyCO                                               ', & ! index 1408
+     ' CH4_SEA_LIV + FixedCl --> LCH4_SEA_LIVbyCl + DummyCO                                               ', & ! index 1409
+     'CH4_SEA_LIV + FixedO1D --> LCH4_SEA_LIVbyO1D + DummyCO                                              ' /) ! index up to 1410
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_47 = (/ &
+     '           CH4_SEA_LIV --> LCH4_SEA_LIVbySoil + DummyCO                                             ', & ! index 1411
+     ' CH4_SEA_LDF + FixedOH --> LCH4_SEA_LDFbyOH + DummyCO                                               ', & ! index 1412
+     ' CH4_SEA_LDF + FixedCl --> LCH4_SEA_LDFbyCl + DummyCO                                               ', & ! index 1413
+     'CH4_SEA_LDF + FixedO1D --> LCH4_SEA_LDFbyO1D + DummyCO                                              ', & ! index 1414
+     '           CH4_SEA_LDF --> LCH4_SEA_LDFbySoil + DummyCO                                             ', & ! index 1415
+     ' CH4_SEA_WST + FixedOH --> LCH4_SEA_WSTbyOH + DummyCO                                               ', & ! index 1416
+     ' CH4_SEA_WST + FixedCl --> LCH4_SEA_WSTbyCl + DummyCO                                               ', & ! index 1417
+     'CH4_SEA_WST + FixedO1D --> LCH4_SEA_WSTbyO1D + DummyCO                                              ', & ! index 1418
+     '           CH4_SEA_WST --> LCH4_SEA_WSTbySoil + DummyCO                                             ', & ! index 1419
+     ' CH4_SEA_RIC + FixedOH --> LCH4_SEA_RICbyOH + DummyCO                                               ', & ! index 1420
+     ' CH4_SEA_RIC + FixedCl --> LCH4_SEA_RICbyCl + DummyCO                                               ', & ! index 1421
+     'CH4_SEA_RIC + FixedO1D --> LCH4_SEA_RICbyO1D + DummyCO                                              ', & ! index 1422
+     '           CH4_SEA_RIC --> LCH4_SEA_RICbySoil + DummyCO                                             ', & ! index 1423
+     ' CH4_SEA_OTA + FixedOH --> LCH4_SEA_OTAbyOH + DummyCO                                               ', & ! index 1424
+     ' CH4_SEA_OTA + FixedCl --> LCH4_SEA_OTAbyCl + DummyCO                                               ', & ! index 1425
+     'CH4_SEA_OTA + FixedO1D --> LCH4_SEA_OTAbyO1D + DummyCO                                              ', & ! index 1426
+     '           CH4_SEA_OTA --> LCH4_SEA_OTAbySoil + DummyCO                                             ', & ! index 1427
+     ' CH4_SEA_BBN + FixedOH --> LCH4_SEA_BBNbyOH + DummyCO                                               ', & ! index 1428
+     ' CH4_SEA_BBN + FixedCl --> LCH4_SEA_BBNbyCl + DummyCO                                               ', & ! index 1429
+     'CH4_SEA_BBN + FixedO1D --> LCH4_SEA_BBNbyO1D + DummyCO                                              ', & ! index 1430
+     '           CH4_SEA_BBN --> LCH4_SEA_BBNbySoil + DummyCO                                             ', & ! index 1431
+     ' CH4_SEA_WTL + FixedOH --> LCH4_SEA_WTLbyOH + DummyCO                                               ', & ! index 1432
+     ' CH4_SEA_WTL + FixedCl --> LCH4_SEA_WTLbyCl + DummyCO                                               ', & ! index 1433
+     'CH4_SEA_WTL + FixedO1D --> LCH4_SEA_WTLbyO1D + DummyCO                                              ', & ! index 1434
+     '           CH4_SEA_WTL --> LCH4_SEA_WTLbySoil + DummyCO                                             ', & ! index 1435
+     ' CH4_SEA_SEE + FixedOH --> LCH4_SEA_SEEbyOH + DummyCO                                               ', & ! index 1436
+     ' CH4_SEA_SEE + FixedCl --> LCH4_SEA_SEEbyCl + DummyCO                                               ', & ! index 1437
+     'CH4_SEA_SEE + FixedO1D --> LCH4_SEA_SEEbyO1D + DummyCO                                              ', & ! index 1438
+     '           CH4_SEA_SEE --> LCH4_SEA_SEEbySoil + DummyCO                                             ', & ! index 1439
+     ' CH4_SEA_LAK + FixedOH --> LCH4_SEA_LAKbyOH + DummyCO                                               ' /) ! index up to 1440
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_48 = (/ &
+     ' CH4_SEA_LAK + FixedCl --> LCH4_SEA_LAKbyCl + DummyCO                                               ', & ! index 1441
+     'CH4_SEA_LAK + FixedO1D --> LCH4_SEA_LAKbyO1D + DummyCO                                              ', & ! index 1442
+     '           CH4_SEA_LAK --> LCH4_SEA_LAKbySoil + DummyCO                                             ', & ! index 1443
+     ' CH4_SEA_TER + FixedOH --> LCH4_SEA_TERbyOH + DummyCO                                               ', & ! index 1444
+     ' CH4_SEA_TER + FixedCl --> LCH4_SEA_TERbyCl + DummyCO                                               ', & ! index 1445
+     'CH4_SEA_TER + FixedO1D --> LCH4_SEA_TERbyO1D + DummyCO                                              ', & ! index 1446
+     '           CH4_SEA_TER --> LCH4_SEA_TERbySoil + DummyCO                                             ', & ! index 1447
+     ' CH4_SEA_RES + FixedOH --> LCH4_SEA_RESbyOH + DummyCO                                               ', & ! index 1448
+     ' CH4_SEA_RES + FixedCl --> LCH4_SEA_RESbyCl + DummyCO                                               ', & ! index 1449
+     'CH4_SEA_RES + FixedO1D --> LCH4_SEA_RESbyO1D + DummyCO                                              ', & ! index 1450
+     '           CH4_SEA_RES --> LCH4_SEA_RESbySoil + DummyCO                                             ', & ! index 1451
+     ' CH4_OCE_OIL + FixedOH --> LCH4_OCE_OILbyOH + DummyCO                                               ', & ! index 1452
+     ' CH4_OCE_OIL + FixedCl --> LCH4_OCE_OILbyCl + DummyCO                                               ', & ! index 1453
+     'CH4_OCE_OIL + FixedO1D --> LCH4_OCE_OILbyO1D + DummyCO                                              ', & ! index 1454
+     '           CH4_OCE_OIL --> LCH4_OCE_OILbySoil + DummyCO                                             ', & ! index 1455
+     ' CH4_OCE_GAS + FixedOH --> LCH4_OCE_GASbyOH + DummyCO                                               ', & ! index 1456
+     ' CH4_OCE_GAS + FixedCl --> LCH4_OCE_GASbyCl + DummyCO                                               ', & ! index 1457
+     'CH4_OCE_GAS + FixedO1D --> LCH4_OCE_GASbyO1D + DummyCO                                              ', & ! index 1458
+     '           CH4_OCE_GAS --> LCH4_OCE_GASbySoil + DummyCO                                             ', & ! index 1459
+     ' CH4_OCE_COL + FixedOH --> LCH4_OCE_COLbyOH + DummyCO                                               ', & ! index 1460
+     ' CH4_OCE_COL + FixedCl --> LCH4_OCE_COLbyCl + DummyCO                                               ', & ! index 1461
+     'CH4_OCE_COL + FixedO1D --> LCH4_OCE_COLbyO1D + DummyCO                                              ', & ! index 1462
+     '           CH4_OCE_COL --> LCH4_OCE_COLbySoil + DummyCO                                             ', & ! index 1463
+     ' CH4_OCE_LIV + FixedOH --> LCH4_OCE_LIVbyOH + DummyCO                                               ', & ! index 1464
+     ' CH4_OCE_LIV + FixedCl --> LCH4_OCE_LIVbyCl + DummyCO                                               ', & ! index 1465
+     'CH4_OCE_LIV + FixedO1D --> LCH4_OCE_LIVbyO1D + DummyCO                                              ', & ! index 1466
+     '           CH4_OCE_LIV --> LCH4_OCE_LIVbySoil + DummyCO                                             ', & ! index 1467
+     ' CH4_OCE_LDF + FixedOH --> LCH4_OCE_LDFbyOH + DummyCO                                               ', & ! index 1468
+     ' CH4_OCE_LDF + FixedCl --> LCH4_OCE_LDFbyCl + DummyCO                                               ', & ! index 1469
+     'CH4_OCE_LDF + FixedO1D --> LCH4_OCE_LDFbyO1D + DummyCO                                              ' /) ! index up to 1470
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_49 = (/ &
+     '           CH4_OCE_LDF --> LCH4_OCE_LDFbySoil + DummyCO                                             ', & ! index 1471
+     ' CH4_OCE_WST + FixedOH --> LCH4_OCE_WSTbyOH + DummyCO                                               ', & ! index 1472
+     ' CH4_OCE_WST + FixedCl --> LCH4_OCE_WSTbyCl + DummyCO                                               ', & ! index 1473
+     'CH4_OCE_WST + FixedO1D --> LCH4_OCE_WSTbyO1D + DummyCO                                              ', & ! index 1474
+     '           CH4_OCE_WST --> LCH4_OCE_WSTbySoil + DummyCO                                             ', & ! index 1475
+     ' CH4_OCE_RIC + FixedOH --> LCH4_OCE_RICbyOH + DummyCO                                               ', & ! index 1476
+     ' CH4_OCE_RIC + FixedCl --> LCH4_OCE_RICbyCl + DummyCO                                               ', & ! index 1477
+     'CH4_OCE_RIC + FixedO1D --> LCH4_OCE_RICbyO1D + DummyCO                                              ', & ! index 1478
+     '           CH4_OCE_RIC --> LCH4_OCE_RICbySoil + DummyCO                                             ', & ! index 1479
+     ' CH4_OCE_OTA + FixedOH --> LCH4_OCE_OTAbyOH + DummyCO                                               ', & ! index 1480
+     ' CH4_OCE_OTA + FixedCl --> LCH4_OCE_OTAbyCl + DummyCO                                               ', & ! index 1481
+     'CH4_OCE_OTA + FixedO1D --> LCH4_OCE_OTAbyO1D + DummyCO                                              ', & ! index 1482
+     '           CH4_OCE_OTA --> LCH4_OCE_OTAbySoil + DummyCO                                             ', & ! index 1483
+     ' CH4_OCE_BBN + FixedOH --> LCH4_OCE_BBNbyOH + DummyCO                                               ', & ! index 1484
+     ' CH4_OCE_BBN + FixedCl --> LCH4_OCE_BBNbyCl + DummyCO                                               ', & ! index 1485
+     'CH4_OCE_BBN + FixedO1D --> LCH4_OCE_BBNbyO1D + DummyCO                                              ', & ! index 1486
+     '           CH4_OCE_BBN --> LCH4_OCE_BBNbySoil + DummyCO                                             ', & ! index 1487
+     ' CH4_OCE_WTL + FixedOH --> LCH4_OCE_WTLbyOH + DummyCO                                               ', & ! index 1488
+     ' CH4_OCE_WTL + FixedCl --> LCH4_OCE_WTLbyCl + DummyCO                                               ', & ! index 1489
+     'CH4_OCE_WTL + FixedO1D --> LCH4_OCE_WTLbyO1D + DummyCO                                              ', & ! index 1490
+     '           CH4_OCE_WTL --> LCH4_OCE_WTLbySoil + DummyCO                                             ', & ! index 1491
+     ' CH4_OCE_SEE + FixedOH --> LCH4_OCE_SEEbyOH + DummyCO                                               ', & ! index 1492
+     ' CH4_OCE_SEE + FixedCl --> LCH4_OCE_SEEbyCl + DummyCO                                               ', & ! index 1493
+     'CH4_OCE_SEE + FixedO1D --> LCH4_OCE_SEEbyO1D + DummyCO                                              ', & ! index 1494
+     '           CH4_OCE_SEE --> LCH4_OCE_SEEbySoil + DummyCO                                             ', & ! index 1495
+     ' CH4_OCE_LAK + FixedOH --> LCH4_OCE_LAKbyOH + DummyCO                                               ', & ! index 1496
+     ' CH4_OCE_LAK + FixedCl --> LCH4_OCE_LAKbyCl + DummyCO                                               ', & ! index 1497
+     'CH4_OCE_LAK + FixedO1D --> LCH4_OCE_LAKbyO1D + DummyCO                                              ', & ! index 1498
+     '           CH4_OCE_LAK --> LCH4_OCE_LAKbySoil + DummyCO                                             ', & ! index 1499
+     ' CH4_OCE_TER + FixedOH --> LCH4_OCE_TERbyOH + DummyCO                                               ' /) ! index up to 1500
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_50 = (/ &
+     ' CH4_OCE_TER + FixedCl --> LCH4_OCE_TERbyCl + DummyCO                                               ', & ! index 1501
+     'CH4_OCE_TER + FixedO1D --> LCH4_OCE_TERbyO1D + DummyCO                                              ', & ! index 1502
+     '           CH4_OCE_TER --> LCH4_OCE_TERbySoil + DummyCO                                             ', & ! index 1503
+     ' CH4_OCE_RES + FixedOH --> LCH4_OCE_RESbyOH + DummyCO                                               ', & ! index 1504
+     ' CH4_OCE_RES + FixedCl --> LCH4_OCE_RESbyCl + DummyCO                                               ', & ! index 1505
+     'CH4_OCE_RES + FixedO1D --> LCH4_OCE_RESbyO1D + DummyCO                                              ', & ! index 1506
+     '           CH4_OCE_RES --> LCH4_OCE_RESbySoil + DummyCO                                             ', & ! index 1507
+     ' CH4_ROW_OIL + FixedOH --> LCH4_ROW_OILbyOH + DummyCO                                               ', & ! index 1508
+     ' CH4_ROW_OIL + FixedCl --> LCH4_ROW_OILbyCl + DummyCO                                               ', & ! index 1509
+     'CH4_ROW_OIL + FixedO1D --> LCH4_ROW_OILbyO1D + DummyCO                                              ', & ! index 1510
+     '           CH4_ROW_OIL --> LCH4_ROW_OILbySoil + DummyCO                                             ', & ! index 1511
+     ' CH4_ROW_GAS + FixedOH --> LCH4_ROW_GASbyOH + DummyCO                                               ', & ! index 1512
+     ' CH4_ROW_GAS + FixedCl --> LCH4_ROW_GASbyCl + DummyCO                                               ', & ! index 1513
+     'CH4_ROW_GAS + FixedO1D --> LCH4_ROW_GASbyO1D + DummyCO                                              ', & ! index 1514
+     '           CH4_ROW_GAS --> LCH4_ROW_GASbySoil + DummyCO                                             ', & ! index 1515
+     ' CH4_ROW_COL + FixedOH --> LCH4_ROW_COLbyOH + DummyCO                                               ', & ! index 1516
+     ' CH4_ROW_COL + FixedCl --> LCH4_ROW_COLbyCl + DummyCO                                               ', & ! index 1517
+     'CH4_ROW_COL + FixedO1D --> LCH4_ROW_COLbyO1D + DummyCO                                              ', & ! index 1518
+     '           CH4_ROW_COL --> LCH4_ROW_COLbySoil + DummyCO                                             ', & ! index 1519
+     ' CH4_ROW_LIV + FixedOH --> LCH4_ROW_LIVbyOH + DummyCO                                               ', & ! index 1520
+     ' CH4_ROW_LIV + FixedCl --> LCH4_ROW_LIVbyCl + DummyCO                                               ', & ! index 1521
+     'CH4_ROW_LIV + FixedO1D --> LCH4_ROW_LIVbyO1D + DummyCO                                              ', & ! index 1522
+     '           CH4_ROW_LIV --> LCH4_ROW_LIVbySoil + DummyCO                                             ', & ! index 1523
+     ' CH4_ROW_LDF + FixedOH --> LCH4_ROW_LDFbyOH + DummyCO                                               ', & ! index 1524
+     ' CH4_ROW_LDF + FixedCl --> LCH4_ROW_LDFbyCl + DummyCO                                               ', & ! index 1525
+     'CH4_ROW_LDF + FixedO1D --> LCH4_ROW_LDFbyO1D + DummyCO                                              ', & ! index 1526
+     '           CH4_ROW_LDF --> LCH4_ROW_LDFbySoil + DummyCO                                             ', & ! index 1527
+     ' CH4_ROW_WST + FixedOH --> LCH4_ROW_WSTbyOH + DummyCO                                               ', & ! index 1528
+     ' CH4_ROW_WST + FixedCl --> LCH4_ROW_WSTbyCl + DummyCO                                               ', & ! index 1529
+     'CH4_ROW_WST + FixedO1D --> LCH4_ROW_WSTbyO1D + DummyCO                                              ' /) ! index up to 1530
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(30) :: EQN_NAMES_51 = (/ &
+     '           CH4_ROW_WST --> LCH4_ROW_WSTbySoil + DummyCO                                             ', & ! index 1531
+     ' CH4_ROW_RIC + FixedOH --> LCH4_ROW_RICbyOH + DummyCO                                               ', & ! index 1532
+     ' CH4_ROW_RIC + FixedCl --> LCH4_ROW_RICbyCl + DummyCO                                               ', & ! index 1533
+     'CH4_ROW_RIC + FixedO1D --> LCH4_ROW_RICbyO1D + DummyCO                                              ', & ! index 1534
+     '           CH4_ROW_RIC --> LCH4_ROW_RICbySoil + DummyCO                                             ', & ! index 1535
+     ' CH4_ROW_OTA + FixedOH --> LCH4_ROW_OTAbyOH + DummyCO                                               ', & ! index 1536
+     ' CH4_ROW_OTA + FixedCl --> LCH4_ROW_OTAbyCl + DummyCO                                               ', & ! index 1537
+     'CH4_ROW_OTA + FixedO1D --> LCH4_ROW_OTAbyO1D + DummyCO                                              ', & ! index 1538
+     '           CH4_ROW_OTA --> LCH4_ROW_OTAbySoil + DummyCO                                             ', & ! index 1539
+     ' CH4_ROW_BBN + FixedOH --> LCH4_ROW_BBNbyOH + DummyCO                                               ', & ! index 1540
+     ' CH4_ROW_BBN + FixedCl --> LCH4_ROW_BBNbyCl + DummyCO                                               ', & ! index 1541
+     'CH4_ROW_BBN + FixedO1D --> LCH4_ROW_BBNbyO1D + DummyCO                                              ', & ! index 1542
+     '           CH4_ROW_BBN --> LCH4_ROW_BBNbySoil + DummyCO                                             ', & ! index 1543
+     ' CH4_ROW_WTL + FixedOH --> LCH4_ROW_WTLbyOH + DummyCO                                               ', & ! index 1544
+     ' CH4_ROW_WTL + FixedCl --> LCH4_ROW_WTLbyCl + DummyCO                                               ', & ! index 1545
+     'CH4_ROW_WTL + FixedO1D --> LCH4_ROW_WTLbyO1D + DummyCO                                              ', & ! index 1546
+     '           CH4_ROW_WTL --> LCH4_ROW_WTLbySoil + DummyCO                                             ', & ! index 1547
+     ' CH4_ROW_SEE + FixedOH --> LCH4_ROW_SEEbyOH + DummyCO                                               ', & ! index 1548
+     ' CH4_ROW_SEE + FixedCl --> LCH4_ROW_SEEbyCl + DummyCO                                               ', & ! index 1549
+     'CH4_ROW_SEE + FixedO1D --> LCH4_ROW_SEEbyO1D + DummyCO                                              ', & ! index 1550
+     '           CH4_ROW_SEE --> LCH4_ROW_SEEbySoil + DummyCO                                             ', & ! index 1551
+     ' CH4_ROW_LAK + FixedOH --> LCH4_ROW_LAKbyOH + DummyCO                                               ', & ! index 1552
+     ' CH4_ROW_LAK + FixedCl --> LCH4_ROW_LAKbyCl + DummyCO                                               ', & ! index 1553
+     'CH4_ROW_LAK + FixedO1D --> LCH4_ROW_LAKbyO1D + DummyCO                                              ', & ! index 1554
+     '           CH4_ROW_LAK --> LCH4_ROW_LAKbySoil + DummyCO                                             ', & ! index 1555
+     ' CH4_ROW_TER + FixedOH --> LCH4_ROW_TERbyOH + DummyCO                                               ', & ! index 1556
+     ' CH4_ROW_TER + FixedCl --> LCH4_ROW_TERbyCl + DummyCO                                               ', & ! index 1557
+     'CH4_ROW_TER + FixedO1D --> LCH4_ROW_TERbyO1D + DummyCO                                              ', & ! index 1558
+     '           CH4_ROW_TER --> LCH4_ROW_TERbySoil + DummyCO                                             ', & ! index 1559
+     ' CH4_ROW_RES + FixedOH --> LCH4_ROW_RESbyOH + DummyCO                                               ' /) ! index up to 1560
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(3) :: EQN_NAMES_52 = (/ &
+     ' CH4_ROW_RES + FixedCl --> LCH4_ROW_RESbyCl + DummyCO                                               ', & ! index 1561
+     'CH4_ROW_RES + FixedO1D --> LCH4_ROW_RESbyO1D + DummyCO                                              ', & ! index 1562
+     '           CH4_ROW_RES --> LCH4_ROW_RESbySoil + DummyCO                                             ' /) ! index up to 1563
+  CHARACTER(LEN=100), PARAMETER, DIMENSION(1563) :: EQN_NAMES = (/&
     EQN_NAMES_0, EQN_NAMES_1, EQN_NAMES_2, EQN_NAMES_3, EQN_NAMES_4, &
-    EQN_NAMES_5 /)
+    EQN_NAMES_5, EQN_NAMES_6, EQN_NAMES_7, EQN_NAMES_8, EQN_NAMES_9, &
+    EQN_NAMES_10, EQN_NAMES_11, EQN_NAMES_12, EQN_NAMES_13, EQN_NAMES_14, &
+    EQN_NAMES_15, EQN_NAMES_16, EQN_NAMES_17, EQN_NAMES_18, EQN_NAMES_19, &
+    EQN_NAMES_20, EQN_NAMES_21, EQN_NAMES_22, EQN_NAMES_23, EQN_NAMES_24, &
+    EQN_NAMES_25, EQN_NAMES_26, EQN_NAMES_27, EQN_NAMES_28, EQN_NAMES_29, &
+    EQN_NAMES_30, EQN_NAMES_31, EQN_NAMES_32, EQN_NAMES_33, EQN_NAMES_34, &
+    EQN_NAMES_35, EQN_NAMES_36, EQN_NAMES_37, EQN_NAMES_38, EQN_NAMES_39, &
+    EQN_NAMES_40, EQN_NAMES_41, EQN_NAMES_42, EQN_NAMES_43, EQN_NAMES_44, &
+    EQN_NAMES_45, EQN_NAMES_46, EQN_NAMES_47, EQN_NAMES_48, EQN_NAMES_49, &
+    EQN_NAMES_50, EQN_NAMES_51, EQN_NAMES_52 /)
 
   CHARACTER(LEN=32), PARAMETER, DIMENSION(3) :: FAM_NAMES = (/ &
      'PCO                             ','LCO                             ','LCH4                            ' /) ! index up to 3

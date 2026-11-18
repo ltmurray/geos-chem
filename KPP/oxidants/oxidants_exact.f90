@@ -18,6 +18,7 @@ MODULE KPP_ROOT_Integrator
   LOGICAL, PRIVATE :: Do_Update_RCONST
   LOGICAL, PRIVATE :: Do_Update_PHOTO
   LOGICAL, PRIVATE :: Do_Update_SUN
+  INTEGER, PARAMETER, PRIVATE :: nRegionSectorCH4 = 350
 
 CONTAINS
 
@@ -159,7 +160,11 @@ CONTAINS
          ind_LCH4_EASbySoil, ind_LCH4_SEAbySoil, ind_LCH4_OCEbySoil, &
          ind_LCH4_ROWbySoil /)
 
-    INTEGER  :: N
+    ! Region-by-sector species are generated contiguously in groups of five:
+    ! CH4 tracer, followed by its OH, Cl, O(1D), and soil loss accumulators.
+    INTEGER, PARAMETER :: firstRegionSectorCH4 = ind_CH4_USA_OIL
+
+    INTEGER  :: N, taggedIndex
     REAL(dp) :: ch4Initial, ch4Loss, ch4Remaining
     REAL(dp) :: coInitial, coLoss, coRemaining
     REAL(dp) :: kCH4OH, kCH4Cl, kCH4O1D, kCH4Soil, kCH4
@@ -217,6 +222,28 @@ CONTAINS
           C(indTaggedCH4(N)) = MAX( ch4Remaining, 0.0_dp )
        ELSE
           C(indTaggedCH4(N)) = ch4Initial
+       ENDIF
+    ENDDO
+
+    DO N = 1, nRegionSectorCH4
+       taggedIndex = firstRegionSectorCH4 + ( 5 * ( N - 1 ) )
+       ch4Initial = MAX( C(taggedIndex), 0.0_dp )
+       IF ( kCH4 > 0.0_dp .and. ch4Initial > 0.0_dp ) THEN
+          lossFraction = OneMinusExpNeg( kCH4 * dt )
+          ch4Loss      = ch4Initial * lossFraction
+          ch4Remaining = ch4Initial - ch4Loss
+
+          C(taggedIndex+1) = C(taggedIndex+1)                          &
+                           + ch4Loss * ( kCH4OH / kCH4 )
+          C(taggedIndex+2) = C(taggedIndex+2)                          &
+                           + ch4Loss * ( kCH4Cl / kCH4 )
+          C(taggedIndex+3) = C(taggedIndex+3)                          &
+                           + ch4Loss * ( kCH4O1D / kCH4 )
+          C(taggedIndex+4) = C(taggedIndex+4)                          &
+                           + ch4Loss * ( kCH4Soil / kCH4 )
+          C(taggedIndex) = MAX( ch4Remaining, 0.0_dp )
+       ELSE
+          C(taggedIndex) = ch4Initial
        ENDIF
     ENDDO
 
@@ -289,8 +316,10 @@ CONTAINS
     isValid = .FALSE.
     message = ''
 
-    IF ( NSPEC /= 213 .or. NVAR /= 207 .or. NVARACT /= 41 .or.           &
-         NREACT /= 163 .or. NFAM /= 3 ) THEN
+    IF ( NSPEC /= 213 + ( 5 * nRegionSectorCH4 ) .or.                    &
+         NVAR /= 207 + ( 5 * nRegionSectorCH4 ) .or.                    &
+         NVARACT /= 41 + nRegionSectorCH4 .or.                           &
+         NREACT /= 163 + ( 4 * nRegionSectorCH4 ) .or. NFAM /= 3 ) THEN
        message = 'Unexpected oxidants KPP dimensions or reaction count'
        RETURN
     ENDIF
@@ -342,7 +371,12 @@ CONTAINS
          INDEX( EQN_NAMES(64), 'CH4_USA + FixedOH' ) == 0 .or.            &
          INDEX( EQN_NAMES(64), 'LCH4_USAbyOH' ) == 0 .or.                 &
          INDEX( EQN_NAMES(163), 'CH4_ROW --> LCH4_ROWbySoil' ) == 0 .or.  &
-         INDEX( EQN_NAMES(163), 'LCH4_ROWbySoil' ) == 0 ) THEN
+         INDEX( EQN_NAMES(163), 'LCH4_ROWbySoil' ) == 0 .or.              &
+         INDEX( EQN_NAMES(164), 'CH4_USA_OIL + FixedOH' ) == 0 .or.       &
+         INDEX( EQN_NAMES(164), 'LCH4_USA_OILbyOH' ) == 0 .or.            &
+         INDEX( EQN_NAMES(1563), 'CH4_ROW_RES --> LCH4_ROW_RESbySoil' )   &
+            == 0 .or.                                                     &
+         INDEX( EQN_NAMES(1563), 'LCH4_ROW_RESbySoil' ) == 0 ) THEN
        message = 'Oxidants equations changed; analytical solver requires review'
        RETURN
     ENDIF

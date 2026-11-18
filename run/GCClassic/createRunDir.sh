@@ -288,6 +288,7 @@ elif [[ "x${sim_name}" == "xoxidants" ]]; then
 	    printf "  2. Total CH4 plus sector tracers\n"
 	    printf "  3. Total CH4 plus regional tracers\n"
 	    printf "  4. Total CH4 plus sector and regional tracers\n"
+	    printf "  5. Total CH4 plus region-by-sector tracers\n"
 	    valid_ch4=0
 	    while [ "${valid_ch4}" -eq 0 ]; do
 		read -p "${USER_PROMPT}" ch4_prompt
@@ -300,6 +301,8 @@ elif [[ "x${sim_name}" == "xoxidants" ]]; then
 		    sim_extra_option="CH4_REGIONS"
 		elif [[ "x${ch4_prompt}" == "x4" ]]; then
 		    sim_extra_option="CH4_SECTORS_REGIONS"
+		elif [[ "x${ch4_prompt}" == "x5" ]]; then
+		    sim_extra_option="CH4_REGIONS_X_SECTORS"
 		else
 		    valid_ch4=0
 		    printf "Invalid selection. Try again.\n"
