@@ -88,7 +88,7 @@ CONTAINS
     USE Species_Mod,          ONLY : SpcConc
     USE State_Grid_Mod,       ONLY : GrdState
     USE State_Chm_Mod,        ONLY : ChmState
-    USE State_Diag_Mod,       ONLY : DgnState, N_TAGGED_CH4
+    USE State_Diag_Mod,       ONLY : DgnState
     USE State_Met_Mod,        ONLY : MetState
     USE Time_Mod,             ONLY : Get_Ts_Chem
 !
@@ -444,22 +444,26 @@ CONTAINS
                        dtChem, State_Met%AIRVOL(I,J,L) )
           ENDIF
 
-          ! Losses of sector-tagged CH4 by each prescribed pathway [kg/s]
+          ! Losses of active tagged CH4 by each prescribed pathway [kg/s]
           IF ( State_Diag%Archive_LossTaggedCH4byOH ) THEN
-             DO T = 1, N_TAGGED_CH4
+             DO T = 1, State_Diag%nTaggedCH4
                 State_Diag%LossTaggedCH4byOH(I,J,L,T) =                     &
                      oxidants_Get_TaggedCH4Loss(                             &
-                          T, 1, dtChem, State_Met%AIRVOL(I,J,L) )
+                          State_Diag%TaggedCH4KppIndex(T), 1, dtChem,         &
+                          State_Met%AIRVOL(I,J,L) )
                 State_Diag%LossTaggedCH4byCl(I,J,L,T) =                     &
                      oxidants_Get_TaggedCH4Loss(                             &
-                          T, 2, dtChem, State_Met%AIRVOL(I,J,L) )
+                          State_Diag%TaggedCH4KppIndex(T), 2, dtChem,         &
+                          State_Met%AIRVOL(I,J,L) )
                 State_Diag%LossTaggedCH4byO1D(I,J,L,T) =                    &
                      oxidants_Get_TaggedCH4Loss(                             &
-                          T, 3, dtChem, State_Met%AIRVOL(I,J,L) )
+                          State_Diag%TaggedCH4KppIndex(T), 3, dtChem,         &
+                          State_Met%AIRVOL(I,J,L) )
                 IF ( L == 1 ) THEN
                    State_Diag%LossTaggedCH4bySoil(I,J,T) =                  &
                         oxidants_Get_TaggedCH4Loss(                          &
-                             T, 4, dtChem, State_Met%AIRVOL(I,J,L) )
+                             State_Diag%TaggedCH4KppIndex(T), 4, dtChem,     &
+                             State_Met%AIRVOL(I,J,L) )
                 ENDIF
              ENDDO
           ENDIF

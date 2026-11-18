@@ -76,12 +76,17 @@ MODULE State_Diag_Mod
 !
 ! !PUBLIC DATA MEMBERS:
 !
-  INTEGER, PUBLIC, PARAMETER :: N_TAGGED_CH4 = 14
+  INTEGER, PUBLIC, PARAMETER :: N_TAGGED_CH4 = 39
 
   CHARACTER(LEN=7), PUBLIC, PARAMETER :: TAGGED_CH4_NAMES(N_TAGGED_CH4) = (/ &
        'CH4_OIL', 'CH4_GAS', 'CH4_COL', 'CH4_LIV', 'CH4_LDF', 'CH4_WST',    &
        'CH4_RIC', 'CH4_OTA', 'CH4_BBN', 'CH4_WTL', 'CH4_SEE', 'CH4_LAK',    &
-       'CH4_TER', 'CH4_RES'                                                  &
+       'CH4_TER', 'CH4_RES',                                                 &
+       'CH4_USA', 'CH4_CAN', 'CH4_MEX', 'CH4_CAC', 'CH4_BRA', 'CH4_NSA', &
+       'CH4_SCN', 'CH4_WEU', 'CH4_EEU', 'CH4_RUS', 'CH4_MDE', 'CH4_NAF', &
+       'CH4_WAF', 'CH4_CAF', 'CH4_EAF', 'CH4_SIO', 'CH4_SAC', 'CH4_CAS', &
+       'CH4_IND', 'CH4_SAS', 'CH4_CHN', 'CH4_EAS', 'CH4_SEA', 'CH4_OCE', &
+       'CH4_ROW' &
        /)
 
   !=========================================================================
@@ -1032,6 +1037,8 @@ MODULE State_Diag_Mod
 
      REAL(f4),           POINTER :: LossTaggedCH4bySoil(:,:,:)
      LOGICAL                     :: Archive_LossTaggedCH4bySoil
+     INTEGER                     :: nTaggedCH4
+     INTEGER,            POINTER :: TaggedCH4KppIndex(:)
 
      REAL(f4),           POINTER :: LossCObyOH(:,:,:)
      LOGICAL                     :: Archive_LossCObyOH
@@ -1550,7 +1557,7 @@ CONTAINS
 ! !IROUTINE: Init_TaggedCH4LossDiags
 !
 ! !DESCRIPTION: Allocates and registers chemical-loss diagnostics for the
-! sector-tagged methane tracers used by the prescribed oxidants simulation.
+! tagged methane tracers used by the prescribed oxidants simulation.
 !\
 !\
 ! !INTERFACE:
@@ -1584,8 +1591,7 @@ CONTAINS
 !
 ! !LOCAL VARIABLES:
 !
-    LOGICAL            :: requested
-    INTEGER            :: N
+    INTEGER            :: N, T, nActive
     CHARACTER(LEN=255) :: diagId, diagDesc, thisLoc
 
     !========================================================================
@@ -1593,39 +1599,55 @@ CONTAINS
     !========================================================================
 
     RC        = GC_SUCCESS
-    requested = .FALSE.
+    nActive   = 0
     thisLoc   = ' -> at Init_TaggedCH4LossDiags ' //                       &
                 '(in module Headers/state_diag_mod.F90)'
 
-    ! Return unless at least one sector-tagged methane tracer is advected.
+    ! Return unless at least one tagged methane tracer is advected.
     DO N = 1, N_TAGGED_CH4
-       requested = requested .or.                                           &
-                   Ind_( TRIM( TAGGED_CH4_NAMES(N) ), 'A' ) > 0
+       IF ( Ind_( TRIM( TAGGED_CH4_NAMES(N) ), 'A' ) > 0 ) THEN
+          nActive = nActive + 1
+       ENDIF
     ENDDO
-    IF ( .not. requested ) RETURN
+    IF ( nActive == 0 ) RETURN
+
+    ! Store the compiled KPP tag index for each active tracer.  Diagnostic
+    ! arrays contain active tracers only, avoiding sector slices in a regional
+    ! run and regional slices in a sector run.
+    State_Diag%nTaggedCH4 = nActive
+    ALLOCATE( State_Diag%TaggedCH4KppIndex(nActive), STAT=RC )
+    CALL GC_CheckVar( 'State_Diag%TaggedCH4KppIndex', 0, RC )
+    IF ( RC /= GC_SUCCESS ) RETURN
+    T = 0
+    DO N = 1, N_TAGGED_CH4
+       IF ( Ind_( TRIM( TAGGED_CH4_NAMES(N) ), 'A' ) > 0 ) THEN
+          T = T + 1
+          State_Diag%TaggedCH4KppIndex(T) = N
+       ENDIF
+    ENDDO
 
     ! Allocate grouped arrays.  Registry fields below point to individual
-    ! sector slices, preserving conventional diagnostic names in HISTORY.
+    ! active-tag slices, preserving conventional diagnostic names in HISTORY.
     ALLOCATE( State_Diag%LossTaggedCH4byOH(                              &
-              State_Grid%NX, State_Grid%NY, State_Grid%NZ, N_TAGGED_CH4 ), &
+              State_Grid%NX, State_Grid%NY, State_Grid%NZ, nActive ),     &
               STAT=RC )
     CALL GC_CheckVar( 'State_Diag%LossTaggedCH4byOH', 0, RC )
     IF ( RC /= GC_SUCCESS ) RETURN
 
     ALLOCATE( State_Diag%LossTaggedCH4byCl(                              &
-              State_Grid%NX, State_Grid%NY, State_Grid%NZ, N_TAGGED_CH4 ), &
+              State_Grid%NX, State_Grid%NY, State_Grid%NZ, nActive ),     &
               STAT=RC )
     CALL GC_CheckVar( 'State_Diag%LossTaggedCH4byCl', 0, RC )
     IF ( RC /= GC_SUCCESS ) RETURN
 
     ALLOCATE( State_Diag%LossTaggedCH4byO1D(                             &
-              State_Grid%NX, State_Grid%NY, State_Grid%NZ, N_TAGGED_CH4 ), &
+              State_Grid%NX, State_Grid%NY, State_Grid%NZ, nActive ),     &
               STAT=RC )
     CALL GC_CheckVar( 'State_Diag%LossTaggedCH4byO1D', 0, RC )
     IF ( RC /= GC_SUCCESS ) RETURN
 
     ALLOCATE( State_Diag%LossTaggedCH4bySoil(                               &
-              State_Grid%NX, State_Grid%NY, N_TAGGED_CH4 ), STAT=RC )
+              State_Grid%NX, State_Grid%NY, nActive ), STAT=RC )
     CALL GC_CheckVar( 'State_Diag%LossTaggedCH4bySoil', 0, RC )
     IF ( RC /= GC_SUCCESS ) RETURN
 
@@ -1638,11 +1660,12 @@ CONTAINS
     State_Diag%Archive_LossTaggedCH4byO1D  = .TRUE.
     State_Diag%Archive_LossTaggedCH4bySoil = .TRUE.
 
-    ! Register each sector and loss pathway under its requested field name.
-    DO N = 1, N_TAGGED_CH4
-       diagDesc = 'Loss of ' // TRIM( TAGGED_CH4_NAMES(N) ) //              &
+    ! Register each active tag and loss pathway under its requested name.
+    DO N = 1, nActive
+       T = State_Diag%TaggedCH4KppIndex(N)
+       diagDesc = 'Loss of ' // TRIM( TAGGED_CH4_NAMES(T) ) //              &
                   ' by reaction with OH'
-       diagId = 'Loss' // TRIM( TAGGED_CH4_NAMES(N) ) // 'byOH'
+       diagId = 'Loss' // TRIM( TAGGED_CH4_NAMES(T) ) // 'byOH'
        CALL Registry_AddField(                                               &
             Input_Opt      = Input_Opt,                                      &
             Registry       = State_Diag%Registry,                            &
@@ -1658,9 +1681,9 @@ CONTAINS
           RETURN
        ENDIF
 
-       diagDesc = 'Loss of ' // TRIM( TAGGED_CH4_NAMES(N) ) //              &
+       diagDesc = 'Loss of ' // TRIM( TAGGED_CH4_NAMES(T) ) //              &
                   ' by reaction with Cl'
-       diagId = 'Loss' // TRIM( TAGGED_CH4_NAMES(N) ) // 'byCl'
+       diagId = 'Loss' // TRIM( TAGGED_CH4_NAMES(T) ) // 'byCl'
        CALL Registry_AddField(                                               &
             Input_Opt      = Input_Opt,                                      &
             Registry       = State_Diag%Registry,                            &
@@ -1676,9 +1699,9 @@ CONTAINS
           RETURN
        ENDIF
 
-       diagDesc = 'Loss of ' // TRIM( TAGGED_CH4_NAMES(N) ) //              &
+       diagDesc = 'Loss of ' // TRIM( TAGGED_CH4_NAMES(T) ) //              &
                   ' by reaction with O(1D)'
-       diagId = 'Loss' // TRIM( TAGGED_CH4_NAMES(N) ) // 'byO1D'
+       diagId = 'Loss' // TRIM( TAGGED_CH4_NAMES(T) ) // 'byO1D'
        CALL Registry_AddField(                                               &
             Input_Opt      = Input_Opt,                                      &
             Registry       = State_Diag%Registry,                            &
@@ -1694,9 +1717,9 @@ CONTAINS
           RETURN
        ENDIF
 
-       diagDesc = 'Loss of ' // TRIM( TAGGED_CH4_NAMES(N) ) //              &
+       diagDesc = 'Loss of ' // TRIM( TAGGED_CH4_NAMES(T) ) //              &
                   ' by soil uptake'
-       diagId = 'Loss' // TRIM( TAGGED_CH4_NAMES(N) ) // 'bySoil'
+       diagId = 'Loss' // TRIM( TAGGED_CH4_NAMES(T) ) // 'bySoil'
        CALL Registry_AddField(                                               &
             Input_Opt      = Input_Opt,                                      &
             Registry       = State_Diag%Registry,                            &
@@ -2789,6 +2812,8 @@ CONTAINS
     State_Diag%Archive_LossTaggedCH4byO1D        = .FALSE.
     State_Diag%LossTaggedCH4bySoil               => NULL()
     State_Diag%Archive_LossTaggedCH4bySoil       = .FALSE.
+    State_Diag%nTaggedCH4                         = 0
+    State_Diag%TaggedCH4KppIndex                  => NULL()
 
     State_Diag%LossCObyOH                        => NULL()
     State_Diag%Archive_LossCObyOH                = .FALSE.
@@ -14223,6 +14248,13 @@ CONTAINS
                    Ptr2Data = State_Diag%LossTaggedCH4bySoil,               &
                    RC       = RC                                            )
     IF ( RC /= GC_SUCCESS ) RETURN
+
+    IF ( ASSOCIATED( State_Diag%TaggedCH4KppIndex ) ) THEN
+       DEALLOCATE( State_Diag%TaggedCH4KppIndex, STAT=RC )
+       CALL GC_CheckVar( 'State_Diag%TaggedCH4KppIndex', 2, RC )
+       IF ( RC /= GC_SUCCESS ) RETURN
+    ENDIF
+    State_Diag%nTaggedCH4 = 0
 
     CALL Finalize( diagId   = 'LossCObyOH',                                  &
                    Ptr2Data = State_Diag%LossCObyOH,                         &

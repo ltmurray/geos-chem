@@ -248,7 +248,25 @@ elif [[ "x${sim_name}" == "xoxidants" ]]; then
 	if [[ "x${prompt}" == "x1" ]]; then
 	    sim_extra_option="none"
 	elif [[ "x${prompt}" == "x2" ]]; then
-	    sim_extra_option="CH4"
+	    printf "${thinline}Choose CH4 simulation type:${thinline}"
+	    printf "  1. Total CH4 only\n"
+	    printf "  2. Total CH4 plus sector tracers\n"
+	    printf "  3. Total CH4 plus regional tracers\n"
+	    valid_ch4=0
+	    while [ "${valid_ch4}" -eq 0 ]; do
+		read -p "${USER_PROMPT}" ch4_prompt
+		valid_ch4=1
+		if [[ "x${ch4_prompt}" == "x1" ]]; then
+		    sim_extra_option="CH4"
+		elif [[ "x${ch4_prompt}" == "x2" ]]; then
+		    sim_extra_option="CH4_SECTORS"
+		elif [[ "x${ch4_prompt}" == "x3" ]]; then
+		    sim_extra_option="CH4_REGIONS"
+		else
+		    valid_ch4=0
+		    printf "Invalid selection. Try again.\n"
+		fi
+	    done
 	elif [[ "x${prompt}" == "x3" ]]; then
 	    sim_extra_option="CO"
 	else

@@ -47,44 +47,94 @@ MODULE oxidants_Funcs
   ! Species ID flags
   INTEGER  :: id_CH4
   INTEGER  :: id_CO
-  INTEGER, PARAMETER :: N_TAGGED_CH4 = 14
-  INTEGER            :: id_CH4_sector(N_TAGGED_CH4)
+  INTEGER, PARAMETER :: N_TAGGED_CH4 = 39
+  INTEGER            :: id_CH4_tagged(N_TAGGED_CH4)
 
   CHARACTER(LEN=7), PARAMETER :: TAGGED_CH4_NAMES(N_TAGGED_CH4) = (/       &
        'CH4_OIL', 'CH4_GAS', 'CH4_COL', 'CH4_LIV', 'CH4_LDF', 'CH4_WST', &
        'CH4_RIC', 'CH4_OTA', 'CH4_BBN', 'CH4_WTL', 'CH4_SEE', 'CH4_LAK', &
-       'CH4_TER', 'CH4_RES' /)
+       'CH4_TER', 'CH4_RES', &
+       'CH4_USA', 'CH4_CAN', 'CH4_MEX', 'CH4_CAC', 'CH4_BRA', 'CH4_NSA', &
+       'CH4_SCN', 'CH4_WEU', 'CH4_EEU', 'CH4_RUS', 'CH4_MDE', 'CH4_NAF', &
+       'CH4_WAF', 'CH4_CAF', 'CH4_EAF', 'CH4_SIO', 'CH4_SAC', 'CH4_CAS', &
+       'CH4_IND', 'CH4_SAS', 'CH4_CHN', 'CH4_EAS', 'CH4_SEA', 'CH4_OCE', &
+       'CH4_ROW' /)
 
-  INTEGER, PARAMETER :: ind_CH4_sector(N_TAGGED_CH4) = (/                  &
+  INTEGER, PARAMETER :: ind_CH4_tagged(N_TAGGED_CH4) = (/                  &
        ind_CH4_OIL, ind_CH4_GAS, ind_CH4_COL, &
        ind_CH4_LIV, ind_CH4_LDF, ind_CH4_WST, &
        ind_CH4_RIC, ind_CH4_OTA, ind_CH4_BBN, &
        ind_CH4_WTL, ind_CH4_SEE, ind_CH4_LAK, &
-       ind_CH4_TER, ind_CH4_RES /)
-  INTEGER, PARAMETER :: ind_LCH4_sector_byOH(N_TAGGED_CH4) = (/             &
+       ind_CH4_TER, ind_CH4_RES, &
+       ind_CH4_USA, ind_CH4_CAN, ind_CH4_MEX, &
+       ind_CH4_CAC, ind_CH4_BRA, ind_CH4_NSA, &
+       ind_CH4_SCN, ind_CH4_WEU, ind_CH4_EEU, &
+       ind_CH4_RUS, ind_CH4_MDE, ind_CH4_NAF, &
+       ind_CH4_WAF, ind_CH4_CAF, ind_CH4_EAF, &
+       ind_CH4_SIO, ind_CH4_SAC, ind_CH4_CAS, &
+       ind_CH4_IND, ind_CH4_SAS, ind_CH4_CHN, &
+       ind_CH4_EAS, ind_CH4_SEA, ind_CH4_OCE, &
+       ind_CH4_ROW /)
+  INTEGER, PARAMETER :: ind_LCH4_tagged_byOH(N_TAGGED_CH4) = (/             &
        ind_LCH4_OILbyOH, ind_LCH4_GASbyOH, ind_LCH4_COLbyOH, &
        ind_LCH4_LIVbyOH, ind_LCH4_LDFbyOH, ind_LCH4_WSTbyOH, &
        ind_LCH4_RICbyOH, ind_LCH4_OTAbyOH, ind_LCH4_BBNbyOH, &
        ind_LCH4_WTLbyOH, ind_LCH4_SEEbyOH, ind_LCH4_LAKbyOH, &
-       ind_LCH4_TERbyOH, ind_LCH4_RESbyOH /)
-  INTEGER, PARAMETER :: ind_LCH4_sector_byCl(N_TAGGED_CH4) = (/             &
+       ind_LCH4_TERbyOH, ind_LCH4_RESbyOH, &
+       ind_LCH4_USAbyOH, ind_LCH4_CANbyOH, ind_LCH4_MEXbyOH, &
+       ind_LCH4_CACbyOH, ind_LCH4_BRAbyOH, ind_LCH4_NSAbyOH, &
+       ind_LCH4_SCNbyOH, ind_LCH4_WEUbyOH, ind_LCH4_EEUbyOH, &
+       ind_LCH4_RUSbyOH, ind_LCH4_MDEbyOH, ind_LCH4_NAFbyOH, &
+       ind_LCH4_WAFbyOH, ind_LCH4_CAFbyOH, ind_LCH4_EAFbyOH, &
+       ind_LCH4_SIObyOH, ind_LCH4_SACbyOH, ind_LCH4_CASbyOH, &
+       ind_LCH4_INDbyOH, ind_LCH4_SASbyOH, ind_LCH4_CHNbyOH, &
+       ind_LCH4_EASbyOH, ind_LCH4_SEAbyOH, ind_LCH4_OCEbyOH, &
+       ind_LCH4_ROWbyOH /)
+  INTEGER, PARAMETER :: ind_LCH4_tagged_byCl(N_TAGGED_CH4) = (/             &
        ind_LCH4_OILbyCl, ind_LCH4_GASbyCl, ind_LCH4_COLbyCl, &
        ind_LCH4_LIVbyCl, ind_LCH4_LDFbyCl, ind_LCH4_WSTbyCl, &
        ind_LCH4_RICbyCl, ind_LCH4_OTAbyCl, ind_LCH4_BBNbyCl, &
        ind_LCH4_WTLbyCl, ind_LCH4_SEEbyCl, ind_LCH4_LAKbyCl, &
-       ind_LCH4_TERbyCl, ind_LCH4_RESbyCl /)
-  INTEGER, PARAMETER :: ind_LCH4_sector_byO1D(N_TAGGED_CH4) = (/            &
+       ind_LCH4_TERbyCl, ind_LCH4_RESbyCl, &
+       ind_LCH4_USAbyCl, ind_LCH4_CANbyCl, ind_LCH4_MEXbyCl, &
+       ind_LCH4_CACbyCl, ind_LCH4_BRAbyCl, ind_LCH4_NSAbyCl, &
+       ind_LCH4_SCNbyCl, ind_LCH4_WEUbyCl, ind_LCH4_EEUbyCl, &
+       ind_LCH4_RUSbyCl, ind_LCH4_MDEbyCl, ind_LCH4_NAFbyCl, &
+       ind_LCH4_WAFbyCl, ind_LCH4_CAFbyCl, ind_LCH4_EAFbyCl, &
+       ind_LCH4_SIObyCl, ind_LCH4_SACbyCl, ind_LCH4_CASbyCl, &
+       ind_LCH4_INDbyCl, ind_LCH4_SASbyCl, ind_LCH4_CHNbyCl, &
+       ind_LCH4_EASbyCl, ind_LCH4_SEAbyCl, ind_LCH4_OCEbyCl, &
+       ind_LCH4_ROWbyCl /)
+  INTEGER, PARAMETER :: ind_LCH4_tagged_byO1D(N_TAGGED_CH4) = (/            &
        ind_LCH4_OILbyO1D, ind_LCH4_GASbyO1D, ind_LCH4_COLbyO1D, &
        ind_LCH4_LIVbyO1D, ind_LCH4_LDFbyO1D, ind_LCH4_WSTbyO1D, &
        ind_LCH4_RICbyO1D, ind_LCH4_OTAbyO1D, ind_LCH4_BBNbyO1D, &
        ind_LCH4_WTLbyO1D, ind_LCH4_SEEbyO1D, ind_LCH4_LAKbyO1D, &
-       ind_LCH4_TERbyO1D, ind_LCH4_RESbyO1D /)
-  INTEGER, PARAMETER :: ind_LCH4_sector_bySoil(N_TAGGED_CH4) = (/           &
+       ind_LCH4_TERbyO1D, ind_LCH4_RESbyO1D, &
+       ind_LCH4_USAbyO1D, ind_LCH4_CANbyO1D, ind_LCH4_MEXbyO1D, &
+       ind_LCH4_CACbyO1D, ind_LCH4_BRAbyO1D, ind_LCH4_NSAbyO1D, &
+       ind_LCH4_SCNbyO1D, ind_LCH4_WEUbyO1D, ind_LCH4_EEUbyO1D, &
+       ind_LCH4_RUSbyO1D, ind_LCH4_MDEbyO1D, ind_LCH4_NAFbyO1D, &
+       ind_LCH4_WAFbyO1D, ind_LCH4_CAFbyO1D, ind_LCH4_EAFbyO1D, &
+       ind_LCH4_SIObyO1D, ind_LCH4_SACbyO1D, ind_LCH4_CASbyO1D, &
+       ind_LCH4_INDbyO1D, ind_LCH4_SASbyO1D, ind_LCH4_CHNbyO1D, &
+       ind_LCH4_EASbyO1D, ind_LCH4_SEAbyO1D, ind_LCH4_OCEbyO1D, &
+       ind_LCH4_ROWbyO1D /)
+  INTEGER, PARAMETER :: ind_LCH4_tagged_bySoil(N_TAGGED_CH4) = (/           &
        ind_LCH4_OILbySoil, ind_LCH4_GASbySoil, ind_LCH4_COLbySoil, &
        ind_LCH4_LIVbySoil, ind_LCH4_LDFbySoil, ind_LCH4_WSTbySoil, &
        ind_LCH4_RICbySoil, ind_LCH4_OTAbySoil, ind_LCH4_BBNbySoil, &
        ind_LCH4_WTLbySoil, ind_LCH4_SEEbySoil, ind_LCH4_LAKbySoil, &
-       ind_LCH4_TERbySoil, ind_LCH4_RESbySoil /)
+       ind_LCH4_TERbySoil, ind_LCH4_RESbySoil, &
+       ind_LCH4_USAbySoil, ind_LCH4_CANbySoil, ind_LCH4_MEXbySoil, &
+       ind_LCH4_CACbySoil, ind_LCH4_BRAbySoil, ind_LCH4_NSAbySoil, &
+       ind_LCH4_SCNbySoil, ind_LCH4_WEUbySoil, ind_LCH4_EEUbySoil, &
+       ind_LCH4_RUSbySoil, ind_LCH4_MDEbySoil, ind_LCH4_NAFbySoil, &
+       ind_LCH4_WAFbySoil, ind_LCH4_CAFbySoil, ind_LCH4_EAFbySoil, &
+       ind_LCH4_SIObySoil, ind_LCH4_SACbySoil, ind_LCH4_CASbySoil, &
+       ind_LCH4_INDbySoil, ind_LCH4_SASbySoil, ind_LCH4_CHNbySoil, &
+       ind_LCH4_EASbySoil, ind_LCH4_SEAbySoil, ind_LCH4_OCEbySoil, &
+       ind_LCH4_ROWbySoil /)
 
 #ifdef JACOBIAN
   ! Jacobian CH4 tracers
@@ -158,8 +208,8 @@ CONTAINS
     ENDIF
 
     DO N = 1, N_TAGGED_CH4
-       IF ( id_CH4_sector(N) > 0 ) THEN
-          C(ind_CH4_sector(N)) = Spc(id_CH4_sector(N))%Conc(I,J,L)           &
+       IF ( id_CH4_tagged(N) > 0 ) THEN
+          C(ind_CH4_tagged(N)) = Spc(id_CH4_tagged(N))%Conc(I,J,L)           &
                                 * xnumol_CH4 / airvol_cm3
        ENDIF
     ENDDO
@@ -330,8 +380,8 @@ CONTAINS
     ENDIF
 
     DO N = 1, N_TAGGED_CH4
-       IF ( id_CH4_sector(N) > 0 ) THEN
-          Spc(id_CH4_sector(N))%Conc(I,J,L) = C(ind_CH4_sector(N))           &
+       IF ( id_CH4_tagged(N) > 0 ) THEN
+          Spc(id_CH4_tagged(N))%Conc(I,J,L) = C(ind_CH4_tagged(N))           &
                                              * airvol_cm3 / xnumol_CH4
        ENDIF
     ENDDO
@@ -540,7 +590,7 @@ CONTAINS
 !
 ! !IROUTINE: oxidants_get_taggedch4_loss
 !
-! !DESCRIPTION: Returns a sector-tagged CH4 loss rate for one chemical
+! !DESCRIPTION: Returns a tagged CH4 loss rate for one chemical
 ! pathway.  Pathways 1--4 denote OH, Cl, O(1D), and soil uptake.
 !\
 !\
@@ -551,7 +601,7 @@ CONTAINS
 !
 ! !INPUT PARAMETERS:
 !
-    INTEGER,  INTENT(IN) :: tag          ! Sector tag index
+    INTEGER,  INTENT(IN) :: tag          ! Compiled tag index
     INTEGER,  INTENT(IN) :: pathway      ! Chemical loss pathway
     REAL(dp), INTENT(IN) :: dtChem       ! Chemistry timestep [s]
     REAL(dp), INTENT(IN) :: airvol_m3    ! Grid-box volume [m3]
@@ -571,13 +621,13 @@ CONTAINS
     IF ( tag >= 1 .and. tag <= N_TAGGED_CH4 ) THEN
        SELECT CASE ( pathway )
           CASE ( 1 )
-             KppId = ind_LCH4_sector_byOH(tag)
+             KppId = ind_LCH4_tagged_byOH(tag)
           CASE ( 2 )
-             KppId = ind_LCH4_sector_byCl(tag)
+             KppId = ind_LCH4_tagged_byCl(tag)
           CASE ( 3 )
-             KppId = ind_LCH4_sector_byO1D(tag)
+             KppId = ind_LCH4_tagged_byO1D(tag)
           CASE ( 4 )
-             KppId = ind_LCH4_sector_bySoil(tag)
+             KppId = ind_LCH4_tagged_bySoil(tag)
        END SELECT
     ENDIF
 
@@ -807,7 +857,7 @@ CONTAINS
     id_CH4      = Ind_('CH4')
     id_CO       = Ind_('CO' )
     DO N = 1, N_TAGGED_CH4
-       id_CH4_sector(N) = Ind_( TRIM( TAGGED_CH4_NAMES(N) ), 'A' )
+       id_CH4_tagged(N) = Ind_( TRIM( TAGGED_CH4_NAMES(N) ), 'A' )
     ENDDO
 
     ! Set kg species / molec species

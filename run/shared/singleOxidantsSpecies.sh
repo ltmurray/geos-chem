@@ -27,6 +27,17 @@ ALL_SPECIES=(CO CH4)
 CH4_SECTOR_SPECIES=(CH4_OIL CH4_GAS CH4_COL CH4_LIV CH4_LDF CH4_WST CH4_RIC \
                     CH4_OTA CH4_BBN CH4_WTL CH4_SEE CH4_LAK CH4_TER CH4_RES)
 
+# CH4 tracers used to separate emissions by source region
+CH4_REGION_CODES=(USA CAN MEX CAC BRA NSA SCN WEU \
+                  EEU RUS MDE NAF WAF CAF EAF SIO \
+                  SAC CAS IND SAS CHN EAS SEA OCE \
+                  ROW)
+CH4_REGION_SPECIES=(CH4_USA CH4_CAN CH4_MEX CH4_CAC CH4_BRA CH4_NSA \
+                    CH4_SCN CH4_WEU CH4_EEU CH4_RUS CH4_MDE CH4_NAF \
+                    CH4_WAF CH4_CAF CH4_EAF CH4_SIO CH4_SAC CH4_CAS \
+                    CH4_IND CH4_SAS CH4_CHN CH4_EAS CH4_SEA CH4_OCE \
+                    CH4_ROW)
+
 
 function isItemInList() {
 
@@ -339,7 +350,16 @@ function setupTaggedCH4Sectors() {
     # Add the source-sector tracers after total CH4.
     for ((n=${#CH4_SECTOR_SPECIES[@]}-1; n>=0; n--)); do
         spc="${CH4_SECTOR_SPECIES[n]}"
-        sed -i "/      - CH4$/a\\      - ${spc}" "${config}"
+        awk -v spc="${spc}" '
+            !done && $0 == "      - CH4" {
+                print
+                print "      - " spc
+                done = 1
+                next
+            }
+            { print }
+        ' "${config}" > "${config}.tmp"
+        mv "${config}.tmp" "${config}"
     done
 
     # Add allocation factors for combined Canadian oil-and-gas emissions.
@@ -441,6 +461,117 @@ function setupTaggedCH4Sectors() {
 }
 
 
+function setupTaggedCH4Regions() {
+
+    #========================================================================
+    # Adds region-tagged CH4 tracers to a CH4-only oxidants simulation.
+    # Total CH4 remains an independent tracer for closure checks.  Regional
+    # fractions are HEMCO scale factors so fractional coastal cells are
+    # retained; HEMCO mask entries would round those fractions to zero or one.
+    #
+    # Arguments:
+    # ${1} : Path to the run directory
+    #========================================================================
+
+    rundir="${1}"
+    config="${rundir}/geoschem_config.yml"
+    hemco="${rundir}/HEMCO_Config.rc"
+    diagn="${rundir}/HEMCO_Diagn.rc"
+    history="${rundir}/HISTORY.rc"
+    maskFile='$ROOT/MASKS/v2026-11/PrescribedOxidants_Regions_0.05x0.05_v2026-11.nc4'
+
+    # Add the source-region tracers after total CH4.
+    for ((n=${#CH4_REGION_SPECIES[@]}-1; n>=0; n--)); do
+        spc="${CH4_REGION_SPECIES[n]}"
+        awk -v spc="${spc}" '
+            !done && $0 == "      - CH4" {
+                print
+                print "      - " spc
+                done = 1
+                next
+            }
+            { print }
+        ' "${config}" > "${config}.tmp"
+        mv "${config}.tmp" "${config}"
+    done
+
+    # Add one gridded scale factor for each region.  The variables in the
+    # source file are mutually exclusive fractional areas that sum to one.
+    awk -v codes="${CH4_REGION_CODES[*]}" -v mask="${maskFile}" '
+        {
+            print
+            if ($1 == "1" && $2 == "NEGATIVE") {
+                print "# Prescribed Oxidants regional emission fractions"
+                nRegion = split(codes, region)
+                for (n = 1; n <= nRegion; n++) {
+                    printf "%d CH4_REGION_%s_SF %s %s 2000/1/1/0 C xy 1 1\n", \
+                           4000+n, region[n], mask, region[n]
+                }
+            }
+        }
+    ' "${hemco}" > "${hemco}.tmp"
+    mv "${hemco}.tmp" "${hemco}"
+
+    # Duplicate each total-CH4 base-emission line for every region and append
+    # the corresponding fractional-area scale factor.  Apply the same logic
+    # to the default GFAS CH4 field supplied through extension 112.
+    awk -v codes="${CH4_REGION_CODES[*]}" '
+        function addScale(base, scale) {
+            if (base == "-") return scale
+            return base "/" scale
+        }
+        {
+            print
+            nRegion = split(codes, region)
+            if ($1 == "112" && $2 == "GFAS_CH4_2D") {
+                baseName = $2
+                baseScale = $(NF-2)
+                for (i = 1; i <= nRegion; i++) {
+                    $2 = "GFAS_CH4_" region[i] "_2D"
+                    $(NF-2) = addScale(baseScale, 4000+i)
+                    print
+                }
+                next
+            }
+            if ($1 != "0") next
+            target = ""
+            for (n = 3; n <= NF; n++) {
+                if ($n == "CH4") target = n
+            }
+            if (target == "") next
+            baseName = $2
+            baseScale = $(target+1)
+            for (i = 1; i <= nRegion; i++) {
+                $2 = baseName "_REG_" region[i]
+                $target = "CH4_" region[i]
+                $(target+1) = addScale(baseScale, 4000+i)
+                print
+            }
+        }
+    ' "${hemco}" > "${hemco}.tmp"
+    mv "${hemco}.tmp" "${hemco}"
+
+    # Allow GFAS to route the region-specific fields to their tracers.  GFED
+    # remains unchanged because its internally generated emissions cannot use
+    # external HEMCO scale factors; the standard oxidants setup uses GFAS.
+    regionList=""
+    for spc in "${CH4_REGION_SPECIES[@]}"; do
+        regionList+="${spc}/"
+    done
+    sed -i "/^112[[:space:]]*GFAS/s|CH4/CO|CH4/${regionList}CO|" "${hemco}"
+
+    # Archive each regional emission flux and its four chemical-loss pathways.
+    for spc in "${CH4_REGION_SPECIES[@]}"; do
+        printf "Emis%s_Total  %s  -1  -1  -1  2  kg/m2/s  %s_emissions_from_all_sources\n" \
+               "${spc}" "${spc}" "${spc}" >> "${diagn}"
+        sed -i "/'LossCH4bySoil/a\\                             'Loss${spc}bySoil               '," "${history}"
+        sed -i "/'LossCH4byO1D/a\\                             'Loss${spc}byO1D                '," "${history}"
+        sed -i "/'LossCH4byCl/a\\                             'Loss${spc}byCl                 '," "${history}"
+        sed -i "/'LossCH4byOH/a\\                             'Loss${spc}byOH                 '," "${history}"
+    done
+}
+
+
 function singleOxidantsSpecies() {
 
     #========================================================================
@@ -465,7 +596,8 @@ function singleOxidantsSpecies() {
     fi
 
     # Get species to include/exclude
-    if [[ "x${1}" == "xCH4_SECTORS" ]]; then
+    if [[ "x${1}" == "xCH4_SECTORS" ]] || \
+       [[ "x${1}" == "xCH4_REGIONS" ]]; then
         include="CH4"
     else
         include=${1}
@@ -481,5 +613,7 @@ function singleOxidantsSpecies() {
 
     if [[ "x${1}" == "xCH4_SECTORS" ]]; then
         setupTaggedCH4Sectors "${rundir}"
+    elif [[ "x${1}" == "xCH4_REGIONS" ]]; then
+        setupTaggedCH4Regions "${rundir}"
     fi
 }
