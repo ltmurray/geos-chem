@@ -6,9 +6,7 @@
 ! !MODULE: offline_oxidants_mod.F90
 !
 ! !DESCRIPTION: Module OFFLINE_OXIDANTS_MOD contains variables and routines
-! for simulating CH4, CO, CO2, and OCS with an online calculation of the
-! chemistry between them using KPP. It was adapted directly from code
-! provided by Beata Bukosa.
+! for simulating gases whose chemistry is driven by prescribed oxidants.
 !\\
 !\\
 ! !INTERFACE:
@@ -27,7 +25,6 @@ MODULE Offline_Oxidants_Mod
 !
 ! !PUBLIC MEMBER FUNCTIONS:
 !
-  PUBLIC :: Offline_Oxidants_CO2_Production
   PUBLIC :: Run_Offline_Oxidants
   PUBLIC :: Init_Offline_Oxidants
   PUBLIC :: Cleanup_Offline_Oxidants
@@ -46,9 +43,8 @@ MODULE Offline_Oxidants_Mod
   LOGICAL               :: useGlobOHbmk10yr
   LOGICAL               :: useGlobOHv5
   INTEGER               :: id_CH4,     id_CH4_adv, id_CO,      id_CO_adv
-  INTEGER               :: id_CO2,     id_CO2_adv, id_OCS,     id_OCS_adv
   INTEGER               :: id_OH
-  REAL(fp)              :: xnumol_CH4, xnumol_CO,  xnumol_CO2, xnumol_OH
+  REAL(fp)              :: xnumol_CH4, xnumol_CO,  xnumol_OH
 
   ! Arrays
   REAL(fp), ALLOCATABLE :: sumOfCosSza(:,:)
@@ -61,192 +57,6 @@ MODULE Offline_Oxidants_Mod
   REAL(fp), PARAMETER   :: toMolecCm3  = ( AVO / AIRMW ) * 1.0e-3_fp
 
 CONTAINS
-!EOC
-!------------------------------------------------------------------------------
-!                  GEOS-Chem Global Chemical Transport Model                  !
-!------------------------------------------------------------------------------
-!BOP
-!
-! !IROUTINE: co2_production
-!
-! !DESCRIPTION: Places CO2 production from CO oxidation into the chemical
-!  species array.
-!\\
-!\\
-! !INTERFACE:
-!
-  SUBROUTINE Offline_Oxidants_CO2_Production( Input_Opt,  State_Chm, State_Diag,            &
-                             State_Grid, State_Met, RC                    )
-!
-! !USES:
-!
-    USE HCO_State_Mod,        ONLY : Hco_GetHcoId
-    USE HCO_State_GC_Mod,     ONLY : HcoState
-    USE HCO_Utilities_GC_Mod, ONLY : HCO_GC_EvalFld
-    USE HCO_Utilities_GC_Mod, ONLY : HCO_GC_GetDiagn
-    USE ErrCode_Mod
-    USE Input_Opt_Mod,        ONLY : OptInput
-    USE Species_Mod,          ONLY : SpcConc
-    USE State_Chm_Mod,        ONLY : ChmState
-    USE State_Diag_Mod,       ONLY : DgnState
-    USE State_Grid_Mod,       ONLY : GrdState
-    USE State_Met_Mod,        ONLY : MetState
-!
-! !INPUT PARAMETERS:
-!
-    TYPE(OptInput), INTENT(IN)    :: Input_Opt   ! Input Options object
-    TYPE(MetState), INTENT(IN)    :: State_Met   ! Meteorology State object
-    TYPE(GrdState), INTENT(IN)    :: State_Grid  ! Grid State object
-!
-! !INPUT PARAMETERS:
-!
-    TYPE(ChmState), INTENT(INOUT) :: State_Chm   ! Chemistry State object
-    TYPE(DgnState), INTENT(INOUT) :: State_Diag  ! Diagnostics State object
-!
-! !OUTPUT PARAMETERS:
-!
-    INTEGER,        INTENT(OUT)   :: RC          ! Success or failure?
-!EOP
-!------------------------------------------------------------------------------
-!BOC
-!
-! !LOCAL VARIABLES:
-!
-    ! SAVEd scalars
-    LOGICAL, SAVE          :: FIRST = .TRUE.
-
-    ! Scalars
-    LOGICAL                :: prtDebug
-    INTEGER                :: I,        J
-    INTEGER                :: L,        N
-    REAL(fp)               :: dtSrce,   P_CO2
-
-    ! Strings
-    CHARACTER(LEN=255)     :: thisLoc
-    CHARACTER(LEN=512)     :: errMsg
-
-    ! Arrays
-    REAL(hp)               :: CH4scale(N_CH4_DIAGS)
-    REAL(fp)               :: PCO2_fr_CO(                                    &
-                               State_Grid%NX,                                &
-                               State_Grid%NY,                                &
-                               State_Grid%NZ)
-
-    ! String arrays
-    CHARACTER(LEN=15)      :: CH4diag(N_CH4_DIAGS)
-
-    ! Pointers
-    TYPE(SpcConc), POINTER :: Spc(:)
-    REAL(f4),      POINTER :: Ptr2D(:,:)
-!
-! !DEFINED PARAMETERS:
-!
-    ! Molecules C per kg C
-    REAL(fp),    PARAMETER :: xnumol_C = AVO / 12.0e-3_fp
-
-    !========================================================================
-    ! Offline_Oxidants_CO2_Production begins here!
-    !========================================================================
-
-    ! Initialize
-    RC       =  GC_SUCCESS
-    Ptr2D    => NULL()
-    Spc      => NULL()
-    errMsg   =  ''
-    thisLoc  =  &
-     ' -> at CO2_production (in module GeosCore/offline_oxidants_mod.F90)'
-
-    ! Exit with error if we can't find the HEMCO state object
-    IF ( .NOT. ASSOCIATED( HcoState ) ) THEN
-       errMsg = 'The HcoState object is undefined!'
-       CALL GC_Error( errMsg, RC, thisLoc )
-       RETURN
-    ENDIF
-
-    ! Emission timestep
-    dtSrce = HcoState%TS_EMIS
-
-    !========================================================================
-    ! CO2 production from CO oxidation
-    !========================================================================
-
-    ! Use CO2_COPROD field instead of computing CO2 production in KPP
-    ! (the latter slows down the CO2 chemistry and produced differences
-    !  that need to be evaluated by the Carbon Gases Working Group)
-    IF ( id_CO2_adv > 0 ) THEN
-
-       IF ( Input_Opt%amIRoot .and. FIRST ) THEN
-          WRITE( 6, 100 )
-100       FORMAT( 'Offline_Oxidants: Applying production of CO2 from CO from file')
-       ENDIF
-
-       ! Point to chemical species array [kg/kg dry air]
-       Spc => State_Chm%Species
-
-       ! Evalulate the CO2 production from HEMCO
-       CALL HCO_GC_EvalFld( Input_Opt,  State_Grid, 'CO2_COPROD',            &
-                            PCO2_fr_CO, RC )
-       IF ( RC /= GC_SUCCESS ) THEN
-          errMsg = 'CO_COPROD not found in HEMCO data list!'
-          CALL GC_Error( errMsg, RC, thisLoc )
-          RETURN
-       ENDIF
-
-       ! Loop over all grid boxes
-       !$OMP PARALLEL DO                                                     &
-       !$OMP DEFAULT( SHARED                                                )&
-       !$OMP PRIVATE( I, J, L, P_CO2, N                                     )&
-       !$OMP COLLAPSE( 3                                                    )
-       DO L = 1, State_Grid%NZ
-       DO J = 1, State_Grid%NY
-       DO I = 1, State_Grid%NX
-
-          ! Production is in [kg C/m3], convert to [molec/cm2/s]
-          P_CO2 = PCO2_fr_CO(I,J,L)                       & ! kg/m3
-                  / CM3perM3                              & ! => kg/cm3
-                  * xnumol_C                              & ! => molec/cm3
-                  / dtSrce                                & ! => molec/cm3/s
-                  * State_Met%BXHEIGHT(I,J,L) * 100.0_fp    ! => molec/cm2/s
-
-          !------------------------------------------------------------------
-          ! %%%%% HISTORY (aka netCDF diagnostics) %%%%%
-          !
-          ! Save production of CO2 from CO oxidation [kg/m2/s]
-          !------------------------------------------------------------------
-          IF ( State_Diag%Archive_ProdCO2fromCO ) THEN
-             State_Diag%ProdCO2fromCO(I,J,L) = P_CO2       & ! molec/cm2/s
-                                             / xnumol_CO2  & ! => kg/cm2/s
-                                             * CM2perM2      ! => kg/m2/s
-
-          ENDIF
-
-          ! Convert emissions from [molec/cm2/s] to [kg/kg dry air]
-          ! (ewl, 9/11/15)
-          P_CO2  =  P_CO2 * DTSRCE * CM2perM2 /                              &
-                    ( XNUMOL_CO2 * State_Met%DELP(I,J,L)                     &
-                    * G0_100 * ( 1.0e+0_fp                                   &
-                    - State_Met%SPHU(I,J,L) * 1.0e-3_fp )                   )
-
-          ! Total CO2 [kg/kg dry air]
-          Spc(id_CO2)%Conc(I,J,L) = Spc(id_CO2)%Conc(I,J,L) + P_CO2
-
-       ENDDO
-       ENDDO
-       ENDDO
-       !$OMP END PARALLEL DO
-
-       ! Free pointer
-       Spc => NULL()
-    ENDIF
-
-    ! Reset first-time flag
-    FIRST = .FALSE.
-
-    ! Free pointers for safety's sake
-    Spc   => NULL()
-    Ptr2D => NULL()
-
-  END SUBROUTINE Offline_Oxidants_CO2_Production
 !EOC
 !------------------------------------------------------------------------------
 !                  GEOS-Chem Global Chemical Transport Model                  !
@@ -937,7 +747,6 @@ CONTAINS
     RC         = GC_SUCCESS
     xnumol_CH4 = 1.0_fp
     xnumol_CO  = 1.0_fp
-    xnumol_CO2 = 1.0_fp
     xnumol_OH  = 1.0_fp
     errMsg     = ''
     thisLoc    = &
@@ -962,10 +771,6 @@ CONTAINS
     id_CH4_adv    = Ind_( 'CH4',   'A' )
     id_CO         = Ind_( 'CO'         )
     id_CO_adv     = Ind_( 'CO',    'A' )
-    id_CO2        = Ind_( 'CO2'        )
-    id_CO2_adv    = Ind_( 'CO2',   'A' )
-    id_OCS        = Ind_( 'OCS'        )
-    id_OCS_adv    = Ind_( 'OCS',   'A' )
     id_OH         = Ind_( 'FixedOH'    )
 
     ! Define xnumol factors = molec/kg ratios
@@ -974,8 +779,6 @@ CONTAINS
        xnumol_CH4 = AVO / ( State_Chm%SpcData(id_CH4)%Info%MW_g * 1.0e-3_fp )
     IF ( id_CO  > 0 ) &
        xnumol_CO  = AVO / ( State_Chm%SpcData(id_CO )%Info%MW_g * 1.0e-3_fp )
-    IF ( id_CO2 > 0 ) &
-       xnumol_CO2 = AVO / ( State_Chm%SpcData(id_CO2)%Info%MW_g * 1.0e-3_fp )
     IF ( id_OH  > 0 ) &
        xnumol_OH  = AVO / ( State_Chm%SpcData(id_OH )%Info%MW_g * 1.0e-3_fp )
 
@@ -983,7 +786,7 @@ CONTAINS
     ! Initialize module variables in oxidants_Funcs (in KPP)
     !========================================================================
     IF ( (id_CH4 > 0) .OR. (id_CO > 0) ) THEN
-       CALL oxidants_InitKPPFuncs( xnumol_CH4, xnumol_CO, xnumol_CO2, RC )
+       CALL oxidants_InitKPPFuncs( xnumol_CH4, xnumol_CO, RC )
        IF ( RC /= GC_SUCCESS ) THEN
           errMsg = 'Cannot initialize module variables in oxidants_InitCarbonChem'
           CALL GC_Error( errMsg, RC, thisLoc )
@@ -1019,7 +822,7 @@ CONTAINS
 ! !USES:
 !
     USE ErrCode_Mod
-    USE oxidants_Funcs,   ONLY : oxidants_CleanupCarbonKPPFuncs
+    USE oxidants_Funcs,   ONLY : oxidants_CleanupKPPFuncs
 !
 ! !OUTPUT PARAMETERS:
 !
@@ -1040,7 +843,7 @@ CONTAINS
        CALL GC_CheckVar( 'offline_oxidants_mod.F90:sumOfCosSza', 2, RC )
     ENDIF
 
-    CALL oxidants_CleanupCarbonKPPFuncs( RC )
+    CALL oxidants_CleanupKPPFuncs( RC )
 
   END SUBROUTINE Cleanup_Offline_Oxidants
 !EOC

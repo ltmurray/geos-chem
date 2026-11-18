@@ -30,7 +30,7 @@ MODULE oxidants_Funcs
   PUBLIC :: oxidants_ComputeRateConstants
   PUBLIC :: oxidants_ConvertMolecCm3ToKg
   PUBLIC :: oxidants_InitKPPFuncs
-  PUBLIC :: oxidants_CleanupCarbonKPPFuncs
+  PUBLIC :: oxidants_CleanupKPPFuncs
   PUBLIC :: oxidants_Get_COfromCH4_Flux
   PUBLIC :: oxidants_Get_COfromNMVOC_Flux
   PUBLIC :: oxidants_Get_CH4byOH_Loss
@@ -46,7 +46,6 @@ MODULE oxidants_Funcs
   ! Species ID flags
   INTEGER  :: id_CH4
   INTEGER  :: id_CO
-  INTEGER  :: id_CO2
 
 #ifdef JACOBIAN
   ! Jacobian CH4 tracers
@@ -57,7 +56,6 @@ MODULE oxidants_Funcs
   ! Kg species / molec species
   REAL(fp) :: xnumol_CH4
   REAL(fp) :: xnumol_CO
-  REAL(fp) :: xnumol_CO2
 
 CONTAINS
 !EOC
@@ -119,12 +117,6 @@ CONTAINS
     IF ( id_CO > 0 ) THEN
        C(ind_CO)  = Spc(id_CO)%Conc(I,J,L)  * xnumol_CO  / airvol_cm3
     ENDIF
-
-    ! Comment out for now - CO2 chemistry is done explicitly in
-    ! oxidants_gases_mod.F90
-    !IF ( id_CO2 > 0 ) THEN
-    !   C(ind_CO2) = Spc(id_CO2)%Conc(I,J,L) * xnumol_CO2 / airvol_cm3
-    !ENDIF
 
 #ifdef JACOBIAN
     ! Do the same for Jacobian CH4 tracers, if any
@@ -289,12 +281,6 @@ CONTAINS
        convfac_CO             = airvol_cm3 / xnumol_CO
        Spc(id_CO)%Conc(I,J,L) = C(ind_CO)  * convfac_CO
     ENDIF
-
-    ! Comment out for now - CO2 chemistry is done explicitly in
-    ! oxidants_gases_mod.F90
-    !IF ( id_CO2 > 0 ) THEN
-    !   Spc(id_CO2)%Conc(I,J,L) = C(ind_CO2) * airvol_cm3 / xnumol_CO2
-    !ENDIF
 
 #ifdef JACOBIAN
     ! Do the same for Jacobian CH4 tracers, if any
@@ -638,7 +624,7 @@ CONTAINS
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE oxidants_InitKPPFuncs( kgmolec_CH4, kgmolec_CO, kgmolec_CO2, RC )
+  SUBROUTINE oxidants_InitKPPFuncs( kgmolec_CH4, kgmolec_CO, RC )
 !
 ! !USES:
 !
@@ -649,7 +635,6 @@ CONTAINS
 !
     REAL(fp), INTENT(IN)  :: kgmolec_CH4   ! kg CH4 / molec CH4
     REAL(fp), INTENT(IN)  :: kgmolec_CO    ! kg CO  / molec CO
-    REAL(fp), INTENT(IN)  :: kgmolec_CO2   ! kg CO2 / molec CO2
 !
 ! !OUTPUT PARAMETERS:
 !
@@ -711,12 +696,10 @@ CONTAINS
     ! Define flags for species ID's
     id_CH4      = Ind_('CH4')
     id_CO       = Ind_('CO' )
-    id_CO2      = Ind_('CO2')
 
     ! Set kg species / molec species
     xnumol_CH4  = kgmolec_CH4
     xnumol_CO   = kgmolec_CO
-    xnumol_CO2  = kgmolec_CO2
 
   END SUBROUTINE oxidants_InitKPPFuncs
 !EOC
@@ -725,14 +708,14 @@ CONTAINS
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: oxidants_CleanupCarbonKPPFuncs
+! !IROUTINE: oxidants_CleanupKPPFuncs
 !
 ! !DESCRIPTION: Deallocates module arrays.
 !\\
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE oxidants_CleanupCarbonKPPFuncs( RC )
+  SUBROUTINE oxidants_CleanupKPPFuncs( RC )
 !
 ! !USES:
 !
@@ -749,7 +732,7 @@ CONTAINS
 !BOC
 
     !=================================================================
-    ! oxidants_CleanupCarbonKPPFuncs begins here!
+    ! oxidants_CleanupKPPFuncs begins here!
     !=================================================================
 
     ! Initialize
@@ -762,6 +745,6 @@ CONTAINS
     ENDIF
 #endif
 
-  END SUBROUTINE oxidants_CleanupCarbonKPPFuncs
+  END SUBROUTINE oxidants_CleanupKPPFuncs
 !EOC
 END MODULE oxidants_Funcs

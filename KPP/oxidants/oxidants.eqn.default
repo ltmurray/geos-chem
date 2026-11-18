@@ -3,8 +3,8 @@
 DESCRIPTION
 ===============================================================================
 
-GEOS-Chem KPP file containing species and equations for the carbon
-chemistry mechanism
+GEOS-Chem KPP file containing species and equations for the prescribed
+oxidants mechanism
 
 ===============================================================================
 FILE HISTORY
@@ -21,7 +21,6 @@ v14.1.0 (release TBD)
 #DEFVAR
 CH4         = IGNORE;  { Active methane species                   }
 CO          = IGNORE;  { Active carbon monoxide species           }
-CO2         = IGNORE;  { Active carbon dioxide species            }
 PCOfromCH4  = IGNORE;  { Tracks P(CO) from CH4   for diagnostics }
 PCOfromNMVOC= IGNORE;  { Tracks P(CO) from NMVOC for diagnostics }
 LCH4byOH    = IGNORE;  { Dummy spc to track loss of CH4 by OH     }

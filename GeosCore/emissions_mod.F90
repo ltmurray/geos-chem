@@ -124,9 +124,7 @@ CONTAINS
 ! !USES:
 !
     USE CARBON_MOD,            ONLY : EmissCarbon
-#ifdef IS_OXIDANTS_MECH
-    USE Offline_Oxidants_Mod, ONLY : Offline_CO2_Production => Offline_Oxidants_CO2_Production
-#else
+#ifndef IS_OXIDANTS_MECH
     USE Carbon_Gases_Mod,      ONLY : Offline_CO2_Production => CO2_Production
 #endif
     USE ErrCode_Mod
@@ -246,10 +244,9 @@ CONTAINS
        ENDIF
     ENDIF
 
-    ! Carbon simulation (e.g. CO2-CO-CH4-OCS via KPP)
-    !
-    ! Computes CO2 production from CO oxidation
-    IF ( Input_Opt%ITS_AN_OFFLINE_GAS_SIM ) THEN
+#ifndef IS_OXIDANTS_MECH
+    ! Compute CO2 production from CO oxidation in a carbon simulation
+    IF ( Input_Opt%ITS_A_CARBON_SIM ) THEN
        CALL Offline_CO2_Production( Input_Opt,  State_Chm, State_Diag,            &
                             State_Grid, State_Met, RC                    )
 
@@ -260,6 +257,7 @@ CONTAINS
           RETURN
        ENDIF
     ENDIF
+#endif
 
     ! For mercury, use old emissions code for now
     IF ( Input_Opt%ITS_A_MERCURY_SIM ) THEN

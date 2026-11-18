@@ -242,9 +242,8 @@ elif [[ ${sim_name} = "POPs" ]]; then
 	fi
     done
 
-# Ask user to specify carbon or oxidants simulation options
-elif [[ "x${sim_name}" == "xcarbon"   ||
-        "x${sim_name}" == "xoxidants" ]]; then
+# Ask user to specify carbon simulation options
+elif [[ "x${sim_name}" == "xcarbon" ]]; then
     printf "${thinline}Do you wish to use a single advected species?${thinline}"
     printf "  1. Use all species\n"
     printf "  2. Use CH4 only\n"
@@ -265,6 +264,28 @@ elif [[ "x${sim_name}" == "xcarbon"   ||
 	    sim_extra_option="CO"
 	elif [[ "x${prompt}" == "x5" ]]; then
 	    sim_extra_option="OCS"
+	else
+	    valid=0
+	    printf "Invalid selection. Try again.\n"
+	fi
+    done
+
+# Ask user to specify prescribed oxidants simulation options
+elif [[ "x${sim_name}" == "xoxidants" ]]; then
+    printf "${thinline}Do you wish to use a single advected species?${thinline}"
+    printf "  1. Use all species\n"
+    printf "  2. Use CH4 only\n"
+    printf "  3. Use CO only\n"
+    valid=0
+    while [ "${valid}" -eq 0 ]; do
+	read -p "${USER_PROMPT}" prompt
+	valid=1
+	if [[ "x${prompt}" == "x1" ]]; then
+	    sim_extra_option="none"
+	elif [[ "x${prompt}" == "x2" ]]; then
+	    sim_extra_option="CH4"
+	elif [[ "x${prompt}" == "x3" ]]; then
+	    sim_extra_option="CO"
 	else
 	    valid=0
 	    printf "Invalid selection. Try again.\n"

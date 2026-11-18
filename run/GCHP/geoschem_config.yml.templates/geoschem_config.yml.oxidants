@@ -35,8 +35,6 @@ operations:
     transported_species:
       - CH4
       - CO
-      - CO2
-      - OCS
 
 #============================================================================
 # Options for CH4
@@ -67,19 +65,6 @@ CO_options:
   use_fullchem_PCO_from_NMVOC: true
 
 #============================================================================
-# Options for CO2
-#============================================================================
-
-CO2_options:
-
-  sources:
-    3D_chemical_oxidation_source: true
-
-  tagged_species:
-    tag_bio_and_ocean_CO2: false
-    tag_land_fossil_fuel_CO2: false
-
-#============================================================================
 # Settings for diagnostics (other than HISTORY and HEMCO)
 #============================================================================
 extra_diagnostics:
@@ -87,12 +72,11 @@ extra_diagnostics:
   obspack:
     activate: false
     quiet_logfile_output: false
-    input_file: ./obspack_co2_1_OCO2MIP_2018-11-28.YYYYMMDD.nc
+    input_file: ./obspack_input_for_testing.YYYYMMDD.nc
     output_file: ./OutputDir/GEOSChem.ObsPack.YYYYMMDD_hhmmz.nc4
     output_species:
       - CH4
       - CO
-      - CO2
 
   planeflight:
     activate: false

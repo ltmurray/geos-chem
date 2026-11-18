@@ -21,7 +21,7 @@
 #BOC
 
 # List of all advected species in the oxidants simulation
-ALL_SPECIES=(CO2 CO CH4 OCS)
+ALL_SPECIES=(CO CH4)
 
 
 function isItemInList() {
@@ -103,8 +103,7 @@ function updateGeosChemConfig() {
     # File to modify
     file="${2}/geoschem_config.yml"
 
-    # Remove advected species (use \< and \> for exact match in order
-    # to prevent inadvertently removing CO2 with when spc is CO.
+    # Remove advected species (use \< and \> for an exact match).
     for spc in ${1}; do
     cmd="/\s*\-\s*\<${spc}\>/d"
         sed -i -e "${cmd}" "${file}"
@@ -129,14 +128,6 @@ function updateHemcoConfig() {
     true="      true"
     false="      false"
 
-    # If CO2 is in the exclude list, turn off CO2 options
-    # NOTE: This must precede CO to avoid unintended deletions
-    isItemInList "CO2" "${1}"
-    if [[ $? == 0 ]]; then
-        key="--> USE_CO2_DATA           "
-        keyValueUpdate "${key}" "${true}" "${false}" "${file}"
-    fi
-
     # If CO is in the exclude list, turn off CO options
     isItemInList "CO" "${1}"
     if [[ $? == 0 ]]; then
@@ -151,12 +142,6 @@ function updateHemcoConfig() {
         keyValueUpdate "${key}" "${true}" "${false}" "${file}"
     fi
 
-    # If OCS is in the exclude list, turn off OCS options
-    isItemInList "OCS" "${1}"
-    if [[ $? == 0 ]]; then
-        key="--> USE_OCS_DATA           "
-        keyValueUpdate "${key}" "${true}" "${false}" "${file}"
-    fi
 }
 
 
@@ -222,13 +207,6 @@ function updateHistory() {
 	sed -i "s|$oldline|$newline|g" "${file}"
     fi
 
-    # Also disable emissions for OCS-only simulations
-    # (as we currently do not have any)
-    isItemInList "OCS" "${1}"
-    if [[ $? == 1 ]]; then
-	sed -i -e "s/'Emissions/#'Emissions/" "${file}"
-    fi
-
     # Retain ProdLoss diagnostics only when the diagnostic target species
     # (the X in ProdXfromY or LossXbyY) is advected.  These diagnostics are
     # ordinary HISTORY fields, so filtering the generated HISTORY.rc is more
@@ -242,46 +220,16 @@ function updateHistory() {
             sed -i "/Loss_CO/d"          "${file}"
             sed -i "/ProdCOfromCH4/d"   "${file}"
             sed -i "/ProdCOfromNMVOC/d" "${file}"
-            sed -i "/ProdCO2fromCO/d"    "${file}"
             sed -i "/LossCObyOH/d"       "${file}"
             firstProdLoss="Loss_CH4"
             ;;
         CO)
             sed -i "/Loss_CH4/d"       "${file}"
-            sed -i "/ProdCO2fromCO/d"  "${file}"
             sed -i "/LossCH4byOH/d"    "${file}"
             sed -i "/LossCH4byCl/d"    "${file}"
             sed -i "/LossCH4byO1D/d"   "${file}"
             sed -i "/LossCH4bySoil/d"  "${file}"
             firstProdLoss="Prod_CO"
-            ;;
-        CO2)
-            sed -i "/Prod_CO/d"          "${file}"
-            sed -i "/Loss_CO/d"          "${file}"
-            sed -i "/Loss_CH4/d"         "${file}"
-            sed -i "/ProdCOfromCH4/d"   "${file}"
-            sed -i "/ProdCOfromNMVOC/d" "${file}"
-            sed -i "/LossCH4byOH/d"      "${file}"
-            sed -i "/LossCH4byCl/d"      "${file}"
-            sed -i "/LossCH4byO1D/d"     "${file}"
-            sed -i "/LossCH4bySoil/d"    "${file}"
-            sed -i "/LossCObyOH/d"       "${file}"
-            firstProdLoss="ProdCO2fromCO"
-            ;;
-        OCS)
-            sed -i "/Prod_CO/d"          "${file}"
-            sed -i "/Loss_CO/d"          "${file}"
-            sed -i "/Loss_CH4/d"         "${file}"
-            sed -i "/ProdCOfromCH4/d"   "${file}"
-            sed -i "/ProdCOfromNMVOC/d" "${file}"
-            sed -i "/ProdCO2fromCO/d"    "${file}"
-            sed -i "/LossCH4byOH/d"      "${file}"
-            sed -i "/LossCH4byCl/d"      "${file}"
-            sed -i "/LossCH4byO1D/d"     "${file}"
-            sed -i "/LossCH4bySoil/d"    "${file}"
-            sed -i "/LossCObyOH/d"       "${file}"
-            sed -i -E "s/^([[:space:]]*)'ProdLoss',/\1#'ProdLoss',/" "${file}"
-            firstProdLoss=""
             ;;
     esac
 
@@ -343,23 +291,6 @@ function updateExtData() {
         sed -i "/^CONUS_/d"             "${file}"
     fi
 
-    # If CO2 is in the exclude list, remove CO2 entries.
-    # NOTE: CO2 deletions must prececde CO deletions.
-    isItemInList "CO2" "${1}"
-    if [[ $? == 0 ]]; then
-        sed -i "/AEIC19_DAILY_CO2 /d"   "${file}"  # trailing space required
-        sed -i "/AEIC19_MONMEAN_CO2 /d" "${file}"  # trailing space required
-        sed -i "/BBIOCO2_/d"            "${file}"
-        sed -i "/^CEDS_CO2_/d"          "${file}"
-        sed -i "/^CO2_/d"               "${file}"
-        sed -i "/COPROD/d"              "${file}"
-        sed -i "/FOSSILCO2_/d"          "${file}"
-        sed -i "/ICOADS_CO2_/d"         "${file}"
-        sed -i "/OCEANCO2_/d"           "${file}"
-        sed -i "/SIB_BBIO_CO2/d"        "${file}"
-	sed -i "/AVIATION_SURF_CORR/d"  "${file}"
-    fi
-
     # If CO is in the exclude list, remove CO entries
     isItemInList "CO" "${1}"
     if [[ $? == 0 ]]; then
@@ -380,12 +311,6 @@ function updateExtData() {
 	sed -i "/LIQFUEL_/d"            "${file}"
     fi
 
-    # If OSC is in the exclude list, remove OCS entries
-    isItemInList "OCS" "${1}"
-    if [[ $? == 0 ]]; then
-        sed -i "/^OCS_/d"              "${file}"
-        sed -i "/^StoOCS_/d"           "${file}"
-    fi
 }
 
 
