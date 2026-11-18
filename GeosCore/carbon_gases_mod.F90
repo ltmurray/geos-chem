@@ -894,6 +894,7 @@ CONTAINS
 !
     USE carbon_Funcs,   ONLY : carbon_InitCarbonKPPFuncs
     USE gckpp_Global,   ONLY : SR_MW, HENRY_CR, HENRY_K0
+    USE gckpp_Integrator, ONLY : ValidateCarbonAnalyticalMechanism
     USE ErrCode_Mod
     USE Input_Opt_Mod,  ONLY : OptInput
     USE State_Chm_Mod,  ONLY : ChmState, Ind_
@@ -923,6 +924,7 @@ CONTAINS
 ! !LOCAL VARIABLES:
 !
     ! Scalars
+    LOGICAL            :: mechanismIsValid
     INTEGER            :: KppId,  N
 
     ! Strings
@@ -941,6 +943,15 @@ CONTAINS
     thisLoc    = &
      ' -> at Init_Carbon_Gases (in module GeosCore/carbon_gases_mod.F90)'
 
+    ! Refuse startup if the generated KPP mechanism no longer matches the
+    ! reaction and accumulator ordering assumed by the analytical solver.
+    CALL ValidateCarbonAnalyticalMechanism( mechanismIsValid, errMsg )
+    IF ( .not. mechanismIsValid ) THEN
+       errMsg = 'Carbon analytical integrator validation failed: ' //       &
+                TRIM( errMsg )
+       CALL GC_Error( errMsg, RC, thisLoc )
+       RETURN
+    ENDIF
 
     !========================================================================
     ! Define GEOS-Chem species indices

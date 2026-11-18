@@ -1,0 +1,242 @@
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~!
+! Exact analytical integrator for the linear GEOS-Chem carbon mechanism. !
+! Rates are held fixed over one chemistry operator timestep.              !
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~!
+MODULE KPP_ROOT_Integrator
+
+  USE KPP_ROOT_Precision,  ONLY : dp
+  USE KPP_ROOT_Parameters
+  USE KPP_ROOT_Global
+  USE KPP_ROOT_Monitor,    ONLY : SPC_NAMES, FAM_NAMES, EQN_NAMES
+
+  IMPLICIT NONE
+  PRIVATE
+
+  PUBLIC :: Integrate
+  PUBLIC :: ValidateCarbonAnalyticalMechanism
+
+  LOGICAL, PRIVATE :: Do_Update_RCONST
+  LOGICAL, PRIVATE :: Do_Update_PHOTO
+  LOGICAL, PRIVATE :: Do_Update_SUN
+
+CONTAINS
+
+  SUBROUTINE Integrate( TIN,       TOUT,      ICNTRL_U, RCNTRL_U,          &
+                        ISTATUS_U, RSTATUS_U, IERR_U )
+
+    USE KPP_ROOT_Rates, ONLY : Update_SUN, Update_RCONST
+    USE KPP_ROOT_Util,  ONLY : Integrator_Update_Options
+
+    REAL(dp), INTENT(IN)            :: TIN
+    REAL(dp), INTENT(IN)            :: TOUT
+    INTEGER,  INTENT(IN),  OPTIONAL :: ICNTRL_U(20)
+    REAL(dp), INTENT(IN),  OPTIONAL :: RCNTRL_U(20)
+    INTEGER,  INTENT(OUT), OPTIONAL :: ISTATUS_U(20)
+    REAL(dp), INTENT(OUT), OPTIONAL :: RSTATUS_U(20)
+    INTEGER,  INTENT(OUT), OPTIONAL :: IERR_U
+
+    INTEGER  :: ICNTRL(20), ISTATUS(20), IERR
+    REAL(dp) :: RSTATUS(20), dt
+
+    ICNTRL  = 0
+    ISTATUS = 0
+    RSTATUS = 0.0_dp
+    IERR    = 1
+
+    ! Match the standard KPP integrator convention.  GEOS-Chem passes -1
+    ! because it updates rates immediately before calling Integrate.
+    ICNTRL(15) = 5
+    IF ( PRESENT( ICNTRL_U ) ) THEN
+       WHERE ( ICNTRL_U /= 0 ) ICNTRL = ICNTRL_U
+    ENDIF
+
+    CALL Integrator_Update_Options( ICNTRL(15),       Do_Update_RCONST,     &
+                                    Do_Update_PHOTO,  Do_Update_SUN )
+
+    VAR => C(1:NVAR)
+    FIX => C(NVAR+1:NSPEC)
+
+    IF ( Do_Update_SUN    ) CALL Update_SUN()
+    IF ( Do_Update_RCONST ) CALL Update_RCONST()
+
+    dt = TOUT - TIN
+    IF ( dt < 0.0_dp ) THEN
+       IERR = -1
+    ELSE IF ( dt > 0.0_dp ) THEN
+       CALL CarbonAnalyticalStep( dt )
+       ISTATUS(1) = 1 ! One analytical function evaluation
+       ISTATUS(3) = 1 ! One total step
+       ISTATUS(4) = 1 ! One accepted step
+    ENDIF
+
+    VAR => NULL()
+    FIX => NULL()
+
+    IF ( PRESENT( ISTATUS_U ) ) ISTATUS_U = ISTATUS
+    IF ( PRESENT( RSTATUS_U ) ) RSTATUS_U = RSTATUS
+    IF ( PRESENT( IERR_U    ) ) IERR_U    = IERR
+
+  END SUBROUTINE Integrate
+
+  SUBROUTINE CarbonAnalyticalStep( dt )
+
+    REAL(dp), INTENT(IN) :: dt
+
+    REAL(dp) :: ch4Initial, ch4Loss, ch4Remaining
+    REAL(dp) :: coInitial, coLoss, coRemaining
+    REAL(dp) :: kCH4OH, kCH4Cl, kCH4O1D, kCH4Soil, kCH4
+    REAL(dp) :: kCO, pCOCH4, pCONMVOC, pCO, producedCO
+    REAL(dp) :: lossFraction, producedLossFraction
+
+    !---------------------------------------------------------------------
+    ! CH4: exact decay and exact allocation to the four loss channels.
+    !---------------------------------------------------------------------
+    ch4Initial = MAX( C(ind_CH4), 0.0_dp )
+    kCH4OH     = MAX( RCONST(1) * C(ind_FixedOH),  0.0_dp )
+    kCH4Cl     = MAX( RCONST(2) * C(ind_FixedCl),  0.0_dp )
+    kCH4O1D    = MAX( RCONST(3) * C(ind_FixedO1D), 0.0_dp )
+    kCH4Soil   = MAX( RCONST(4),                    0.0_dp )
+    kCH4       = kCH4OH + kCH4Cl + kCH4O1D + kCH4Soil
+
+    IF ( kCH4 > 0.0_dp .and. ch4Initial > 0.0_dp ) THEN
+       lossFraction = OneMinusExpNeg( kCH4 * dt )
+       ch4Loss      = ch4Initial * lossFraction
+       ch4Remaining = ch4Initial - ch4Loss
+
+       C(ind_LCH4byOH)   = C(ind_LCH4byOH)                         &
+                          + ch4Loss * ( kCH4OH   / kCH4 )
+       C(ind_LCH4byCl)   = C(ind_LCH4byCl)                         &
+                          + ch4Loss * ( kCH4Cl   / kCH4 )
+       C(ind_LCH4byO1D)  = C(ind_LCH4byO1D)                        &
+                          + ch4Loss * ( kCH4O1D  / kCH4 )
+       C(ind_LCH4bySoil) = C(ind_LCH4bySoil)                       &
+                          + ch4Loss * ( kCH4Soil / kCH4 )
+       C(ind_LCH4)       = C(ind_LCH4) + ch4Loss
+       C(ind_CH4)        = MAX( ch4Remaining, 0.0_dp )
+    ELSE
+       C(ind_CH4) = ch4Initial
+    ENDIF
+
+    !---------------------------------------------------------------------
+    ! CO: exact solution of dCO/dt = P - k*CO.  The loss of CO produced
+    ! during the step is included so that production - loss equals dCO.
+    !---------------------------------------------------------------------
+    coInitial = MAX( C(ind_CO), 0.0_dp )
+    pCOCH4    = MAX( RCONST(5) * C(ind_DummyCH4),   0.0_dp )
+    kCO       = MAX( RCONST(6) * C(ind_FixedOH),    0.0_dp )
+    pCONMVOC  = MAX( RCONST(7) * C(ind_DummyNMVOC), 0.0_dp )
+    pCO       = pCOCH4 + pCONMVOC
+    producedCO = pCO * dt
+
+    IF ( kCO > 0.0_dp ) THEN
+       lossFraction = OneMinusExpNeg( kCO * dt )
+       producedLossFraction = ProductionLossIntegral( kCO * dt )
+       coLoss = coInitial * lossFraction                                  &
+                + producedCO * producedLossFraction
+    ELSE
+       coLoss = 0.0_dp
+    ENDIF
+
+    coRemaining = coInitial + producedCO - coLoss
+    C(ind_CO)            = MAX( coRemaining, 0.0_dp )
+    C(ind_PCOfromCH4)    = C(ind_PCOfromCH4) + pCOCH4 * dt
+    C(ind_PCOfromNMVOC)  = C(ind_PCOfromNMVOC) + pCONMVOC * dt
+    C(ind_PCO)           = C(ind_PCO) + producedCO
+    C(ind_LCObyOH)       = C(ind_LCObyOH) + coLoss
+    C(ind_LCO)           = C(ind_LCO) + coLoss
+
+  END SUBROUTINE CarbonAnalyticalStep
+
+  PURE FUNCTION OneMinusExpNeg( x ) RESULT( value )
+
+    REAL(dp), INTENT(IN) :: x
+    REAL(dp)             :: value
+
+    IF ( x < 1.0e-4_dp ) THEN
+       value = x * ( 1.0_dp - x * ( 0.5_dp - x *                         &
+               ( 1.0_dp / 6.0_dp - x / 24.0_dp ) ) )
+    ELSE
+       value = 1.0_dp - EXP( -x )
+    ENDIF
+
+  END FUNCTION OneMinusExpNeg
+
+  PURE FUNCTION ProductionLossIntegral( x ) RESULT( value )
+
+    ! Fraction of uniformly produced material that is lost during dt:
+    ! 1 - (1-exp(-x))/x.  Use a series to avoid cancellation for small x.
+    REAL(dp), INTENT(IN) :: x
+    REAL(dp)             :: value
+
+    IF ( x < 1.0e-4_dp ) THEN
+       value = x * ( 0.5_dp - x * ( 1.0_dp / 6.0_dp - x *               &
+               ( 1.0_dp / 24.0_dp - x / 120.0_dp ) ) )
+    ELSE
+       value = 1.0_dp - OneMinusExpNeg( x ) / x
+    ENDIF
+
+  END FUNCTION ProductionLossIntegral
+
+  SUBROUTINE ValidateCarbonAnalyticalMechanism( isValid, message )
+
+    LOGICAL,          INTENT(OUT) :: isValid
+    CHARACTER(LEN=*), INTENT(OUT) :: message
+
+    isValid = .FALSE.
+    message = ''
+
+    IF ( NSPEC /= 17 .or. NVAR /= 12 .or. NVARACT /= 2 .or.              &
+         NREACT /= 7 .or. NFAM /= 3 ) THEN
+       message = 'Unexpected carbon KPP dimensions or reaction count'
+       RETURN
+    ENDIF
+
+    IF ( TRIM( SPC_NAMES(ind_CH4)          ) /= 'CH4'          .or.       &
+         TRIM( SPC_NAMES(ind_CO)           ) /= 'CO'           .or.       &
+         TRIM( SPC_NAMES(ind_PCOfromCH4)   ) /= 'PCOfromCH4'   .or.       &
+         TRIM( SPC_NAMES(ind_PCOfromNMVOC) ) /= 'PCOfromNMVOC' .or.       &
+         TRIM( SPC_NAMES(ind_LCH4byOH)     ) /= 'LCH4byOH'     .or.       &
+         TRIM( SPC_NAMES(ind_LCH4byCl)     ) /= 'LCH4byCl'     .or.       &
+         TRIM( SPC_NAMES(ind_LCH4byO1D)    ) /= 'LCH4byO1D'    .or.       &
+         TRIM( SPC_NAMES(ind_LCH4bySoil)   ) /= 'LCH4bySoil'   .or.       &
+         TRIM( SPC_NAMES(ind_LCObyOH)      ) /= 'LCObyOH'      .or.       &
+         TRIM( SPC_NAMES(ind_PCO)          ) /= 'PCO'          .or.       &
+         TRIM( SPC_NAMES(ind_LCO)          ) /= 'LCO'          .or.       &
+         TRIM( SPC_NAMES(ind_LCH4)         ) /= 'LCH4'         .or.       &
+         TRIM( SPC_NAMES(ind_FixedOH)      ) /= 'FixedOH'      .or.       &
+         TRIM( SPC_NAMES(ind_FixedCl)      ) /= 'FixedCl'      .or.       &
+         TRIM( SPC_NAMES(ind_FixedO1D)     ) /= 'FixedO1D'     .or.       &
+         TRIM( SPC_NAMES(ind_DummyCH4)     ) /= 'DummyCH4'     .or.       &
+         TRIM( SPC_NAMES(ind_DummyNMVOC)   ) /= 'DummyNMVOC' ) THEN
+       message = 'Unexpected carbon KPP species ordering'
+       RETURN
+    ENDIF
+
+    IF ( TRIM( FAM_NAMES(1) ) /= 'PCO'  .or.                              &
+         TRIM( FAM_NAMES(2) ) /= 'LCO'  .or.                              &
+         TRIM( FAM_NAMES(3) ) /= 'LCH4' ) THEN
+       message = 'Unexpected carbon KPP family ordering'
+       RETURN
+    ENDIF
+
+    IF ( INDEX( EQN_NAMES(1), 'CH4 + FixedOH'  ) == 0 .or.                 &
+         INDEX( EQN_NAMES(1), 'LCH4byOH'       ) == 0 .or.                 &
+         INDEX( EQN_NAMES(2), 'CH4 + FixedCl'  ) == 0 .or.                 &
+         INDEX( EQN_NAMES(2), 'LCH4byCl'       ) == 0 .or.                 &
+         INDEX( EQN_NAMES(3), 'CH4 + FixedO1D' ) == 0 .or.                 &
+         INDEX( EQN_NAMES(3), 'LCH4byO1D'      ) == 0 .or.                 &
+         INDEX( EQN_NAMES(4), 'CH4 --> LCH4bySoil' ) == 0 .or.             &
+         INDEX( EQN_NAMES(5), 'DummyCH4 --> CO' ) == 0 .or.                &
+         INDEX( EQN_NAMES(6), 'CO + FixedOH'   ) == 0 .or.                 &
+         INDEX( EQN_NAMES(6), 'LCObyOH'        ) == 0 .or.                 &
+         INDEX( EQN_NAMES(7), 'DummyNMVOC --> CO' ) == 0 ) THEN
+       message = 'Carbon equations changed; analytical solver requires review'
+       RETURN
+    ENDIF
+
+    isValid = .TRUE.
+    message = 'Carbon analytical mechanism signature validated'
+
+  END SUBROUTINE ValidateCarbonAnalyticalMechanism
+
+END MODULE KPP_ROOT_Integrator
