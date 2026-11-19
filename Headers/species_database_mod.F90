@@ -819,7 +819,16 @@ CONTAINS
                 CALL QFYAML_Get( yml, key, v_real, RC )
              ENDIF
              IF ( RC /= GC_SUCCESS ) GOTO 999
-             ThisSpc%MW_g = Cast_and_RoundOff( v_real, 2 )
+             SELECT CASE ( TRIM( dbSpcName ) )
+                CASE ( 'CH4', 'C12H4', 'C13H4', 'C12H3D', 'C13H3D' )
+                   ! Preserve the isotope-resolved methane masses specified
+                   ! in species_database.yml.  Two-decimal rounding changes
+                   ! molar isotope partitioning and creates a false emission
+                   ! closure error.
+                   ThisSpc%MW_g = DBLE( v_real )
+                CASE DEFAULT
+                   ThisSpc%MW_g = Cast_and_RoundOff( v_real, 2 )
+             END SELECT
 
           ELSE IF ( INDEX( key, "%Radius" ) > 0 ) THEN
              IF ( addSpc ) THEN

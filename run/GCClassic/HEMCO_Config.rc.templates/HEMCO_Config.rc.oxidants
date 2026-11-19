@@ -73,6 +73,7 @@ Mask fractions:              false
     --> LPJ_MERRA2             :       false    # 2018-2023
     --> SEEPS                  :       true     # 2012
     --> LAKES                  :       false    # 2009-2015
+    --> OCEAN_CH4              :       true     # Climatology
     --> RESERVOIRS             :       true     # 2022
     --> CAMS_TERMITES          :       true     # 2000
     --> MeMo_SOIL_ABSORPTION   :       true     # 1990-2009 or clim.
@@ -80,8 +81,8 @@ Mask fractions:              false
     --> CMIP6_SHIP             :       false    # 1850-2100
     --> BB4MIPS                :       false    # 1850-2100
 # ..... Non-Emissions Data ...........
-    --> GLOBAL_CL              :       true     # 2010-2019
-    --> GLOBAL_O1D             :       true     # 2010-2019
+    --> GLOBAL_CL              :       true     # Prescribed 47L oxidant climatology
+    --> GLOBAL_O1D             :       true     # Prescribed 47L oxidant climatology
 # ----- CO INVENTORIES AND DATA ----------------------------------
 # ..... Global inventories ...........
     --> AEIC2019_DAILY         :       false    # 2019 (daily data)
@@ -111,8 +112,8 @@ Mask fractions:              false
 # ----- NON-EMISSIONS DATA ----------------------------------------------------
     --> OLSON_LANDMAP          :       true     # 1985
     --> YUAN_MODIS_LAI         :       true     # 2000-2020
-    --> GLOBAL_OH_GC14         :       false    # 2010-2019
-    --> GLOBAL_OH_GCv5         :       true     # 1985 (recommended for CH4)
+    --> GLOBAL_OH_GC14         :       true     # Prescribed 47L oxidant climatology
+    --> GLOBAL_OH_GCv5         :       false    # 1985
 # ----- Options for analytical inversions -------------------------------------
     --> AnalyticalInversion    :       false
     --> UseTotalPriorEmis      :       false    # Skips global/regional inventories
@@ -125,10 +126,113 @@ Mask fractions:              false
     --> Scaling_CO             :       1.05
 112     GFAS                   : ${RUNDIR_GFAS_EXT}   CH4/CO
     --> Vertical Profile Species:      CO
+115     CH4_Isotopologues           : off   CH4/C12H4/C13H4/C12H3D/C13H3D
+    --> R13_VPDB                    : 0.0111802
+    --> RD_VSMOW                    : 1.5576e-4
+#
+# Reference-ratio alternatives (replace the corresponding active value above;
+# keep exactly one active value for each option):
+#
+# R13_VPDB = 0.0112372
+#   Craig (1957), original absolute 13C/12C ratio assigned to PDB.
+# R13_VPDB = 0.0111802
+#   Chang and Li (1990); adopted by IUPAC in 1998 and reaffirmed in 2010.
+#   This is the active value used by the present methane-isotope manuscript.
+# R13_VPDB = 0.011113
+#   CIAAW/IUPAC (2024) consensus value, uncertainty 0.000022.
+# R13_VPDB = 0.0111105
+#   Malinovsky et al. (2024) re-determination, uncertainty 0.0000042.
+#
+# RD_VSMOW = 1.5574e-4
+#   Hagemann et al. (1970), as reassessed by CIAAW.
+# RD_VSMOW = 1.5575e-4
+#   de Wit et al. (1980), commonly tabulated historical value.
+# RD_VSMOW = 1.5576e-4
+#   Conventional VSMOW/VSMOW2 value in IAEA reference-material tables.
+# RD_VSMOW = 1.5595e-4
+#   de Wit et al. (1980) alternative absolute determination; retained for
+#   reproducibility of studies that explicitly adopted that value.
 ### END SECTION EXTENSION SWITCHES ###
 
 ###############################################################################
 ### BEGIN SECTION BASE EMISSIONS
+###############################################################################
+
+###############################################################################
+### CH4 ISOTOPOLOGUE SIGNATURE MAPS
+###############################################################################
+#
+# Each CH4 emission sector has a pair of annual gridded source-signature
+# fields for 1998--2022: d13C relative to VPDB and dD relative to VSMOW, both
+# in per mil.  HEMCO regrids the 1x1-degree maps to the simulation grid and
+# uses the nearest endpoint year outside the coverage period: 1998 before
+# 1998 and 2022 after 2022.  Extension 115
+# will combine each sector's bulk CH4 emissions with its matching signatures
+# before the sectors are summed, preserving sector information during the
+# conversion to C12H4, C13H4, C12H3D, and C13H3D.
+#
+# Sector codes:
+#   OIL    oil                         GAS    natural gas
+#   COL    coal                        LIV_EF livestock enteric fermentation
+#   LIV_MM livestock manure           LDF    landfills
+#   WST    wastewater                 RIC    rice
+#   OTA    other anthropogenic        BBN    biomass burning
+#   WTL    wetlands                    SEE    geological seeps
+#   LAK    lakes                       TER    termites
+#   OCN    ocean                       RSV    reservoirs
+#
+# Extension 115 reassembles the hierarchy-resolved CH4 flux in each category,
+# converts the matching delta values to molecular fractions, and emits every
+# methane isotopologue that is defined in geoschem_config.yml.  Category 16 is
+# reserved for manure-management emissions so they remain distinct from
+# enteric fermentation in category 4.
+#
+# ExtNr Name sourceFile sourceVar sourceTime C/R/E SrcDim SrcUnit Species ScalIDs Cat Hier
+#
+(((CH4_Isotopologues
+# Register the extension-created tracers with HEMCO.  These zero-valued
+# fields do not contribute emissions; extension 115 adds the calculated
+# isotope fluxes below using the registered species IDs.
+0 CH4ISO_REGISTER_C12H4  0.0 - - - xy kg/m2/s C12H4  - 99 1
+0 CH4ISO_REGISTER_C13H4  0.0 - - - xy kg/m2/s C13H4  - 99 1
+0 CH4ISO_REGISTER_C12H3D 0.0 - - - xy kg/m2/s C12H3D - 99 1
+0 CH4ISO_REGISTER_C13H3D 0.0 - - - xy kg/m2/s C13H3D - 99 1
+115 CH4ISO_D13C_OIL $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 d13_OIL 1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_DD_OIL   $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 dD_OIL   1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_D13C_GAS $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 d13_GAS 1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_DD_GAS   $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 dD_GAS   1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_D13C_COL $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 d13_COL 1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_DD_COL   $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 dD_COL   1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_D13C_LIV_EF $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 d13_LIV_EF 1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_DD_LIV_EF   $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 dD_LIV_EF   1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_D13C_LIV_MM $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 d13_LIV_MM 1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_DD_LIV_MM   $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 dD_LIV_MM   1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_D13C_LDF $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 d13_LDF 1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_DD_LDF   $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 dD_LDF   1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_D13C_WST $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 d13_WST 1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_DD_WST   $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 dD_WST   1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_D13C_RIC $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 d13_RIC 1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_DD_RIC   $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 dD_RIC   1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_D13C_OTA $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 d13_OTA 1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_DD_OTA   $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 dD_OTA   1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_D13C_BBN $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 d13_BBN 1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_DD_BBN   $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 dD_BBN   1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_D13C_WTL $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 d13_WTL 1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_DD_WTL   $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 dD_WTL   1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_D13C_SEE $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 d13_SEE 1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_DD_SEE   $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 dD_SEE   1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_D13C_LAK $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 d13_LAK 1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_DD_LAK   $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 dD_LAK   1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_D13C_TER $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 d13_TER 1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_DD_TER   $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 dD_TER   1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_D13C_OCN $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 d13_OCN 1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_DD_OCN   $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 dD_OCN   1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_D13C_RSV $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 d13_RSV 1998-2022/1/1/0 C xy 1 * - 1 1
+115 CH4ISO_DD_RSV   $ROOT/CH4_ISOTOPOLOGUES/v2026-11/methane_source_isotopologues.1x1.1998-2022.nc4 dD_RSV   1998-2022/1/1/0 C xy 1 * - 1 1
+)))CH4_Isotopologues
+
+###############################################################################
+### END CH4 ISOTOPOLOGUE SIGNATURE MAPS
 ###############################################################################
 
 # ExtNr	Name sourceFile	sourceVar sourceTime C/R/E SrcDim SrcUnit Species ScalIDs Cat Hier
@@ -201,8 +305,8 @@ Mask fractions:              false
 ### Livestock ###
 0 GHGI_LIVESTOCK_ENT          $ROOT/CH4/v2023-07/Gridded_GHGI_v2/Gridded_GHGI_Methane_v2_$YYYY.nc  emi_ch4_3A_Enteric_Fermentation              2012-2018/1/1/0    EFY xy molec/cm2/s CH4 1008    4 100
 0 GHGI_COAST_LIVESTOCK_ENT    -                                                                    -                                            -                  -   -  -           CH4 1009    4 1
-0 GHGI_LIVESTOCK_MAN          $ROOT/CH4/v2023-07/Gridded_GHGI_v2/Gridded_GHGI_Methane_v2_$YYYY.nc  emi_ch4_3B_Manure_Management                 2012-2018/1-12/1/0 EFY xy molec/cm2/s CH4 57/1008 4 100
-0 GHGI_COAST_LIVESTOCK_MAN    -                                                                    -                                            -                  -   -  -           CH4 57/1009 4 1
+0 GHGI_LIVESTOCK_MAN          $ROOT/CH4/v2023-07/Gridded_GHGI_v2/Gridded_GHGI_Methane_v2_$YYYY.nc  emi_ch4_3B_Manure_Management                 2012-2018/1-12/1/0 EFY xy molec/cm2/s CH4 57/1008 16 100
+0 GHGI_COAST_LIVESTOCK_MAN    -                                                                    -                                            -                  -   -  -           CH4 57/1009 16 1
 
 ### Landfills ###
 0 GHGI_LANDFILLS_IND          $ROOT/CH4/v2023-07/Gridded_GHGI_v2/Gridded_GHGI_Methane_v2_$YYYY.nc  emi_ch4_5A1_Landfills_Industrial             2012-2018/1/1/0    EFY xy molec/cm2/s CH4 1008    5 100
@@ -284,8 +388,8 @@ Mask fractions:              false
 ### Livestock ###
 0 GHGI_EE_LIVESTOCK_ENT          $ROOT/CH4/v2023-07/Gridded_GHGI_v2/Express_Extension_Gridded_GHGI_Methane_v2_$YYYY.nc  emi_ch4_3A_Enteric_Fermentation              2012-2020/1/1/0    C xy molec/cm2/s CH4 1008    4 100
 0 GHGI_EE_COAST_LIVESTOCK_ENT    -                                                                                      -                                            -                  - -  -           CH4 1009    4 1
-0 GHGI_EE_LIVESTOCK_MAN          $ROOT/CH4/v2023-07/Gridded_GHGI_v2/Express_Extension_Gridded_GHGI_Methane_v2_$YYYY.nc  emi_ch4_3B_Manure_Management                 2012-2020/1-12/1/0 C xy molec/cm2/s CH4 57/1008 4 100
-0 GHGI_EE_COAST_LIVESTOCK_MAN    -                                                                                      -                                            -                  - -  -           CH4 57/1009 4 1
+0 GHGI_EE_LIVESTOCK_MAN          $ROOT/CH4/v2023-07/Gridded_GHGI_v2/Express_Extension_Gridded_GHGI_Methane_v2_$YYYY.nc  emi_ch4_3B_Manure_Management                 2012-2020/1-12/1/0 C xy molec/cm2/s CH4 57/1008 16 100
+0 GHGI_EE_COAST_LIVESTOCK_MAN    -                                                                                      -                                            -                  - -  -           CH4 57/1009 16 1
 
 ### Landfills ###
 0 GHGI_EE_LANDFILLS_IND          $ROOT/CH4/v2023-07/Gridded_GHGI_v2/Express_Extension_Gridded_GHGI_Methane_v2_$YYYY.nc  emi_ch4_5A1_Landfills_Industrial             2012-2020/1/1/0    C xy molec/cm2/s CH4 1008    5 100
@@ -338,8 +442,8 @@ Mask fractions:              false
 0 MEX_COAL_COAST        -                                                                    -        -          - -  -           CH4 1010    3 5
 0 MEX_LIVESTOCK_A       $ROOT/CH4/v2022-11/Scarpelli_Mexico/MEX_Tia2020_livestock_A_2015.nc  emis_ch4 2015/1/1/0 C xy molec/cm2/s CH4 1001    4 100
 0 MEX_LIVESTOCK_A_COAST -                                                                    -        -          - -  -           CH4 1010    4 1
-0 MEX_LIVESTOCK_B       $ROOT/CH4/v2022-11/Scarpelli_Mexico/MEX_Tia2020_livestock_B_2015.nc  emis_ch4 2015/1/1/0 C xy molec/cm2/s CH4 10/1001 4 100
-0 MEX_LIVESTOCK_B_COAST -                                                                    -        -          - -  -           CH4 10/1010 4 1
+0 MEX_LIVESTOCK_B       $ROOT/CH4/v2022-11/Scarpelli_Mexico/MEX_Tia2020_livestock_B_2015.nc  emis_ch4 2015/1/1/0 C xy molec/cm2/s CH4 10/1001 16 100
+0 MEX_LIVESTOCK_B_COAST -                                                                    -        -          - -  -           CH4 10/1010 16 1
 0 MEX_LANDFILLS         $ROOT/CH4/v2022-11/Scarpelli_Mexico/MEX_Tia2020_landfill_2015.nc     emis_ch4 2015/1/1/0 C xy molec/cm2/s CH4 1001    5 100
 0 MEX_LANDFILLS_COAST   -                                                                    -        -          - -  -           CH4 1010    5 1
 0 MEX_WASTEWATER        $ROOT/CH4/v2022-11/Scarpelli_Mexico/MEX_Tia2020_waste_2015.nc        emis_ch4 2015/1/1/0 C xy molec/cm2/s CH4 1001    6 100
@@ -367,8 +471,10 @@ Mask fractions:              false
 0 CAN_OIL_GAS_VENT_FLARE_COAST  -                                                                        -                         -          - -  -       CH4 1011 1/2 5
 0 CAN_COAL                      $ROOT/CH4/v2022-01/Scarpelli_Canada/can_emis_coal_2018.nc                coal_total                2018/1/1/0 C xy kg/m2/s CH4 1002 3   100
 0 CAN_COAL_COAST                -                                                                        -                         -          - -  -       CH4 1011 3   5
-0 CAN_LIVESTOCK                 $ROOT/CH4/v2022-01/Scarpelli_Canada/can_emis_livestock_2018.nc           livestock_total           2018/1/1/0 C xy kg/m2/s CH4 1002 4   100
-0 CAN_LIVESTOCK_COAST           -                                                                        -                         -          - -  -       CH4 1011 4   1
+0 CAN_LIVESTOCK_ENT             $ROOT/CH4/v2022-01/Scarpelli_Canada/can_emis_livestock_2018.nc           livestock_total           2018/1/1/0 C xy kg/m2/s CH4 1601/1002 4  100
+0 CAN_LIVESTOCK_ENT_COAST       -                                                                        -                         -          - -  -       CH4 1601/1011 4  1
+0 CAN_LIVESTOCK_MAN             $ROOT/CH4/v2022-01/Scarpelli_Canada/can_emis_livestock_2018.nc           livestock_total           2018/1/1/0 C xy kg/m2/s CH4 1602/1002 16 100
+0 CAN_LIVESTOCK_MAN_COAST       -                                                                        -                         -          - -  -       CH4 1602/1011 16 1
 0 CAN_SOLID_WASTE               $ROOT/CH4/v2022-01/Scarpelli_Canada/can_emis_solid_waste_2018.nc         solid_waste_total         2018/1/1/0 C xy kg/m2/s CH4 1002 5   100
 0 CAN_SOLID_WASTE_COAST         -                                                                        -                         -          - -  -       CH4 1011 5   1
 0 CAN_WASTEWATER                $ROOT/CH4/v2022-01/Scarpelli_Canada/can_emis_wastewater_2018.nc          wastewater_total          2018/1/1/0 C xy kg/m2/s CH4 1002 6   100
@@ -417,7 +523,7 @@ Mask fractions:              false
 
 ### Livestock (from EDGAR v7) ###
 0 EDGAR7_CH4_LIVESTOCK__4A       $ROOT/CH4/v2023-04/EDGARv7/$YYYY/v7.0_FT2021_CH4_$YYYY_ENF.0.1x0.1.nc              emi_ch4 2010-2021/1-12/1/0 C xy kg/m2/s CH4 24 4 1
-0 EDGAR7_CH4_LIVESTOCK__4B       $ROOT/CH4/v2023-04/EDGARv7/$YYYY/v7.0_FT2021_CH4_$YYYY_MNM.0.1x0.1.nc              emi_ch4 2010-2021/1-12/1/0 C xy kg/m2/s CH4 28 4 1
+0 EDGAR7_CH4_LIVESTOCK__4B       $ROOT/CH4/v2023-04/EDGARv7/$YYYY/v7.0_FT2021_CH4_$YYYY_MNM.0.1x0.1.nc              emi_ch4 2010-2021/1-12/1/0 C xy kg/m2/s CH4 28 16 1
 
 ### Landfills ###
 0 EDGAR8_CH4_SWD_LDF             $ROOT/CH4/v2024-02/EDGARv8/$YYYY/v8.0_FT2022_GHG_CH4_$YYYY_SWD_LDF_flx.nc          emi_ch4 2010-2022/1-12/1/0 C xy kg/m2/s CH4 - 5 1
@@ -449,7 +555,8 @@ Mask fractions:              false
 # --- CH4: CEDS (historical) or Shared Socioeconomic Pathways (future) ---
 #==============================================================================
 (((CMIP6_SFC_LAND_ANTHRO
-0 CMIP6_CH4_AGR   $ROOT/CMIP6/v2021-01/$GCAPSCENARIO/$GCAPSCENARIO_$YYYY.nc4 CH4_agr 1970-2014/1-12/1/0 C xy kg/m2/s CH4 - 4 1
+0 CMIP6_CH4_AGR_ENT $ROOT/CMIP6/v2021-01/$GCAPSCENARIO/$GCAPSCENARIO_$YYYY.nc4 CH4_agr 1970-2014/1-12/1/0 C xy kg/m2/s CH4 1601 4  1
+0 CMIP6_CH4_AGR_MAN $ROOT/CMIP6/v2021-01/$GCAPSCENARIO/$GCAPSCENARIO_$YYYY.nc4 CH4_agr 1970-2014/1-12/1/0 C xy kg/m2/s CH4 1602 16 1
 0 CMIP6_CH4_ENE   $ROOT/CMIP6/v2021-01/$GCAPSCENARIO/$GCAPSCENARIO_$YYYY.nc4 CH4_ene 1970-2014/1-12/1/0 C xy kg/m2/s CH4 - 2 1
 0 CMIP6_CH4_IND   $ROOT/CMIP6/v2021-01/$GCAPSCENARIO/$GCAPSCENARIO_$YYYY.nc4 CH4_ind 1970-2014/1-12/1/0 C xy kg/m2/s CH4 - 8 1
 0 CMIP6_CH4_TRA   $ROOT/CMIP6/v2021-01/$GCAPSCENARIO/$GCAPSCENARIO_$YYYY.nc4 CH4_tra 1970-2014/1-12/1/0 C xy kg/m2/s CH4 - 8 1
@@ -510,6 +617,16 @@ Mask fractions:              false
 (((LAKES
 0 CH4_LAKES $ROOT/CH4/v2022-11/Lakes/Maasakkers_Lakes_$YYYY.01x01.nc emi_ch4 $YYYY/1-12/1/0 C xy molec/cm2/s CH4 - 12 1
 )))LAKES
+
+#==============================================================================
+# --- CH4: Ocean emissions ---
+#
+# Single-time climatology retained in molecular units so HEMCO converts it
+# using the CH4 molecular weight from species_database.yml.
+#==============================================================================
+(((OCEAN_CH4
+0 CH4_OCEAN $ROOT/CH4/v2026-11/Ocean/CH4_ocean_emissions.025x025.climatology.nc4 EmisCH4_Ocean 2000/1/1/0 C xy molec/cm2/s CH4 - 14 1
+)))OCEAN_CH4
 
 #==============================================================================
 # --- Emissions from Hydroelectric Reservoirs (Delwich et al., 2022) ---
@@ -848,7 +965,7 @@ Mask fractions:              false
 #==============================================================================
 (((GFAS
 112 GFAS_CO_3D   $ROOT/GFAS/v2026-06/$YYYY/$MM/GFAS-smoke-$YYYY$MM$DD.nc cofire_3d 2003-2100/1-12/1-31/0 EFY xyz kg/m2/s * 75 1 1
-112 GFAS_CH4_2D  $ROOT/GFAS/v2026-06/$YYYY/$MM/GFAS-smoke-$YYYY$MM$DD.nc cofire    2003-2100/1-12/1-31/0 EFY xy  kg/m2/s * 75 1 1
+112 GFAS_CH4_2D  $ROOT/GFAS/v2026-06/$YYYY/$MM/GFAS-smoke-$YYYY$MM$DD.nc ch4fire   2003-2100/1-12/1-31/0 EFY xy  kg/m2/s * 75 1 1
 112 GFAS_CO_2D   $ROOT/GFAS/v2026-06/$YYYY/$MM/GFAS-smoke-$YYYY$MM$DD.nc cofire    2003-2100/1-12/1-31/0 EFY xy  kg/m2/s * 75 1 1
 )))GFAS
 
@@ -1072,15 +1189,15 @@ Mask fractions:              false
 
 (((USE_CH4_DATA.or.USE_CO_DATA
 
-# --- OH from GEOS-Chem v5-07 [kg/m3], needed for CH4/IMI ---
+# --- Legacy OH from GEOS-Chem v5-07 [kg/m3] ---
 (((GLOBAL_OH_GCv5
 * GLOBAL_OH  $ROOT/OH/v2022-11/v5-07-08/OH_3Dglobal.geos5.72L.4x5.nc OH  1985/1-12/1/0 C xyz kg/m3 * 2 1 1
 )))GLOBAL_OH_GCv5
 
-# --- OH from the last 10-yr benchmark [mol/mol dry] ---
+# --- Combined prescribed oxidants [mol/mol dry air] ---
 (((GLOBAL_OH_GC14
 (((.not.GLOBAL_OH_GCv5
-${RUNDIR_GLOBAL_OH}
+* GLOBAL_OH $ROOT/PRESCRIBED_OXIDANTS/v2026-11/GC.oxidants.47L.2017-2019.nc OH_vmr 2000/1-12/1/0 C xyz v/v * - 1 1
 ))).not.GLOBAL_OH_GCv5
 )))GLOBAL_OH_GC14
 
@@ -1092,14 +1209,14 @@ ${RUNDIR_GLOBAL_OH}
 
 (((USE_CH4_DATA
 
-# --- Global Cl [mol/mol dry air] ---
+# --- Global Cl from combined prescribed oxidants [mol/mol dry air] ---
 (((GLOBAL_CL
-${RUNDIR_GLOBAL_Cl}
+* GLOBAL_Cl $ROOT/PRESCRIBED_OXIDANTS/v2026-11/GC.oxidants.47L.2017-2019.nc Cl_vmr 2000/1-12/1/0 C xyz v/v * - 1 1
 )))GLOBAL_CL
 
-# --- Global O(1D) [mol/mol dry air] ---
+# --- Global O(1D) from combined prescribed oxidants [mol/mol dry air] ---
 (((GLOBAL_O1D
-${RUNDIR_GLOBAL_O1D}
+* GLOBAL_O1D $ROOT/PRESCRIBED_OXIDANTS/v2026-11/GC.oxidants.47L.2017-2019.nc O1D_vmr 2000/1-12/1/0 C xyz v/v * - 1 1
 )))GLOBAL_O1D
 
 )))USE_CH4_DATA
@@ -1126,6 +1243,12 @@ ${RUNDIR_PCO_NMVOC}
 ###############################################################################
 ### BEGIN SECTION SCALE FACTORS
 ###############################################################################
+
+#------------------------------------------------------------------------------
+# --- Split inventories that report combined livestock emissions ---
+#------------------------------------------------------------------------------
+1601 CH4_LIVESTOCK_ENT_FRAC 0.5 - - - xy 1 1
+1602 CH4_LIVESTOCK_MAN_FRAC 0.5 - - - xy 1 1
 
 # ScalID Name sourceFile sourceVar sourceTime C/R/E SrcDim SrcUnit Oper
 

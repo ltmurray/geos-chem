@@ -45,6 +45,10 @@ MODULE oxidants_Funcs
 !
   ! Species ID flags
   INTEGER  :: id_CH4
+  INTEGER  :: id_C12H4
+  INTEGER  :: id_C13H4
+  INTEGER  :: id_C12H3D
+  INTEGER  :: id_C13H3D
   INTEGER  :: id_CO
 
 #ifdef JACOBIAN
@@ -55,6 +59,10 @@ MODULE oxidants_Funcs
 
   ! Kg species / molec species
   REAL(fp) :: xnumol_CH4
+  REAL(fp) :: xnumol_C12H4
+  REAL(fp) :: xnumol_C13H4
+  REAL(fp) :: xnumol_C12H3D
+  REAL(fp) :: xnumol_C13H3D
   REAL(fp) :: xnumol_CO
 
 CONTAINS
@@ -112,6 +120,22 @@ CONTAINS
     ! (skip if species are not present)
     IF ( id_CH4 > 0 ) THEN
        C(ind_CH4) = Spc(id_CH4)%Conc(I,J,L) * xnumol_CH4 / airvol_cm3
+    ENDIF
+
+    IF ( id_C12H4 > 0 ) THEN
+       C(ind_C12H4) = Spc(id_C12H4)%Conc(I,J,L) * xnumol_C12H4 / airvol_cm3
+    ENDIF
+
+    IF ( id_C13H4 > 0 ) THEN
+       C(ind_C13H4) = Spc(id_C13H4)%Conc(I,J,L) * xnumol_C13H4 / airvol_cm3
+    ENDIF
+
+    IF ( id_C12H3D > 0 ) THEN
+       C(ind_C12H3D) = Spc(id_C12H3D)%Conc(I,J,L) * xnumol_C12H3D / airvol_cm3
+    ENDIF
+
+    IF ( id_C13H3D > 0 ) THEN
+       C(ind_C13H3D) = Spc(id_C13H3D)%Conc(I,J,L) * xnumol_C13H3D / airvol_cm3
     ENDIF
 
     IF ( id_CO > 0 ) THEN
@@ -275,6 +299,22 @@ CONTAINS
     ! Send species from molec/cm3 to kg
     IF ( id_CH4 > 0 ) THEN
        Spc(id_CH4)%Conc(I,J,L) = C(ind_CH4) * airvol_cm3 / xnumol_CH4
+    ENDIF
+
+    IF ( id_C12H4 > 0 ) THEN
+       Spc(id_C12H4)%Conc(I,J,L) = C(ind_C12H4) * airvol_cm3 / xnumol_C12H4
+    ENDIF
+
+    IF ( id_C13H4 > 0 ) THEN
+       Spc(id_C13H4)%Conc(I,J,L) = C(ind_C13H4) * airvol_cm3 / xnumol_C13H4
+    ENDIF
+
+    IF ( id_C12H3D > 0 ) THEN
+       Spc(id_C12H3D)%Conc(I,J,L) = C(ind_C12H3D) * airvol_cm3 / xnumol_C12H3D
+    ENDIF
+
+    IF ( id_C13H3D > 0 ) THEN
+       Spc(id_C13H3D)%Conc(I,J,L) = C(ind_C13H3D) * airvol_cm3 / xnumol_C13H3D
     ENDIF
 
     IF ( id_CO > 0 ) THEN
@@ -624,7 +664,9 @@ CONTAINS
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE oxidants_InitKPPFuncs( kgmolec_CH4, kgmolec_CO, RC )
+  SUBROUTINE oxidants_InitKPPFuncs(                                    &
+             kgmolec_CH4,   kgmolec_C12H4,  kgmolec_C13H4,             &
+             kgmolec_C12H3D, kgmolec_C13H3D, kgmolec_CO, RC            )
 !
 ! !USES:
 !
@@ -634,6 +676,10 @@ CONTAINS
 ! !INPUT PARAMETERS:
 !
     REAL(fp), INTENT(IN)  :: kgmolec_CH4   ! kg CH4 / molec CH4
+    REAL(fp), INTENT(IN)  :: kgmolec_C12H4 ! kg C12H4 / molec C12H4
+    REAL(fp), INTENT(IN)  :: kgmolec_C13H4 ! kg C13H4 / molec C13H4
+    REAL(fp), INTENT(IN)  :: kgmolec_C12H3D! kg C12H3D / molec C12H3D
+    REAL(fp), INTENT(IN)  :: kgmolec_C13H3D! kg C13H3D / molec C13H3D
     REAL(fp), INTENT(IN)  :: kgmolec_CO    ! kg CO  / molec CO
 !
 ! !OUTPUT PARAMETERS:
@@ -695,10 +741,18 @@ CONTAINS
 
     ! Define flags for species ID's
     id_CH4      = Ind_('CH4')
+    id_C12H4    = Ind_('C12H4')
+    id_C13H4    = Ind_('C13H4')
+    id_C12H3D   = Ind_('C12H3D')
+    id_C13H3D   = Ind_('C13H3D')
     id_CO       = Ind_('CO' )
 
     ! Set kg species / molec species
     xnumol_CH4  = kgmolec_CH4
+    xnumol_C12H4  = kgmolec_C12H4
+    xnumol_C13H4  = kgmolec_C13H4
+    xnumol_C12H3D = kgmolec_C12H3D
+    xnumol_C13H3D = kgmolec_C13H3D
     xnumol_CO   = kgmolec_CO
 
   END SUBROUTINE oxidants_InitKPPFuncs

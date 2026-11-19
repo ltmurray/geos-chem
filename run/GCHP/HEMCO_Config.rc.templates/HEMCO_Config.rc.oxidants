@@ -849,7 +849,7 @@ Mask fractions:              false
 #==============================================================================
 (((GFAS
 112 GFAS_CO_3D    $ROOT/GFAS/v2026-06/$YYYY/$MM/GFAS-smoke-$YYYY$MM$DD.nc cofire_3d 2003-2100/1-12/1-31/0 EFY xyz kg/m2/s * 75 1 1
-112 GFAS_CH4_2D   $ROOT/GFAS/v2026-06/$YYYY/$MM/GFAS-smoke-$YYYY$MM$DD.nc cofire    2003-2100/1-12/1-31/0 EFY xy  kg/m2/s * 75 1 1
+112 GFAS_CH4_2D   $ROOT/GFAS/v2026-06/$YYYY/$MM/GFAS-smoke-$YYYY$MM$DD.nc ch4fire   2003-2100/1-12/1-31/0 EFY xy  kg/m2/s * 75 1 1
 112 GFAS_CO_2D    $ROOT/GFAS/v2026-06/$YYYY/$MM/GFAS-smoke-$YYYY$MM$DD.nc cofire    2003-2100/1-12/1-31/0 EFY xy  kg/m2/s * 75 1 1
 )))GFAS
 

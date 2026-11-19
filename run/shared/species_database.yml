@@ -961,12 +961,43 @@ CH3I:
 CH4_PROP: &CH4properties
   Formula: CH4
   Is_Gas: true
-  MW_g: 16.04
+  MW_g: 16.04249891
 CH4:
   << : *CH4properties
   Background_VV: 1.8e-6
   FullName: Methane
-  MW_g: 16.04
+C12H4_PROP: &C12H4properties
+  Formula: C12H4
+  Is_Gas: true
+  MW_g: 16.03130013
+C12H4:
+  << : *C12H4properties
+  Background_VV: 1.0e-20
+  FullName: Carbon-12 methane
+C13H4_PROP: &C13H4properties
+  Formula: C13H4
+  Is_Gas: true
+  MW_g: 17.03465496
+C13H4:
+  << : *C13H4properties
+  Background_VV: 1.0e-20
+  FullName: Carbon-13 methane
+C12H3D_PROP: &C12H3Dproperties
+  Formula: C12H3D
+  Is_Gas: true
+  MW_g: 17.03757687
+C12H3D:
+  << : *C12H3Dproperties
+  Background_VV: 1.0e-20
+  FullName: Deuterated carbon-12 methane
+C13H3D_PROP: &C13H3Dproperties
+  Formula: C13H3D
+  Is_Gas: true
+  MW_g: 18.04093171
+C13H3D:
+  << : *C13H3Dproperties
+  Background_VV: 1.0e-20
+  FullName: Deuterated carbon-13 methane
 CH4_BBN:
   << : *CH4properties
   Background_VV: 1.0e-20
@@ -2721,6 +2752,102 @@ LCH4bySoil:
   FullName: Dummy species to track loss of CH4 by soil uptake (carbon mechanism)
   Is_Gas: true
   MW_g: 1.0    # KPP accumulator; mass conversion uses CH4 metadata
+  KPP_AbsTol: 1.0e+25
+LC12H4:
+  << : *C12H4properties
+  FullName: Dummy species to track loss rate of C12H4
+  KPP_AbsTol: 1.0e+25
+LC13H4:
+  << : *C13H4properties
+  FullName: Dummy species to track loss rate of C13H4
+  KPP_AbsTol: 1.0e+25
+LC12H3D:
+  << : *C12H3Dproperties
+  FullName: Dummy species to track loss rate of C12H3D
+  KPP_AbsTol: 1.0e+25
+LC13H3D:
+  << : *C13H3Dproperties
+  FullName: Dummy species to track loss rate of C13H3D
+  KPP_AbsTol: 1.0e+25
+L12CH4byOH:
+  FullName: KPP accumulator for C12H4 loss by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+L12CH4byCl:
+  FullName: KPP accumulator for C12H4 loss by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+L12CH4byO1D:
+  FullName: KPP accumulator for C12H4 loss by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+L12CH4bySoil:
+  FullName: KPP accumulator for C12H4 loss to soils
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+L13CH4byOH:
+  FullName: KPP accumulator for C13H4 loss by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+L13CH4byCl:
+  FullName: KPP accumulator for C13H4 loss by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+L13CH4byO1D:
+  FullName: KPP accumulator for C13H4 loss by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+L13CH4bySoil:
+  FullName: KPP accumulator for C13H4 loss to soils
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+L12CH3DbyOH:
+  FullName: KPP accumulator for C12H3D loss by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+L12CH3DbyCl:
+  FullName: KPP accumulator for C12H3D loss by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+L12CH3DbyO1D:
+  FullName: KPP accumulator for C12H3D loss by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+L12CH3DbySoil:
+  FullName: KPP accumulator for C12H3D loss to soils
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+L13CH3DbyOH:
+  FullName: KPP accumulator for C13H3D loss by OH
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+L13CH3DbyCl:
+  FullName: KPP accumulator for C13H3D loss by Cl
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+L13CH3DbyO1D:
+  FullName: KPP accumulator for C13H3D loss by O1D
+  Is_Gas: true
+  MW_g: 1.0
+  KPP_AbsTol: 1.0e+25
+L13CH3DbySoil:
+  FullName: KPP accumulator for C13H3D loss to soils
+  Is_Gas: true
+  MW_g: 1.0
   KPP_AbsTol: 1.0e+25
 LCO:
   FullName: Dummy species to track loss rate of CO

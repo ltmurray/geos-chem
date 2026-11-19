@@ -348,3 +348,72 @@ function singleOxidantsSpecies() {
     updateHistory        "${exclude}" "${rundir}" "${include}"
     updateExtData        "${exclude}" "${rundir}"
 }
+
+
+function methaneIsotopologues() {
+
+    #========================================================================
+    # Configure a CH4-only prescribed-oxidants run with stable methane
+    # isotopologues.  Extension 115 partitions each hierarchy-resolved CH4
+    # sector using its gridded d13C and dD source signatures.
+    #
+    # Arguments:
+    # ${1} : Path to the run directory
+    #========================================================================
+
+    local rundir="${1:-.}"
+    local geos="${rundir}/geoschem_config.yml"
+    local hemco="${rundir}/HEMCO_Config.rc"
+    local hdiag="${rundir}/HEMCO_Diagn.rc"
+    local hist="${rundir}/HISTORY.rc"
+    local tmp
+
+    # Transport total CH4 plus all four stable isotopologues.
+    sed -i '/^[[:space:]]*- CH4[[:space:]]*$/a\      - C12H4\n      - C13H4\n      - C12H3D\n      - C13H3D' "${geos}"
+
+    # Activate the isotope partitioning extension.  All ordinary inventory
+    # records continue to target CH4 only; extension 115 creates the
+    # isotopologue-specific mass fluxes online.
+    sed -i -E 's|^(115[[:space:]]+CH4_Isotopologues[[:space:]]+:[[:space:]]+)off|\1on |' "${hemco}"
+
+    # The standard carbon restart contains total CH4 but not the four isotope
+    # tracers.  Request CH4 explicitly instead of expanding ?ADV? to every
+    # transported species.  GEOS-Chem will then initialize each absent isotope
+    # from its BackgroundVV value in species_database.yml.
+    sed -i -E \
+        's|^(\*[[:space:]]+SPC_)[[:space:]]+(.*[[:space:]])SpeciesRst_\?ADV\?|\1CH4           \2SpeciesRst_CH4|' \
+        "${hemco}"
+
+    # Mirror every CH4 diagnostic for all four isotopologues and select
+    # extension 115, which is where their emissions are added.  Isotopologue
+    # biomass burning is explicitly stored in extension category 9.
+    tmp=$(mktemp)
+    awk '
+        {
+            print
+            if ( $1 ~ /^EmisCH4_/ && $2 == "CH4" ) {
+                name = $1
+                n = split( "C12H4 C13H4 C12H3D C13H3D", spc, " " )
+                for ( i = 1; i <= n; i++ ) {
+                    $1 = name
+                    sub( /^EmisCH4_/, "Emis" spc[i] "_", $1 )
+                    $2 = spc[i]
+                    $3 = 115
+                    if ( name == "EmisCH4_Total" ) $3 = -1
+                    if ( name == "EmisCH4_BiomassBurn" ) $4 = 9
+                    longName = $8
+                    sub( /^CH4_/, spc[i] "_", longName )
+                    printf "%-27s %-7s %5d %4d %4d %3d  %-8s  %s\n",     \
+                           $1, $2, $3, $4, $5, $6, $7, longName
+                }
+            }
+        }
+    ' "${hdiag}" > "${tmp}" || return 1
+    mv "${tmp}" "${hdiag}"
+
+    # Archive isotope concentrations, aggregate chemical losses, isotope
+    # ratios, and the emission checks by default.
+    sed -i "/^[[:space:]]*'SpeciesConc',/a\             'Isotopologues'," "${hist}"
+
+    sed -i "/'Loss_CH4/a\                             'Loss_C12H4                    ',\n                             'Loss_C13H4                    ',\n                             'Loss_C12H3D                   ',\n                             'Loss_C13H3D                   '," "${hist}"
+}

@@ -107,7 +107,7 @@ printf "${thinline}Choose simulation type:${thinline}"
 printf "   1. Full chemistry\n"
 printf "   2. Aerosols only\n"
 printf "   3. Carbon\n"
-printf "   4. Oxidants\n"
+printf "   4. Prescribed Oxidant Runs\n"
 printf "   5. Hg\n"
 printf "   6. POPs\n"
 printf "   7. Tagged O3\n"
@@ -283,7 +283,22 @@ elif [[ "x${sim_name}" == "xoxidants" ]]; then
 	if [[ "x${prompt}" == "x1" ]]; then
 	    sim_extra_option="none"
 	elif [[ "x${prompt}" == "x2" ]]; then
-	    sim_extra_option="CH4"
+	    printf "${thinline}Choose CH4-only configuration:${thinline}"
+	    printf "  1. Total CH4 only\n"
+	    printf "  2. Stable CH4 isotopologues\n"
+	    valid_ch4=0
+	    while [ "${valid_ch4}" -eq 0 ]; do
+		read -p "${USER_PROMPT}" ch4_prompt
+		valid_ch4=1
+		if [[ "x${ch4_prompt}" == "x1" ]]; then
+		    sim_extra_option="CH4"
+		elif [[ "x${ch4_prompt}" == "x2" ]]; then
+		    sim_extra_option="CH4_ISOTOPOLOGUES"
+		else
+		    valid_ch4=0
+		    printf "Invalid selection. Try again.\n"
+		fi
+	    done
 	elif [[ "x${prompt}" == "x3" ]]; then
 	    sim_extra_option="CO"
 	else
@@ -1319,7 +1334,12 @@ if [[ "x${sim_name}" == "xcarbon"   ||
       "x${sim_name}" == "xoxidants" ]]; then
     if [[ "x${sim_extra_option}" != "xnone" ]]; then
 	if [[ "x${sim_name}" == "xoxidants" ]]; then
-	    singleOxidantsSpecies "${sim_extra_option}" "${rundir}"
+	    if [[ "x${sim_extra_option}" == "xCH4_ISOTOPOLOGUES" ]]; then
+		singleOxidantsSpecies "CH4" "${rundir}"
+		methaneIsotopologues "${rundir}"
+	    else
+		singleOxidantsSpecies "${sim_extra_option}" "${rundir}"
+	    fi
 	else
 	    singleCarbonSpecies "${sim_extra_option}" "${rundir}"
 	fi

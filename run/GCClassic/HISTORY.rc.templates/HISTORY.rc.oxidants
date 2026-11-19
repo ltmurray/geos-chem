@@ -79,6 +79,18 @@ COLLECTIONS: 'Restart',
                               #'SpeciesConcMND_?ALL?          ',
 ::
 #==============================================================================
+# %%%%% THE Isotopologues COLLECTION %%%%%
+#
+# Stable methane isotope composition
+#==============================================================================
+  Isotopologues.template:          '%y4%m2%d2_%h2%n2z.nc4',
+  Isotopologues.frequency:         ${RUNDIR_HIST_TIME_AVG_FREQ}
+  Isotopologues.duration:          ${RUNDIR_HIST_TIME_AVG_DUR}
+  Isotopologues.mode:              'time-averaged'
+  Isotopologues.fields:            'd13CCH4                       ',
+                              'd2HCH4                        ',
+::
+#==============================================================================
 # %%%%% THE Budget COLLECTION %%%%%
 #
 # GEOS-Chem budget diagnostics defined as species kg/s in the column

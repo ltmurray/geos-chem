@@ -43,8 +43,13 @@ MODULE Offline_Oxidants_Mod
   LOGICAL               :: useGlobOHbmk10yr
   LOGICAL               :: useGlobOHv5
   INTEGER               :: id_CH4,     id_CH4_adv, id_CO,      id_CO_adv
+  INTEGER               :: id_C12H4,   id_C13H4,   id_C12H3D,  id_C13H3D
   INTEGER               :: id_OH
-  REAL(fp)              :: xnumol_CH4, xnumol_CO,  xnumol_OH
+  REAL(fp)              :: xnumol_CH4,   xnumol_C12H4,  xnumol_C13H4
+  REAL(fp)              :: xnumol_C12H3D, xnumol_C13H3D
+  REAL(fp)              :: xnumol_CO,     xnumol_OH
+  REAL(fp)              :: mw_CH4,        mw_C12H4,      mw_C13H4
+  REAL(fp)              :: mw_C12H3D,     mw_C13H3D
 
   ! Arrays
   REAL(fp), ALLOCATABLE :: sumOfCosSza(:,:)
@@ -55,6 +60,9 @@ MODULE Offline_Oxidants_Mod
   REAL(fp), PARAMETER   :: CM2perM2    = 1.0e+4_fp
   REAL(fp), PARAMETER   :: CM3perM3    = 1.0e+6_fp
   REAL(fp), PARAMETER   :: toMolecCm3  = ( AVO / AIRMW ) * 1.0e-3_fp
+  ! Defaults overridden by extension 115 options in HEMCO_Config.rc
+  REAL(fp)              :: Rs_13C_VPDB = 0.0111802_fp
+  REAL(fp)              :: Rs_D_VSMOW  = 1.5576e-4_fp
 
 CONTAINS
 !EOC
@@ -126,6 +134,8 @@ CONTAINS
     INTEGER                :: S
     REAL(fp)               :: dtChem,    facDiurnal
     REAL(fp)               :: soilLossRate
+    REAL(fp)               :: atomsD, atomsH, ratio
+    REAL(fp)               :: rocCH4, rocD13, rocDD
     REAL(fp)               :: tsPerDay
     REAL(f4)               :: timeAfter, timeBefore
 
@@ -182,6 +192,17 @@ CONTAINS
           CALL InquireGlobalOHversion( Input_Opt, RC )
           IF ( RC /= GC_SUCCESS ) THEN
              errMsg = 'Error encountered in "InquireGlobalOHversion"!'
+             CALL GC_Error( errMsg, RC, thisLoc )
+             RETURN
+          ENDIF
+       ENDIF
+
+       ! Read the isotope-reference ratios used by extension 115
+       IF ( id_C12H4 > 0 .or. id_C13H4 > 0 .or.                         &
+            id_C12H3D > 0 .or. id_C13H3D > 0 ) THEN
+          CALL InquireIsotopeStandards( Input_Opt, RC )
+          IF ( RC /= GC_SUCCESS ) THEN
+             errMsg = 'Error encountered in "InquireIsotopeStandards"!'
              CALL GC_Error( errMsg, RC, thisLoc )
              RETURN
           ENDIF
@@ -453,6 +474,91 @@ CONTAINS
        ENDDO
        ENDDO
        !$OMP END PARALLEL DO
+
+       ! Diagnose stable-isotope composition from molecular abundances.
+       ! Molecular weights come exclusively from species_database.yml.
+       IF ( id_C12H4 > 0 .and. id_C13H4 > 0 .and.                       &
+            id_C12H3D > 0 .and. id_C13H3D > 0 ) THEN
+          !$OMP PARALLEL DO                                               &
+          !$OMP DEFAULT( SHARED                                          )&
+          !$OMP PRIVATE( I, J, L, atomsD, atomsH, ratio                  )&
+          !$OMP PRIVATE( rocCH4, rocD13, rocDD                           )&
+          !$OMP COLLAPSE( 3                                              )
+          DO L = 1, State_Grid%NZ
+          DO J = 1, State_Grid%NY
+          DO I = 1, State_Grid%NX
+
+             IF ( State_Diag%Archive_d13CCH4 ) THEN
+                atomsH = Spc(id_C12H4)%Conc(I,J,L)  / mw_C12H4          &
+                       + Spc(id_C12H3D)%Conc(I,J,L) / mw_C12H3D
+                State_Diag%d13CCH4(I,J,L) = 0.0_fp
+                IF ( atomsH > 0.0_fp ) THEN
+                   ratio = ( Spc(id_C13H4)%Conc(I,J,L)  / mw_C13H4       &
+                           + Spc(id_C13H3D)%Conc(I,J,L) / mw_C13H3D )    &
+                           / atomsH
+                   State_Diag%d13CCH4(I,J,L) =                           &
+                        ( ratio / Rs_13C_VPDB - 1.0_fp ) * 1000.0_fp
+                ENDIF
+             ENDIF
+
+             IF ( State_Diag%Archive_d2HCH4 ) THEN
+                atomsD = Spc(id_C12H3D)%Conc(I,J,L) / mw_C12H3D         &
+                       + Spc(id_C13H3D)%Conc(I,J,L) / mw_C13H3D
+                atomsH = 4.0_fp * Spc(id_C12H4)%Conc(I,J,L) / mw_C12H4  &
+                       + 4.0_fp * Spc(id_C13H4)%Conc(I,J,L) / mw_C13H4  &
+                       + 3.0_fp * Spc(id_C12H3D)%Conc(I,J,L) / mw_C12H3D&
+                       + 3.0_fp * Spc(id_C13H3D)%Conc(I,J,L) / mw_C13H3D
+                State_Diag%d2HCH4(I,J,L) = 0.0_fp
+                IF ( atomsH > 0.0_fp ) THEN
+                   ratio = atomsD / atomsH
+                   State_Diag%d2HCH4(I,J,L) =                            &
+                        ( ratio / Rs_D_VSMOW - 1.0_fp ) * 1000.0_fp
+                ENDIF
+             ENDIF
+
+             ! Print surface methane and stable-isotope composition at the
+             ! 4 x 5 grid box containing Rochester, New York.  Retain the
+             ! legacy ROC record layout for real-time comparison with the
+             ! GCClassic 14.5 spinup.  Radiomethane is not yet implemented
+             ! in the prescribed-oxidants mechanism, so its fields are
+             ! reported explicitly as unavailable.
+             IF ( I == 21 .and. J == 34 .and. L == 1 ) THEN
+                rocCH4 = 0.0_fp
+                rocD13 = 0.0_fp
+                rocDD  = 0.0_fp
+                IF ( State_Met%AD(I,J,L) > 0.0_fp ) THEN
+                   rocCH4 = 1.0e9_fp * Spc(id_CH4)%Conc(I,J,L)           &
+                          / State_Met%AD(I,J,L) * AIRMW / mw_CH4
+                ENDIF
+                atomsH = Spc(id_C12H4)%Conc(I,J,L)  / mw_C12H4          &
+                       + Spc(id_C12H3D)%Conc(I,J,L) / mw_C12H3D
+                IF ( atomsH > 0.0_fp ) THEN
+                   ratio = ( Spc(id_C13H4)%Conc(I,J,L)  / mw_C13H4       &
+                           + Spc(id_C13H3D)%Conc(I,J,L) / mw_C13H3D )    &
+                           / atomsH
+                   rocD13 = ( ratio / Rs_13C_VPDB - 1.0_fp ) * 1000.0_fp
+                ENDIF
+                atomsD = Spc(id_C12H3D)%Conc(I,J,L) / mw_C12H3D         &
+                       + Spc(id_C13H3D)%Conc(I,J,L) / mw_C13H3D
+                atomsH = 4.0_fp * Spc(id_C12H4)%Conc(I,J,L) / mw_C12H4  &
+                       + 4.0_fp * Spc(id_C13H4)%Conc(I,J,L) / mw_C13H4  &
+                       + 3.0_fp * Spc(id_C12H3D)%Conc(I,J,L) / mw_C12H3D&
+                       + 3.0_fp * Spc(id_C13H3D)%Conc(I,J,L) / mw_C13H3D
+                IF ( atomsH > 0.0_fp ) THEN
+                   rocDD = ( atomsD / atomsH / Rs_D_VSMOW - 1.0_fp )    &
+                         * 1000.0_fp
+                ENDIF
+100             FORMAT( 'ROC: CH4 :', F10.2, ' ppb | δ13-CH4: ', F7.1, &
+                     ' ‰    |   δD-CH4: ', F7.1,                       &
+                     ' ‰   |   pMC-CH4: N/A | D14CH4: N/A' )
+                WRITE( 6, 100 ) rocCH4, rocD13, rocDD
+             ENDIF
+
+          ENDDO
+          ENDDO
+          ENDDO
+          !$OMP END PARALLEL DO
+       ENDIF
 
        !=====================================================================
        ! Exit with error if the integration failed
@@ -746,6 +852,10 @@ CONTAINS
     !========================================================================
     RC         = GC_SUCCESS
     xnumol_CH4 = 1.0_fp
+    xnumol_C12H4 = 1.0_fp
+    xnumol_C13H4 = 1.0_fp
+    xnumol_C12H3D = 1.0_fp
+    xnumol_C13H3D = 1.0_fp
     xnumol_CO  = 1.0_fp
     xnumol_OH  = 1.0_fp
     errMsg     = ''
@@ -769,14 +879,36 @@ CONTAINS
     !========================================================================
     id_CH4        = Ind_( 'CH4'        )
     id_CH4_adv    = Ind_( 'CH4',   'A' )
+    id_C12H4      = Ind_( 'C12H4'      )
+    id_C13H4      = Ind_( 'C13H4'      )
+    id_C12H3D     = Ind_( 'C12H3D'     )
+    id_C13H3D     = Ind_( 'C13H3D'     )
     id_CO         = Ind_( 'CO'         )
     id_CO_adv     = Ind_( 'CO',    'A' )
     id_OH         = Ind_( 'FixedOH'    )
 
     ! Define xnumol factors = molec/kg ratios
     ! These are useful in unit conversions
-    IF ( id_CH4 > 0 ) &
-       xnumol_CH4 = AVO / ( State_Chm%SpcData(id_CH4)%Info%MW_g * 1.0e-3_fp )
+    IF ( id_CH4 > 0 ) THEN
+       mw_CH4     = State_Chm%SpcData(id_CH4)%Info%MW_g
+       xnumol_CH4 = AVO / ( mw_CH4 * 1.0e-3_fp )
+    ENDIF
+    IF ( id_C12H4 > 0 ) THEN
+       mw_C12H4     = State_Chm%SpcData(id_C12H4)%Info%MW_g
+       xnumol_C12H4 = AVO / ( mw_C12H4 * 1.0e-3_fp )
+    ENDIF
+    IF ( id_C13H4 > 0 ) THEN
+       mw_C13H4     = State_Chm%SpcData(id_C13H4)%Info%MW_g
+       xnumol_C13H4 = AVO / ( mw_C13H4 * 1.0e-3_fp )
+    ENDIF
+    IF ( id_C12H3D > 0 ) THEN
+       mw_C12H3D     = State_Chm%SpcData(id_C12H3D)%Info%MW_g
+       xnumol_C12H3D = AVO / ( mw_C12H3D * 1.0e-3_fp )
+    ENDIF
+    IF ( id_C13H3D > 0 ) THEN
+       mw_C13H3D     = State_Chm%SpcData(id_C13H3D)%Info%MW_g
+       xnumol_C13H3D = AVO / ( mw_C13H3D * 1.0e-3_fp )
+    ENDIF
     IF ( id_CO  > 0 ) &
        xnumol_CO  = AVO / ( State_Chm%SpcData(id_CO )%Info%MW_g * 1.0e-3_fp )
     IF ( id_OH  > 0 ) &
@@ -786,7 +918,9 @@ CONTAINS
     ! Initialize module variables in oxidants_Funcs (in KPP)
     !========================================================================
     IF ( (id_CH4 > 0) .OR. (id_CO > 0) ) THEN
-       CALL oxidants_InitKPPFuncs( xnumol_CH4, xnumol_CO, RC )
+       CALL oxidants_InitKPPFuncs(                                        &
+            xnumol_CH4,   xnumol_C12H4,  xnumol_C13H4,                   &
+            xnumol_C12H3D, xnumol_C13H3D, xnumol_CO, RC                  )
        IF ( RC /= GC_SUCCESS ) THEN
           errMsg = 'Cannot initialize module variables in oxidants_InitCarbonChem'
           CALL GC_Error( errMsg, RC, thisLoc )
@@ -1121,6 +1255,73 @@ CONTAINS
   END SUBROUTINE InquireGlobalOHversion
 !EOC
 !------------------------------------------------------------------------------
+!BOP
+!
+! !IROUTINE: InquireIsotopeStandards
+!
+! !DESCRIPTION: Reads the reference isotope ratios used by the methane
+!  isotopologue HEMCO extension so emission partitioning and diagnostics use
+!  exactly the same standards.
+!\\
+!\\
+! !INTERFACE:
+!
+  SUBROUTINE InquireIsotopeStandards( Input_Opt, RC )
+!
+! !USES:
+!
+    USE ErrCode_Mod
+    USE Hco_Utilities_Gc_Mod, ONLY : HCO_GC_GetOption
+    USE Input_Opt_Mod,        ONLY : OptInput
+!
+! !INPUT PARAMETERS:
+!
+    TYPE(OptInput), INTENT(IN)  :: Input_Opt
+!
+! !OUTPUT PARAMETERS:
+!
+    INTEGER,        INTENT(OUT) :: RC
+!EOP
+!------------------------------------------------------------------------------
+!BOC
+!
+! !LOCAL VARIABLES:
+!
+    INTEGER            :: IOS
+    CHARACTER(LEN=255) :: optVal
+    CHARACTER(LEN=255) :: thisLoc
+    CHARACTER(LEN=512) :: errMsg
+
+    RC      = GC_SUCCESS
+    errMsg  = ''
+    thisLoc = &
+     ' -> at InquireIsotopeStandards (in module GeosCore/offline_oxidants_mod.F90)'
+
+    optVal = HCO_GC_GetOption( 'R13_VPDB', extNr=115 )
+    READ( optVal, *, IOSTAT=IOS ) Rs_13C_VPDB
+    IF ( IOS /= 0 .or. Rs_13C_VPDB <= 0.0_fp ) THEN
+       errMsg = 'Invalid R13_VPDB option for HEMCO extension 115!'
+       CALL GC_Error( errMsg, RC, thisLoc )
+       RETURN
+    ENDIF
+
+    optVal = HCO_GC_GetOption( 'RD_VSMOW', extNr=115 )
+    READ( optVal, *, IOSTAT=IOS ) Rs_D_VSMOW
+    IF ( IOS /= 0 .or. Rs_D_VSMOW <= 0.0_fp ) THEN
+       errMsg = 'Invalid RD_VSMOW option for HEMCO extension 115!'
+       CALL GC_Error( errMsg, RC, thisLoc )
+       RETURN
+    ENDIF
+
+    IF ( Input_Opt%amIRoot ) THEN
+       WRITE( 6, 100 ) Rs_13C_VPDB, Rs_D_VSMOW
+ 100   FORMAT( 'Offline_Oxidants: Isotope reference ratios: ',            &
+               'R13_VPDB=', es13.6, ', RD_VSMOW=', es13.6 )
+    ENDIF
+
+  END SUBROUTINE InquireIsotopeStandards
+!EOC
+!------------------------------------------------------------------------------
 !                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
@@ -1190,6 +1391,14 @@ CONTAINS
 
     IF ( State_Diag%Archive_LossCH4bySoil ) THEN
        State_Diag%LossCH4bySoil = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_d13CCH4 ) THEN
+       State_Diag%d13CCH4 = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_d2HCH4 ) THEN
+       State_Diag%d2HCH4 = 0.0_f4
     ENDIF
 
     IF ( State_Diag%Archive_LossCObyOH ) THEN

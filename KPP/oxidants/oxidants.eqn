@@ -20,6 +20,10 @@ v14.1.0 (release TBD)
 
 #DEFVAR
 CH4         = IGNORE;  { Active methane species                   }
+C12H4       = IGNORE;  { Active carbon-12 methane                 }
+C13H4       = IGNORE;  { Active carbon-13 methane                 }
+C12H3D      = IGNORE;  { Active deuterated carbon-12 methane      }
+C13H3D      = IGNORE;  { Active deuterated carbon-13 methane      }
 CO          = IGNORE;  { Active carbon monoxide species           }
 PCOfromCH4  = IGNORE;  { Tracks P(CO) from CH4   for diagnostics }
 PCOfromNMVOC= IGNORE;  { Tracks P(CO) from NMVOC for diagnostics }
@@ -27,6 +31,22 @@ LCH4byOH    = IGNORE;  { Dummy spc to track loss of CH4 by OH     }
 LCH4byCl    = IGNORE;  { Dummy spc to track loss of CH4 by Cl     }
 LCH4byO1D   = IGNORE;  { Dummy spc to track loss of CH4 by O(1D)  }
 LCH4bySoil  = IGNORE;  { Dummy spc to track loss of CH4 to soils  }
+L12CH4byOH  = IGNORE;  { Tracks C12H4 loss by OH                  }
+L12CH4byCl  = IGNORE;  { Tracks C12H4 loss by Cl                  }
+L12CH4byO1D = IGNORE;  { Tracks C12H4 loss by O(1D)               }
+L12CH4bySoil= IGNORE;  { Tracks C12H4 loss to soils               }
+L13CH4byOH  = IGNORE;  { Tracks C13H4 loss by OH                  }
+L13CH4byCl  = IGNORE;  { Tracks C13H4 loss by Cl                  }
+L13CH4byO1D = IGNORE;  { Tracks C13H4 loss by O(1D)               }
+L13CH4bySoil= IGNORE;  { Tracks C13H4 loss to soils               }
+L12CH3DbyOH = IGNORE;  { Tracks C12H3D loss by OH                 }
+L12CH3DbyCl = IGNORE;  { Tracks C12H3D loss by Cl                 }
+L12CH3DbyO1D= IGNORE;  { Tracks C12H3D loss by O(1D)              }
+L12CH3DbySoil=IGNORE;  { Tracks C12H3D loss to soils              }
+L13CH3DbyOH = IGNORE;  { Tracks C13H3D loss by OH                 }
+L13CH3DbyCl = IGNORE;  { Tracks C13H3D loss by Cl                 }
+L13CH3DbyO1D= IGNORE;  { Tracks C13H3D loss by O(1D)              }
+L13CH3DbySoil=IGNORE;  { Tracks C13H3D loss to soils              }
 LCObyOH     = IGNORE;  { Dummy spc to track loss of CO  by OH     }
 
 #DEFFIX
@@ -52,6 +72,34 @@ CH4 + FixedO1D = LCH4byO1D           : 1.75d-10;
 // Surface-only first-order soil uptake.  k_Oxidants(4) is diagnosed from the
 // HEMCO MeMo uptake flux and the instantaneous surface-level CH4 mass.
 CH4             = LCH4bySoil          : k_Oxidants(4);
+
+// Stable methane isotopologues.  The OH, Cl, and O(1D) isotope effects are
+// based on the 14.5 development mechanism, while soil uptake uses the same
+// total-CH4-derived rate with isotope-specific fractionation.
+
+// OH oxidation
+C12H4  + FixedOH = L12CH4byOH  : 2.45d-12*EXP(-1775.0d0/TEMP);
+C13H4  + FixedOH = L13CH4byOH  : 2.45d-12*EXP(-1775.0d0/TEMP)/1.0061d0;
+C12H3D + FixedOH = L12CH3DbyOH : 3.50d-12*EXP(-1950.0d0/TEMP);
+C13H3D + FixedOH = L13CH3DbyOH : 2.45d-12*EXP(-1775.0d0/TEMP)/1.34d0;
+
+// Cl oxidation
+C12H4  + FixedCl = L12CH4byCl  : 9.60d-12*EXP(-1360.0d0/TEMP);
+C13H4  + FixedCl = L13CH4byCl  : 9.60d-12*EXP(-1360.0d0/TEMP)/1.0621d0;
+C12H3D + FixedCl = L12CH3DbyCl : 9.60d-12*EXP(-1360.0d0/TEMP)/(1.278d0*EXP(51.31d0/TEMP));
+C13H3D + FixedCl = L13CH3DbyCl : 9.60d-12*EXP(-1360.0d0/TEMP)/1.60d0;
+
+// O(1D) oxidation
+C12H4  + FixedO1D = L12CH4byO1D  : 1.75d-10;
+C13H4  + FixedO1D = L13CH4byO1D  : 1.75d-10/1.0130d0;
+C12H3D + FixedO1D = L12CH3DbyO1D : 1.75d-10/1.0600d0;
+C13H3D + FixedO1D = L13CH3DbyO1D : 1.75d-10/1.0600d0/1.0130d0;
+
+// Soil uptake
+C12H4  = L12CH4bySoil  : k_Oxidants(4);
+C13H4  = L13CH4bySoil  : k_Oxidants(4)/1.018d0;
+C12H3D = L12CH3DbySoil : k_Oxidants(4)/1.083d0;
+C13H3D = L13CH3DbySoil : k_Oxidants(4)/1.018d0/1.083d0;
 //
 // Rate k_Oxidants(1) is the HEMCO-supplied P(CO) from CH4.
 DummyCH4      = CO    + PCOfromCH4   : k_Oxidants(1);

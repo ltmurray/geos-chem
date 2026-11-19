@@ -1012,6 +1012,12 @@ MODULE State_Diag_Mod
      REAL(f4),           POINTER :: LossCH4bySoil(:,:)
      LOGICAL                     :: Archive_LossCH4bySoil
 
+     REAL(f4),           POINTER :: d13CCH4(:,:,:)
+     LOGICAL                     :: Archive_d13CCH4
+
+     REAL(f4),           POINTER :: d2HCH4(:,:,:)
+     LOGICAL                     :: Archive_d2HCH4
+
      REAL(f4),           POINTER :: LossCObyOH(:,:,:)
      LOGICAL                     :: Archive_LossCObyOH
 
@@ -2587,6 +2593,11 @@ CONTAINS
     State_Diag%Archive_LossCH4byO1D              = .FALSE.
     State_Diag%LossCH4bySoil                     => NULL()
     State_Diag%Archive_LossCH4bySoil             = .FALSE.
+
+    State_Diag%d13CCH4                           => NULL()
+    State_Diag%Archive_d13CCH4                   = .FALSE.
+    State_Diag%d2HCH4                            => NULL()
+    State_Diag%Archive_d2HCH4                    = .FALSE.
 
     State_Diag%LossCObyOH                        => NULL()
     State_Diag%Archive_LossCObyOH                = .FALSE.
@@ -10136,7 +10147,7 @@ CONTAINS
        ! being requested as diagnostic output when the corresponding
        ! array has not been allocated.
        !-------------------------------------------------------------------
-       DO N = 1, 5
+       DO N = 1, 7
 
           ! Select the diagnostic ID
           SELECT CASE( N )
@@ -10913,6 +10924,50 @@ CONTAINS
        ENDIF
 
        !--------------------------------------------------------------------
+       ! Stable carbon isotope composition of methane
+       !--------------------------------------------------------------------
+       diagID  = 'd13CCH4'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%d13CCH4,                             &
+            archiveData    = State_Diag%Archive_d13CCH4,                     &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Stable hydrogen isotope composition of methane
+       !--------------------------------------------------------------------
+       diagID  = 'd2HCH4'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%d2HCH4,                              &
+            archiveData    = State_Diag%Archive_d2HCH4,                      &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
        ! Loss of CO by OH
        !--------------------------------------------------------------------
        diagID  = 'LossCObyOH'
@@ -10957,6 +11012,10 @@ CONTAINS
                 diagID = 'LossCH4bySoil'
              CASE( 5  )
                 diagID = 'LossCObyOH'
+             CASE( 6  )
+                diagID = 'd13CCH4'
+             CASE( 7  )
+                diagID = 'd2HCH4'
           END SELECT
 
           ! Exit if any of the above are in the diagnostic list
@@ -13985,6 +14044,16 @@ CONTAINS
                    RC       = RC                                            )
     IF ( RC /= GC_SUCCESS ) RETURN
 
+    CALL Finalize( diagId   = 'd13CCH4',                                    &
+                   Ptr2Data = State_Diag%d13CCH4,                           &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'd2HCH4',                                     &
+                   Ptr2Data = State_Diag%d2HCH4,                            &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
     CALL Finalize( diagId   = 'LossCObyOH',                                  &
                    Ptr2Data = State_Diag%LossCObyOH,                         &
                    RC       = RC                                            )
@@ -16435,6 +16504,16 @@ CONTAINS
        IF ( isDesc    ) Desc  = 'Loss of CH4 by soil uptake'
        IF ( isUnits   ) Units = 'kg s-1'
        IF ( isRank    ) Rank  =  2
+
+    ELSE IF ( TRIM( Name_AllCaps ) == 'D13CCH4' ) THEN
+       IF ( isDesc    ) Desc  = 'Delta C-13 of methane vs. VPDB'
+       IF ( isUnits   ) Units = 'permil'
+       IF ( isRank    ) Rank  =  3
+
+    ELSE IF ( TRIM( Name_AllCaps ) == 'D2HCH4' ) THEN
+       IF ( isDesc    ) Desc  = 'Delta H-2 of methane vs. VSMOW'
+       IF ( isUnits   ) Units = 'permil'
+       IF ( isRank    ) Rank  =  3
 
     ELSE IF ( TRIM( Name_AllCaps ) == 'LOSSCOBYOH' ) THEN
        IF ( isDesc    ) Desc  = 'Loss of CO by reaction with OH'

@@ -13,6 +13,10 @@
 PCO : CO;
 LCO : CO;
 LCH4 : CH4;
+LC12H4 : C12H4;
+LC13H4 : C13H4;
+LC12H3D : C12H3D;
+LC13H3D : C13H3D;
 
 #INLINE F90_GLOBAL
 ! Inline common variables into gckpp_Global.F90
