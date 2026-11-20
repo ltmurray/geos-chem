@@ -26,55 +26,41 @@
 MODULE gckpp_Monitor
 
 
-  CHARACTER(LEN=32), PARAMETER, DIMENSION(41) :: SPC_NAMES = (/ &
+  CHARACTER(LEN=32), PARAMETER, DIMENSION(11) :: SPC_NAMES = (/ &
      'CH4                             ','C12H4                           ','C13H4                           ', & ! index 1 - 3
      'C12H3D                          ','C13H3D                          ','CO                              ', & ! index 4 - 6
-     'PCOfromCH4                      ','PCOfromNMVOC                    ','LCH4byOH                        ', & ! index 7 - 9
-     'LCH4byCl                        ','LCH4byO1D                       ','LCH4bySoil                      ', & ! index 10 - 12
-     'L12CH4byOH                      ','L12CH4byCl                      ','L12CH4byO1D                     ', & ! index 13 - 15
-     'L12CH4bySoil                    ','L13CH4byOH                      ','L13CH4byCl                      ', & ! index 16 - 18
-     'L13CH4byO1D                     ','L13CH4bySoil                    ','L12CH3DbyOH                     ', & ! index 19 - 21
-     'L12CH3DbyCl                     ','L12CH3DbyO1D                    ','L12CH3DbySoil                   ', & ! index 22 - 24
-     'L13CH3DbyOH                     ','L13CH3DbyCl                     ','L13CH3DbyO1D                    ', & ! index 25 - 27
-     'L13CH3DbySoil                   ','LCObyOH                         ','PCO                             ', & ! index 28 - 30
-     'LCO                             ','LCH4                            ','LC12H4                          ', & ! index 31 - 33
-     'LC13H4                          ','LC12H3D                         ','LC13H3D                         ', & ! index 34 - 36
-     'FixedOH                         ','FixedCl                         ','FixedO1D                        ', & ! index 37 - 39
-     'DummyCH4                        ','DummyNMVOC                      ' /) ! index up to 41
+     'FixedOH                         ','FixedCl                         ','FixedO1D                        ', & ! index 7 - 9
+     'DummyCH4                        ','DummyNMVOC                      ' /) ! index up to 11
 
   INTEGER, DIMENSION(1) :: LOOKAT
   INTEGER, DIMENSION(1) :: MONITOR
   CHARACTER(LEN=32), DIMENSION(1) :: SMASS
   CHARACTER(LEN=100), PARAMETER, DIMENSION(23) :: EQN_NAMES = (/ &
-     '    CH4 + FixedOH --> LCH4byOH + LCH4                                                               ', & ! index 1
-     '    CH4 + FixedCl --> LCH4byCl + LCH4                                                               ', & ! index 2
-     '   CH4 + FixedO1D --> LCH4byO1D + LCH4                                                              ', & ! index 3
-     '              CH4 --> LCH4bySoil + LCH4                                                             ', & ! index 4
-     '  C12H4 + FixedOH --> L12CH4byOH + LC12H4                                                           ', & ! index 5
-     '  C13H4 + FixedOH --> L13CH4byOH + LC13H4                                                           ', & ! index 6
-     ' C12H3D + FixedOH --> L12CH3DbyOH + LC12H3D                                                         ', & ! index 7
-     ' C13H3D + FixedOH --> L13CH3DbyOH + LC13H3D                                                         ', & ! index 8
-     '  C12H4 + FixedCl --> L12CH4byCl + LC12H4                                                           ', & ! index 9
-     '  C13H4 + FixedCl --> L13CH4byCl + LC13H4                                                           ', & ! index 10
-     ' C12H3D + FixedCl --> L12CH3DbyCl + LC12H3D                                                         ', & ! index 11
-     ' C13H3D + FixedCl --> L13CH3DbyCl + LC13H3D                                                         ', & ! index 12
-     ' C12H4 + FixedO1D --> L12CH4byO1D + LC12H4                                                          ', & ! index 13
-     ' C13H4 + FixedO1D --> L13CH4byO1D + LC13H4                                                          ', & ! index 14
-     'C12H3D + FixedO1D --> L12CH3DbyO1D + LC12H3D                                                        ', & ! index 15
-     'C13H3D + FixedO1D --> L13CH3DbyO1D + LC13H3D                                                        ', & ! index 16
-     '            C12H4 --> L12CH4bySoil + LC12H4                                                         ', & ! index 17
-     '            C13H4 --> L13CH4bySoil + LC13H4                                                         ', & ! index 18
-     '           C12H3D --> L12CH3DbySoil + LC12H3D                                                       ', & ! index 19
-     '           C13H3D --> L13CH3DbySoil + LC13H3D                                                       ', & ! index 20
-     '         DummyCH4 --> CO + PCOfromCH4 + PCO                                                         ', & ! index 21
-     '     CO + FixedOH --> LCObyOH + LCO                                                                 ', & ! index 22
-     '       DummyNMVOC --> CO + PCOfromNMVOC + PCO                                                       ' /) ! index up to 23
+     '    CH4 + FixedOH --> DummyCH4                                                                      ', & ! index 1
+     '    CH4 + FixedCl --> DummyCH4                                                                      ', & ! index 2
+     '   CH4 + FixedO1D --> DummyCH4                                                                      ', & ! index 3
+     '              CH4 --> DummyCH4                                                                      ', & ! index 4
+     '  C12H4 + FixedOH --> DummyCH4                                                                      ', & ! index 5
+     '  C13H4 + FixedOH --> DummyCH4                                                                      ', & ! index 6
+     ' C12H3D + FixedOH --> DummyCH4                                                                      ', & ! index 7
+     ' C13H3D + FixedOH --> DummyCH4                                                                      ', & ! index 8
+     '  C12H4 + FixedCl --> DummyCH4                                                                      ', & ! index 9
+     '  C13H4 + FixedCl --> DummyCH4                                                                      ', & ! index 10
+     ' C12H3D + FixedCl --> DummyCH4                                                                      ', & ! index 11
+     ' C13H3D + FixedCl --> DummyCH4                                                                      ', & ! index 12
+     ' C12H4 + FixedO1D --> DummyCH4                                                                      ', & ! index 13
+     ' C13H4 + FixedO1D --> DummyCH4                                                                      ', & ! index 14
+     'C12H3D + FixedO1D --> DummyCH4                                                                      ', & ! index 15
+     'C13H3D + FixedO1D --> DummyCH4                                                                      ', & ! index 16
+     '            C12H4 --> DummyCH4                                                                      ', & ! index 17
+     '            C13H4 --> DummyCH4                                                                      ', & ! index 18
+     '           C12H3D --> DummyCH4                                                                      ', & ! index 19
+     '           C13H3D --> DummyCH4                                                                      ', & ! index 20
+     '         DummyCH4 --> CO                                                                            ', & ! index 21
+     '     CO + FixedOH --> DummyCH4                                                                      ', & ! index 22
+     '       DummyNMVOC --> CO                                                                            ' /) ! index up to 23
 
-  CHARACTER(LEN=32), PARAMETER, DIMENSION(7) :: FAM_NAMES = (/ &
-     'PCO                             ','LCO                             ','LCH4                            ', & ! index 1 - 3
-     'LC12H4                          ','LC13H4                          ','LC12H3D                         ', & ! index 4 - 6
-     'LC13H3D                         ' /) ! index up to 7
-
+  CHARACTER(LEN=32), DIMENSION(1) :: FAM_NAMES
 ! INLINED global variables
 
 ! End INLINED global variables

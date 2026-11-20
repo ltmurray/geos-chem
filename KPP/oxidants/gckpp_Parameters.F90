@@ -31,11 +31,11 @@ MODULE gckpp_Parameters
 
 
 ! NSPEC - Number of chemical species
-  INTEGER, PARAMETER :: NSPEC = 41 
+  INTEGER, PARAMETER :: NSPEC = 11
 ! NVAR - Number of Variable species
-  INTEGER, PARAMETER :: NVAR = 36 
+  INTEGER, PARAMETER :: NVAR = 6
 ! NFAM - Number of Prod/Loss Families
-  INTEGER, PARAMETER :: NFAM = 7 
+  INTEGER, PARAMETER :: NFAM = 1
 ! NVARACT - Number of Active species
   INTEGER, PARAMETER :: NVARACT = 6 
 ! NFIX - Number of Fixed species
@@ -45,13 +45,13 @@ MODULE gckpp_Parameters
 ! NVARST - Starting of variables in conc. vect.
   INTEGER, PARAMETER :: NVARST = 1 
 ! NFIXST - Starting of fixed in conc. vect.
-  INTEGER, PARAMETER :: NFIXST = 37 
+  INTEGER, PARAMETER :: NFIXST = 7
 ! NONZERO - Number of nonzero entries in Jacobian
   INTEGER, PARAMETER :: NONZERO = 1 
 ! LU_NONZERO - Number of nonzero entries in LU factoriz. of Jacobian
   INTEGER, PARAMETER :: LU_NONZERO = 1 
 ! CNVAR - (NVAR+1) Number of elements in compressed row format
-  INTEGER, PARAMETER :: CNVAR = 37 
+  INTEGER, PARAMETER :: CNVAR = 7
 ! NLOOKAT - Number of species to look at
   INTEGER, PARAMETER :: NLOOKAT = 0 
 ! NMONITOR - Number of species to monitor
@@ -68,45 +68,15 @@ MODULE gckpp_Parameters
   INTEGER, PARAMETER :: ind_C12H3D = 4 
   INTEGER, PARAMETER :: ind_C13H3D = 5 
   INTEGER, PARAMETER :: ind_CO = 6 
-  INTEGER, PARAMETER :: ind_PCOfromCH4 = 7 
-  INTEGER, PARAMETER :: ind_PCOfromNMVOC = 8 
-  INTEGER, PARAMETER :: ind_LCH4byOH = 9 
-  INTEGER, PARAMETER :: ind_LCH4byCl = 10 
-  INTEGER, PARAMETER :: ind_LCH4byO1D = 11 
-  INTEGER, PARAMETER :: ind_LCH4bySoil = 12 
-  INTEGER, PARAMETER :: ind_L12CH4byOH = 13 
-  INTEGER, PARAMETER :: ind_L12CH4byCl = 14 
-  INTEGER, PARAMETER :: ind_L12CH4byO1D = 15 
-  INTEGER, PARAMETER :: ind_L12CH4bySoil = 16 
-  INTEGER, PARAMETER :: ind_L13CH4byOH = 17 
-  INTEGER, PARAMETER :: ind_L13CH4byCl = 18 
-  INTEGER, PARAMETER :: ind_L13CH4byO1D = 19 
-  INTEGER, PARAMETER :: ind_L13CH4bySoil = 20 
-  INTEGER, PARAMETER :: ind_L12CH3DbyOH = 21 
-  INTEGER, PARAMETER :: ind_L12CH3DbyCl = 22 
-  INTEGER, PARAMETER :: ind_L12CH3DbyO1D = 23 
-  INTEGER, PARAMETER :: ind_L12CH3DbySoil = 24 
-  INTEGER, PARAMETER :: ind_L13CH3DbyOH = 25 
-  INTEGER, PARAMETER :: ind_L13CH3DbyCl = 26 
-  INTEGER, PARAMETER :: ind_L13CH3DbyO1D = 27 
-  INTEGER, PARAMETER :: ind_L13CH3DbySoil = 28 
-  INTEGER, PARAMETER :: ind_LCObyOH = 29 
-  INTEGER, PARAMETER :: ind_PCO = 30 
-  INTEGER, PARAMETER :: ind_LCO = 31 
-  INTEGER, PARAMETER :: ind_LCH4 = 32 
-  INTEGER, PARAMETER :: ind_LC12H4 = 33 
-  INTEGER, PARAMETER :: ind_LC13H4 = 34 
-  INTEGER, PARAMETER :: ind_LC12H3D = 35 
-  INTEGER, PARAMETER :: ind_LC13H3D = 36 
 
 ! Index declaration for fixed species in C
 !   C(ind_spc)
 
-  INTEGER, PARAMETER :: ind_FixedOH = 37 
-  INTEGER, PARAMETER :: ind_FixedCl = 38 
-  INTEGER, PARAMETER :: ind_FixedO1D = 39 
-  INTEGER, PARAMETER :: ind_DummyCH4 = 40 
-  INTEGER, PARAMETER :: ind_DummyNMVOC = 41 
+  INTEGER, PARAMETER :: ind_FixedOH = 7
+  INTEGER, PARAMETER :: ind_FixedCl = 8
+  INTEGER, PARAMETER :: ind_FixedO1D = 9
+  INTEGER, PARAMETER :: ind_DummyCH4 = 10
+  INTEGER, PARAMETER :: ind_DummyNMVOC = 11
 
 ! Index declaration for fixed species in FIX
 !    FIX(indf_spc) = C(ind_spc) = C(NVAR+indf_spc)

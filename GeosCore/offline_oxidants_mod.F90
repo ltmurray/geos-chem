@@ -130,8 +130,7 @@ CONTAINS
     INTEGER                :: HcoID,     I
     INTEGER                :: J,         L
     INTEGER                :: NA,        N
-    INTEGER                :: IERR,      KppId
-    INTEGER                :: S
+    INTEGER                :: IERR
     REAL(fp)               :: dtChem,    facDiurnal
     REAL(fp)               :: soilLossRate
     REAL(fp)               :: atomsD, atomsH, ratio
@@ -392,23 +391,6 @@ CONTAINS
                timeAfter  = timeAfter,                                       &
                State_Diag = State_Diag                                      )
 
-          ! Aggregate KPP family diagnostics [molec/cm3/s].  The carbon
-          ! mechanism defines PCO, LCO, and LCH4 as rate accumulators; they
-          ! are diagnostics, not transported species or restart requirements.
-          IF ( State_Diag%Archive_Loss ) THEN
-             DO S = 1, State_Diag%Map_Loss%nSlots
-                KppId = State_Diag%Map_Loss%slot2Id(S)
-                State_Diag%Loss(I,J,L,S) = C(KppId) / dtChem
-             ENDDO
-          ENDIF
-
-          IF ( State_Diag%Archive_Prod ) THEN
-             DO S = 1, State_Diag%Map_Prod%nSlots
-                KppId = State_Diag%Map_Prod%slot2Id(S)
-                State_Diag%Prod(I,J,L,S) = C(KppId) / dtChem
-             ENDDO
-          ENDIF
-
           !==================================================================
           ! Convert species back to kg
           !==================================================================
@@ -461,6 +443,118 @@ CONTAINS
           IF ( State_Diag%Archive_LossCH4bySoil .and. L == 1 ) THEN
              State_Diag%LossCH4bySoil(I,J) =                                &
                   oxidants_Get_CH4bySoil_Loss(                                &
+                       dtChem, State_Met%AIRVOL(I,J,L) )
+          ENDIF
+
+          ! Loss of C12H4 by OH [kg/s]
+          IF ( State_Diag%Archive_LossC12H4byOH ) THEN
+             State_Diag%LossC12H4byOH(I,J,L) =                                &
+                  oxidants_Get_CH4IsotopologueLoss( 2, 1,                   &
+                       dtChem, State_Met%AIRVOL(I,J,L) )
+          ENDIF
+
+          ! Loss of C12H4 by Cl [kg/s]
+          IF ( State_Diag%Archive_LossC12H4byCl ) THEN
+             State_Diag%LossC12H4byCl(I,J,L) =                                &
+                  oxidants_Get_CH4IsotopologueLoss( 2, 2,                   &
+                       dtChem, State_Met%AIRVOL(I,J,L) )
+          ENDIF
+
+          ! Loss of C12H4 by O1D [kg/s]
+          IF ( State_Diag%Archive_LossC12H4byO1D ) THEN
+             State_Diag%LossC12H4byO1D(I,J,L) =                                &
+                  oxidants_Get_CH4IsotopologueLoss( 2, 3,                   &
+                       dtChem, State_Met%AIRVOL(I,J,L) )
+          ENDIF
+
+          ! Loss of C12H4 by soil uptake [kg/s]
+          IF ( State_Diag%Archive_LossC12H4bySoil .and. L == 1 ) THEN
+             State_Diag%LossC12H4bySoil(I,J) =                                &
+                  oxidants_Get_CH4IsotopologueLoss( 2, 4,                   &
+                       dtChem, State_Met%AIRVOL(I,J,L) )
+          ENDIF
+
+          ! Loss of C13H4 by OH [kg/s]
+          IF ( State_Diag%Archive_LossC13H4byOH ) THEN
+             State_Diag%LossC13H4byOH(I,J,L) =                                &
+                  oxidants_Get_CH4IsotopologueLoss( 3, 1,                   &
+                       dtChem, State_Met%AIRVOL(I,J,L) )
+          ENDIF
+
+          ! Loss of C13H4 by Cl [kg/s]
+          IF ( State_Diag%Archive_LossC13H4byCl ) THEN
+             State_Diag%LossC13H4byCl(I,J,L) =                                &
+                  oxidants_Get_CH4IsotopologueLoss( 3, 2,                   &
+                       dtChem, State_Met%AIRVOL(I,J,L) )
+          ENDIF
+
+          ! Loss of C13H4 by O1D [kg/s]
+          IF ( State_Diag%Archive_LossC13H4byO1D ) THEN
+             State_Diag%LossC13H4byO1D(I,J,L) =                                &
+                  oxidants_Get_CH4IsotopologueLoss( 3, 3,                   &
+                       dtChem, State_Met%AIRVOL(I,J,L) )
+          ENDIF
+
+          ! Loss of C13H4 by soil uptake [kg/s]
+          IF ( State_Diag%Archive_LossC13H4bySoil .and. L == 1 ) THEN
+             State_Diag%LossC13H4bySoil(I,J) =                                &
+                  oxidants_Get_CH4IsotopologueLoss( 3, 4,                   &
+                       dtChem, State_Met%AIRVOL(I,J,L) )
+          ENDIF
+
+          ! Loss of C12H3D by OH [kg/s]
+          IF ( State_Diag%Archive_LossC12H3DbyOH ) THEN
+             State_Diag%LossC12H3DbyOH(I,J,L) =                                &
+                  oxidants_Get_CH4IsotopologueLoss( 4, 1,                   &
+                       dtChem, State_Met%AIRVOL(I,J,L) )
+          ENDIF
+
+          ! Loss of C12H3D by Cl [kg/s]
+          IF ( State_Diag%Archive_LossC12H3DbyCl ) THEN
+             State_Diag%LossC12H3DbyCl(I,J,L) =                                &
+                  oxidants_Get_CH4IsotopologueLoss( 4, 2,                   &
+                       dtChem, State_Met%AIRVOL(I,J,L) )
+          ENDIF
+
+          ! Loss of C12H3D by O1D [kg/s]
+          IF ( State_Diag%Archive_LossC12H3DbyO1D ) THEN
+             State_Diag%LossC12H3DbyO1D(I,J,L) =                                &
+                  oxidants_Get_CH4IsotopologueLoss( 4, 3,                   &
+                       dtChem, State_Met%AIRVOL(I,J,L) )
+          ENDIF
+
+          ! Loss of C12H3D by soil uptake [kg/s]
+          IF ( State_Diag%Archive_LossC12H3DbySoil .and. L == 1 ) THEN
+             State_Diag%LossC12H3DbySoil(I,J) =                                &
+                  oxidants_Get_CH4IsotopologueLoss( 4, 4,                   &
+                       dtChem, State_Met%AIRVOL(I,J,L) )
+          ENDIF
+
+          ! Loss of C13H3D by OH [kg/s]
+          IF ( State_Diag%Archive_LossC13H3DbyOH ) THEN
+             State_Diag%LossC13H3DbyOH(I,J,L) =                                &
+                  oxidants_Get_CH4IsotopologueLoss( 5, 1,                   &
+                       dtChem, State_Met%AIRVOL(I,J,L) )
+          ENDIF
+
+          ! Loss of C13H3D by Cl [kg/s]
+          IF ( State_Diag%Archive_LossC13H3DbyCl ) THEN
+             State_Diag%LossC13H3DbyCl(I,J,L) =                                &
+                  oxidants_Get_CH4IsotopologueLoss( 5, 2,                   &
+                       dtChem, State_Met%AIRVOL(I,J,L) )
+          ENDIF
+
+          ! Loss of C13H3D by O1D [kg/s]
+          IF ( State_Diag%Archive_LossC13H3DbyO1D ) THEN
+             State_Diag%LossC13H3DbyO1D(I,J,L) =                                &
+                  oxidants_Get_CH4IsotopologueLoss( 5, 3,                   &
+                       dtChem, State_Met%AIRVOL(I,J,L) )
+          ENDIF
+
+          ! Loss of C13H3D by soil uptake [kg/s]
+          IF ( State_Diag%Archive_LossC13H3DbySoil .and. L == 1 ) THEN
+             State_Diag%LossC13H3DbySoil(I,J) =                                &
+                  oxidants_Get_CH4IsotopologueLoss( 5, 4,                   &
                        dtChem, State_Met%AIRVOL(I,J,L) )
           ENDIF
 
@@ -1391,6 +1485,70 @@ CONTAINS
 
     IF ( State_Diag%Archive_LossCH4bySoil ) THEN
        State_Diag%LossCH4bySoil = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_LossC12H4byOH ) THEN
+       State_Diag%LossC12H4byOH = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_LossC12H4byCl ) THEN
+       State_Diag%LossC12H4byCl = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_LossC12H4byO1D ) THEN
+       State_Diag%LossC12H4byO1D = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_LossC12H4bySoil ) THEN
+       State_Diag%LossC12H4bySoil = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_LossC13H4byOH ) THEN
+       State_Diag%LossC13H4byOH = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_LossC13H4byCl ) THEN
+       State_Diag%LossC13H4byCl = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_LossC13H4byO1D ) THEN
+       State_Diag%LossC13H4byO1D = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_LossC13H4bySoil ) THEN
+       State_Diag%LossC13H4bySoil = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_LossC12H3DbyOH ) THEN
+       State_Diag%LossC12H3DbyOH = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_LossC12H3DbyCl ) THEN
+       State_Diag%LossC12H3DbyCl = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_LossC12H3DbyO1D ) THEN
+       State_Diag%LossC12H3DbyO1D = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_LossC12H3DbySoil ) THEN
+       State_Diag%LossC12H3DbySoil = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_LossC13H3DbyOH ) THEN
+       State_Diag%LossC13H3DbyOH = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_LossC13H3DbyCl ) THEN
+       State_Diag%LossC13H3DbyCl = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_LossC13H3DbyO1D ) THEN
+       State_Diag%LossC13H3DbyO1D = 0.0_f4
+    ENDIF
+
+    IF ( State_Diag%Archive_LossC13H3DbySoil ) THEN
+       State_Diag%LossC13H3DbySoil = 0.0_f4
     ENDIF
 
     IF ( State_Diag%Archive_d13CCH4 ) THEN

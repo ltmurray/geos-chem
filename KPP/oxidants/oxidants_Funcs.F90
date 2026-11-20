@@ -18,6 +18,10 @@ MODULE oxidants_Funcs
   USE gckpp_Precision
   USE gckpp_Parameters
   USE gckpp_Global
+  USE gckpp_Integrator, ONLY : DiagnosticLossOH, DiagnosticLossCl,       &
+                               DiagnosticLossO1D, DiagnosticLossSoil,   &
+                               DiagnosticProdCOCH4,                     &
+                               DiagnosticProdCONMVOC, DiagnosticLossCOOH
   USE Precision_Mod,   ONLY : fp
   USE rateLawUtilFuncs
 
@@ -37,6 +41,7 @@ MODULE oxidants_Funcs
   PUBLIC :: oxidants_Get_CH4byCl_Loss
   PUBLIC :: oxidants_Get_CH4byO1D_Loss
   PUBLIC :: oxidants_Get_CH4bySoil_Loss
+  PUBLIC :: oxidants_Get_CH4IsotopologueLoss
   PUBLIC :: oxidants_Get_CH4SoilUptakeRate
   PUBLIC :: oxidants_Get_CObyOH_Loss
   PUBLIC :: GC_OHCO
@@ -361,7 +366,7 @@ CONTAINS
 !------------------------------------------------------------------------------
 !BOC
 
-    flux = C(ind_PCOfromCH4) / dtChem     ! molec/cm3 --> molec/cm3/s
+    flux = DiagnosticProdCOCH4 / dtChem   ! molec/cm3 --> molec/cm3/s
 
   END FUNCTION oxidants_Get_COfromCH4_Flux
 !EOC
@@ -391,7 +396,7 @@ CONTAINS
 !------------------------------------------------------------------------------
 !BOC
 
-    flux = C(ind_PCOfromNMVOC) / dtChem   ! molec/cm3 --> molec/cm3/s
+    flux = DiagnosticProdCONMVOC / dtChem ! molec/cm3 --> molec/cm3/s
 
   END FUNCTION oxidants_Get_COfromNMVOC_Flux
 !EOC
@@ -421,7 +426,7 @@ CONTAINS
 !------------------------------------------------------------------------------
 !BOC
 
-    loss = C(ind_LCH4byOH) * airvol_m3 * 1.0e+6_dp /                        &
+    loss = DiagnosticLossOH(1) * airvol_m3 * 1.0e+6_dp /                    &
            ( dtChem * xnumol_CH4 )
 
   END FUNCTION oxidants_Get_CH4byOH_Loss
@@ -452,7 +457,7 @@ CONTAINS
 !------------------------------------------------------------------------------
 !BOC
 
-    loss = C(ind_LCH4byCl) * airvol_m3 * 1.0e+6_dp /                        &
+    loss = DiagnosticLossCl(1) * airvol_m3 * 1.0e+6_dp /                    &
            ( dtChem * xnumol_CH4 )
 
   END FUNCTION oxidants_Get_CH4byCl_Loss
@@ -483,7 +488,7 @@ CONTAINS
 !------------------------------------------------------------------------------
 !BOC
 
-    loss = C(ind_LCH4byO1D) * airvol_m3 * 1.0e+6_dp /                       &
+    loss = DiagnosticLossO1D(1) * airvol_m3 * 1.0e+6_dp /                   &
            ( dtChem * xnumol_CH4 )
 
   END FUNCTION oxidants_Get_CH4byO1D_Loss
@@ -514,10 +519,75 @@ CONTAINS
 !------------------------------------------------------------------------------
 !BOC
 
-    loss = C(ind_LCH4bySoil) * airvol_m3 * 1.0e+6_dp /                      &
+    loss = DiagnosticLossSoil(1) * airvol_m3 * 1.0e+6_dp /                  &
            ( dtChem * xnumol_CH4 )
 
   END FUNCTION oxidants_Get_CH4bySoil_Loss
+!EOC
+!------------------------------------------------------------------------------
+!                  GEOS-Chem Global Chemical Transport Model                  !
+!------------------------------------------------------------------------------
+!BOP
+!
+! !IROUTINE: oxidants_get_ch4isotopologueloss
+!
+! !DESCRIPTION: Returns a grid-box methane-isotopologue loss rate for one
+!  prescribed-oxidants process.  Isotopologue IDs 2--5 correspond to C12H4,
+!  C13H4, C12H3D, and C13H3D; process IDs 1--4 correspond to OH, Cl, O(1D),
+!  and soil uptake.
+!\
+!\
+! !INTERFACE:
+!
+  FUNCTION oxidants_Get_CH4IsotopologueLoss( isotopeId, processId, dtChem, &
+                                              airvol_m3 ) RESULT ( loss )
+!
+! !INPUT PARAMETERS:
+!
+    INTEGER,  INTENT(IN) :: isotopeId    ! Analytical diagnostic slot [2--5]
+    INTEGER,  INTENT(IN) :: processId    ! Loss process [1--4]
+    REAL(dp), INTENT(IN) :: dtChem       ! Chemistry timestep [s]
+    REAL(dp), INTENT(IN) :: airvol_m3    ! Grid-box volume [m3]
+!
+! !RETURN VALUE:
+!
+    REAL(dp)             :: loss         ! Isotopologue loss [kg/s]
+!EOP
+!------------------------------------------------------------------------------
+!BOC
+!
+! !LOCAL VARIABLES:
+!
+    REAL(dp) :: amount, xnumol
+
+    amount = 0.0_dp
+    SELECT CASE ( processId )
+       CASE ( 1 )
+          amount = DiagnosticLossOH(isotopeId)
+       CASE ( 2 )
+          amount = DiagnosticLossCl(isotopeId)
+       CASE ( 3 )
+          amount = DiagnosticLossO1D(isotopeId)
+       CASE ( 4 )
+          amount = DiagnosticLossSoil(isotopeId)
+    END SELECT
+
+    SELECT CASE ( isotopeId )
+       CASE ( 2 )
+          xnumol = xnumol_C12H4
+       CASE ( 3 )
+          xnumol = xnumol_C13H4
+       CASE ( 4 )
+          xnumol = xnumol_C12H3D
+       CASE ( 5 )
+          xnumol = xnumol_C13H3D
+       CASE DEFAULT
+          xnumol = xnumol_CH4
+    END SELECT
+
+    loss = amount * airvol_m3 * 1.0e+6_dp / ( dtChem * xnumol )
+
+  END FUNCTION oxidants_Get_CH4IsotopologueLoss
 !EOC
 !------------------------------------------------------------------------------
 !                  GEOS-Chem Global Chemical Transport Model                  !
@@ -584,7 +654,7 @@ CONTAINS
 !------------------------------------------------------------------------------
 !BOC
 
-    loss = C(ind_LCObyOH) * airvol_m3 * 1.0e+6_dp /                         &
+    loss = DiagnosticLossCOOH * airvol_m3 * 1.0e+6_dp /                     &
            ( dtChem * xnumol_CO )
 
   END FUNCTION oxidants_Get_CObyOH_Loss

@@ -1012,6 +1012,54 @@ MODULE State_Diag_Mod
      REAL(f4),           POINTER :: LossCH4bySoil(:,:)
      LOGICAL                     :: Archive_LossCH4bySoil
 
+     REAL(f4),           POINTER :: LossC12H4byOH(:,:,:)
+     LOGICAL                     :: Archive_LossC12H4byOH
+
+     REAL(f4),           POINTER :: LossC12H4byCl(:,:,:)
+     LOGICAL                     :: Archive_LossC12H4byCl
+
+     REAL(f4),           POINTER :: LossC12H4byO1D(:,:,:)
+     LOGICAL                     :: Archive_LossC12H4byO1D
+
+     REAL(f4),           POINTER :: LossC12H4bySoil(:,:)
+     LOGICAL                     :: Archive_LossC12H4bySoil
+
+     REAL(f4),           POINTER :: LossC13H4byOH(:,:,:)
+     LOGICAL                     :: Archive_LossC13H4byOH
+
+     REAL(f4),           POINTER :: LossC13H4byCl(:,:,:)
+     LOGICAL                     :: Archive_LossC13H4byCl
+
+     REAL(f4),           POINTER :: LossC13H4byO1D(:,:,:)
+     LOGICAL                     :: Archive_LossC13H4byO1D
+
+     REAL(f4),           POINTER :: LossC13H4bySoil(:,:)
+     LOGICAL                     :: Archive_LossC13H4bySoil
+
+     REAL(f4),           POINTER :: LossC12H3DbyOH(:,:,:)
+     LOGICAL                     :: Archive_LossC12H3DbyOH
+
+     REAL(f4),           POINTER :: LossC12H3DbyCl(:,:,:)
+     LOGICAL                     :: Archive_LossC12H3DbyCl
+
+     REAL(f4),           POINTER :: LossC12H3DbyO1D(:,:,:)
+     LOGICAL                     :: Archive_LossC12H3DbyO1D
+
+     REAL(f4),           POINTER :: LossC12H3DbySoil(:,:)
+     LOGICAL                     :: Archive_LossC12H3DbySoil
+
+     REAL(f4),           POINTER :: LossC13H3DbyOH(:,:,:)
+     LOGICAL                     :: Archive_LossC13H3DbyOH
+
+     REAL(f4),           POINTER :: LossC13H3DbyCl(:,:,:)
+     LOGICAL                     :: Archive_LossC13H3DbyCl
+
+     REAL(f4),           POINTER :: LossC13H3DbyO1D(:,:,:)
+     LOGICAL                     :: Archive_LossC13H3DbyO1D
+
+     REAL(f4),           POINTER :: LossC13H3DbySoil(:,:)
+     LOGICAL                     :: Archive_LossC13H3DbySoil
+
      REAL(f4),           POINTER :: d13CCH4(:,:,:)
      LOGICAL                     :: Archive_d13CCH4
 
@@ -2593,6 +2641,54 @@ CONTAINS
     State_Diag%Archive_LossCH4byO1D              = .FALSE.
     State_Diag%LossCH4bySoil                     => NULL()
     State_Diag%Archive_LossCH4bySoil             = .FALSE.
+
+    State_Diag%LossC12H4byOH => NULL()
+    State_Diag%Archive_LossC12H4byOH = .FALSE.
+
+    State_Diag%LossC12H4byCl => NULL()
+    State_Diag%Archive_LossC12H4byCl = .FALSE.
+
+    State_Diag%LossC12H4byO1D => NULL()
+    State_Diag%Archive_LossC12H4byO1D = .FALSE.
+
+    State_Diag%LossC12H4bySoil => NULL()
+    State_Diag%Archive_LossC12H4bySoil = .FALSE.
+
+    State_Diag%LossC13H4byOH => NULL()
+    State_Diag%Archive_LossC13H4byOH = .FALSE.
+
+    State_Diag%LossC13H4byCl => NULL()
+    State_Diag%Archive_LossC13H4byCl = .FALSE.
+
+    State_Diag%LossC13H4byO1D => NULL()
+    State_Diag%Archive_LossC13H4byO1D = .FALSE.
+
+    State_Diag%LossC13H4bySoil => NULL()
+    State_Diag%Archive_LossC13H4bySoil = .FALSE.
+
+    State_Diag%LossC12H3DbyOH => NULL()
+    State_Diag%Archive_LossC12H3DbyOH = .FALSE.
+
+    State_Diag%LossC12H3DbyCl => NULL()
+    State_Diag%Archive_LossC12H3DbyCl = .FALSE.
+
+    State_Diag%LossC12H3DbyO1D => NULL()
+    State_Diag%Archive_LossC12H3DbyO1D = .FALSE.
+
+    State_Diag%LossC12H3DbySoil => NULL()
+    State_Diag%Archive_LossC12H3DbySoil = .FALSE.
+
+    State_Diag%LossC13H3DbyOH => NULL()
+    State_Diag%Archive_LossC13H3DbyOH = .FALSE.
+
+    State_Diag%LossC13H3DbyCl => NULL()
+    State_Diag%Archive_LossC13H3DbyCl = .FALSE.
+
+    State_Diag%LossC13H3DbyO1D => NULL()
+    State_Diag%Archive_LossC13H3DbyO1D = .FALSE.
+
+    State_Diag%LossC13H3DbySoil => NULL()
+    State_Diag%Archive_LossC13H3DbySoil = .FALSE.
 
     State_Diag%d13CCH4                           => NULL()
     State_Diag%Archive_d13CCH4                   = .FALSE.
@@ -10924,6 +11020,361 @@ CONTAINS
        ENDIF
 
        !--------------------------------------------------------------------
+       ! Stable-isotopologue losses resolved by chemical process
+       !--------------------------------------------------------------------
+       !--------------------------------------------------------------------
+       ! Loss of C12H4 by OH
+       !--------------------------------------------------------------------
+       diagID  = 'LossC12H4byOH'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossC12H4byOH,                             &
+            archiveData    = State_Diag%Archive_LossC12H4byOH,                     &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Loss of C12H4 by Cl
+       !--------------------------------------------------------------------
+       diagID  = 'LossC12H4byCl'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossC12H4byCl,                             &
+            archiveData    = State_Diag%Archive_LossC12H4byCl,                     &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Loss of C12H4 by O1D
+       !--------------------------------------------------------------------
+       diagID  = 'LossC12H4byO1D'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossC12H4byO1D,                             &
+            archiveData    = State_Diag%Archive_LossC12H4byO1D,                     &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Loss of C12H4 by soil uptake
+       !--------------------------------------------------------------------
+       diagID  = 'LossC12H4bySoil'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossC12H4bySoil,                             &
+            archiveData    = State_Diag%Archive_LossC12H4bySoil,                     &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Loss of C13H4 by OH
+       !--------------------------------------------------------------------
+       diagID  = 'LossC13H4byOH'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossC13H4byOH,                             &
+            archiveData    = State_Diag%Archive_LossC13H4byOH,                     &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Loss of C13H4 by Cl
+       !--------------------------------------------------------------------
+       diagID  = 'LossC13H4byCl'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossC13H4byCl,                             &
+            archiveData    = State_Diag%Archive_LossC13H4byCl,                     &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Loss of C13H4 by O1D
+       !--------------------------------------------------------------------
+       diagID  = 'LossC13H4byO1D'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossC13H4byO1D,                             &
+            archiveData    = State_Diag%Archive_LossC13H4byO1D,                     &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Loss of C13H4 by soil uptake
+       !--------------------------------------------------------------------
+       diagID  = 'LossC13H4bySoil'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossC13H4bySoil,                             &
+            archiveData    = State_Diag%Archive_LossC13H4bySoil,                     &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Loss of C12H3D by OH
+       !--------------------------------------------------------------------
+       diagID  = 'LossC12H3DbyOH'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossC12H3DbyOH,                             &
+            archiveData    = State_Diag%Archive_LossC12H3DbyOH,                     &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Loss of C12H3D by Cl
+       !--------------------------------------------------------------------
+       diagID  = 'LossC12H3DbyCl'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossC12H3DbyCl,                             &
+            archiveData    = State_Diag%Archive_LossC12H3DbyCl,                     &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Loss of C12H3D by O1D
+       !--------------------------------------------------------------------
+       diagID  = 'LossC12H3DbyO1D'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossC12H3DbyO1D,                             &
+            archiveData    = State_Diag%Archive_LossC12H3DbyO1D,                     &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Loss of C12H3D by soil uptake
+       !--------------------------------------------------------------------
+       diagID  = 'LossC12H3DbySoil'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossC12H3DbySoil,                             &
+            archiveData    = State_Diag%Archive_LossC12H3DbySoil,                     &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Loss of C13H3D by OH
+       !--------------------------------------------------------------------
+       diagID  = 'LossC13H3DbyOH'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossC13H3DbyOH,                             &
+            archiveData    = State_Diag%Archive_LossC13H3DbyOH,                     &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Loss of C13H3D by Cl
+       !--------------------------------------------------------------------
+       diagID  = 'LossC13H3DbyCl'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossC13H3DbyCl,                             &
+            archiveData    = State_Diag%Archive_LossC13H3DbyCl,                     &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Loss of C13H3D by O1D
+       !--------------------------------------------------------------------
+       diagID  = 'LossC13H3DbyO1D'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossC13H3DbyO1D,                             &
+            archiveData    = State_Diag%Archive_LossC13H3DbyO1D,                     &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
+       ! Loss of C13H3D by soil uptake
+       !--------------------------------------------------------------------
+       diagID  = 'LossC13H3DbySoil'
+       CALL Init_and_Register(                                               &
+            Input_Opt      = Input_Opt,                                      &
+            State_Chm      = State_Chm,                                      &
+            State_Diag     = State_Diag,                                     &
+            State_Grid     = State_Grid,                                     &
+            DiagList       = Diag_List,                                      &
+            TaggedDiagList = TaggedDiag_List,                                &
+            Ptr2Data       = State_Diag%LossC13H3DbySoil,                             &
+            archiveData    = State_Diag%Archive_LossC13H3DbySoil,                     &
+            diagId         = diagId,                                         &
+            RC             = RC                                             )
+
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+
+       !--------------------------------------------------------------------
        ! Stable carbon isotope composition of methane
        !--------------------------------------------------------------------
        diagID  = 'd13CCH4'
@@ -10999,23 +11450,55 @@ CONTAINS
        ! being requested as diagnostic output when the corresponding
        ! array has not been allocated.
        !-------------------------------------------------------------------
-       DO N = 1, 5
+       DO N = 1, 23
 
           SELECT CASE( N )
-             CASE( 1  )
+             CASE( 1   )
                 diagID = 'LossCH4byCl'
-             CASE( 2  )
+             CASE( 2   )
                 diagID = 'LossCH4byOH'
-             CASE( 3  )
+             CASE( 3   )
                 diagID = 'LossCH4byO1D'
-             CASE( 4  )
+             CASE( 4   )
                 diagID = 'LossCH4bySoil'
-             CASE( 5  )
+             CASE( 5   )
                 diagID = 'LossCObyOH'
-             CASE( 6  )
+             CASE( 6   )
                 diagID = 'd13CCH4'
-             CASE( 7  )
+             CASE( 7   )
                 diagID = 'd2HCH4'
+             CASE( 8   )
+                diagID = 'LossC12H4byOH'
+             CASE( 9   )
+                diagID = 'LossC12H4byCl'
+             CASE( 10  )
+                diagID = 'LossC12H4byO1D'
+             CASE( 11  )
+                diagID = 'LossC12H4bySoil'
+             CASE( 12  )
+                diagID = 'LossC13H4byOH'
+             CASE( 13  )
+                diagID = 'LossC13H4byCl'
+             CASE( 14  )
+                diagID = 'LossC13H4byO1D'
+             CASE( 15  )
+                diagID = 'LossC13H4bySoil'
+             CASE( 16  )
+                diagID = 'LossC12H3DbyOH'
+             CASE( 17  )
+                diagID = 'LossC12H3DbyCl'
+             CASE( 18  )
+                diagID = 'LossC12H3DbyO1D'
+             CASE( 19  )
+                diagID = 'LossC12H3DbySoil'
+             CASE( 20  )
+                diagID = 'LossC13H3DbyOH'
+             CASE( 21  )
+                diagID = 'LossC13H3DbyCl'
+             CASE( 22  )
+                diagID = 'LossC13H3DbyO1D'
+             CASE( 23  )
+                diagID = 'LossC13H3DbySoil'
           END SELECT
 
           ! Exit if any of the above are in the diagnostic list
@@ -14044,6 +14527,86 @@ CONTAINS
                    RC       = RC                                            )
     IF ( RC /= GC_SUCCESS ) RETURN
 
+    CALL Finalize( diagId   = 'LossC12H4byOH',                              &
+                   Ptr2Data = State_Diag%LossC12H4byOH,                 &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'LossC12H4byCl',                              &
+                   Ptr2Data = State_Diag%LossC12H4byCl,                 &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'LossC12H4byO1D',                              &
+                   Ptr2Data = State_Diag%LossC12H4byO1D,                 &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'LossC12H4bySoil',                              &
+                   Ptr2Data = State_Diag%LossC12H4bySoil,                 &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'LossC13H4byOH',                              &
+                   Ptr2Data = State_Diag%LossC13H4byOH,                 &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'LossC13H4byCl',                              &
+                   Ptr2Data = State_Diag%LossC13H4byCl,                 &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'LossC13H4byO1D',                              &
+                   Ptr2Data = State_Diag%LossC13H4byO1D,                 &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'LossC13H4bySoil',                              &
+                   Ptr2Data = State_Diag%LossC13H4bySoil,                 &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'LossC12H3DbyOH',                              &
+                   Ptr2Data = State_Diag%LossC12H3DbyOH,                 &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'LossC12H3DbyCl',                              &
+                   Ptr2Data = State_Diag%LossC12H3DbyCl,                 &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'LossC12H3DbyO1D',                              &
+                   Ptr2Data = State_Diag%LossC12H3DbyO1D,                 &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'LossC12H3DbySoil',                              &
+                   Ptr2Data = State_Diag%LossC12H3DbySoil,                 &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'LossC13H3DbyOH',                              &
+                   Ptr2Data = State_Diag%LossC13H3DbyOH,                 &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'LossC13H3DbyCl',                              &
+                   Ptr2Data = State_Diag%LossC13H3DbyCl,                 &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'LossC13H3DbyO1D',                              &
+                   Ptr2Data = State_Diag%LossC13H3DbyO1D,                 &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'LossC13H3DbySoil',                              &
+                   Ptr2Data = State_Diag%LossC13H3DbySoil,                 &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
     CALL Finalize( diagId   = 'd13CCH4',                                    &
                    Ptr2Data = State_Diag%d13CCH4,                           &
                    RC       = RC                                            )
@@ -16504,6 +17067,20 @@ CONTAINS
        IF ( isDesc    ) Desc  = 'Loss of CH4 by soil uptake'
        IF ( isUnits   ) Units = 'kg s-1'
        IF ( isRank    ) Rank  =  2
+
+    ELSE IF ( INDEX( TRIM(Name_AllCaps), 'LOSSC12H4BY'  ) == 1 .or.      &
+              INDEX( TRIM(Name_AllCaps), 'LOSSC13H4BY'  ) == 1 .or.      &
+              INDEX( TRIM(Name_AllCaps), 'LOSSC12H3DBY' ) == 1 .or.      &
+              INDEX( TRIM(Name_AllCaps), 'LOSSC13H3DBY' ) == 1 ) THEN
+       IF ( isDesc    ) Desc  = 'Loss of methane isotopologue by process'
+       IF ( isUnits   ) Units = 'kg s-1'
+       IF ( isRank ) THEN
+          IF ( INDEX( TRIM(Name_AllCaps), 'BYSOIL' ) > 0 ) THEN
+             Rank = 2
+          ELSE
+             Rank = 3
+          ENDIF
+       ENDIF
 
     ELSE IF ( TRIM( Name_AllCaps ) == 'D13CCH4' ) THEN
        IF ( isDesc    ) Desc  = 'Delta C-13 of methane vs. VPDB'

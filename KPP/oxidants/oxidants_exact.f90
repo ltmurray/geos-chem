@@ -7,13 +7,20 @@ MODULE KPP_ROOT_Integrator
   USE KPP_ROOT_Precision,  ONLY : dp
   USE KPP_ROOT_Parameters
   USE KPP_ROOT_Global
-  USE KPP_ROOT_Monitor,    ONLY : SPC_NAMES, FAM_NAMES, EQN_NAMES
+  USE KPP_ROOT_Monitor,    ONLY : SPC_NAMES, EQN_NAMES
 
   IMPLICIT NONE
   PRIVATE
 
   PUBLIC :: Integrate
   PUBLIC :: ValidateOxidantsAnalyticalMechanism
+  PUBLIC :: DiagnosticLossOH
+  PUBLIC :: DiagnosticLossCl
+  PUBLIC :: DiagnosticLossO1D
+  PUBLIC :: DiagnosticLossSoil
+  PUBLIC :: DiagnosticProdCOCH4
+  PUBLIC :: DiagnosticProdCONMVOC
+  PUBLIC :: DiagnosticLossCOOH
 
   LOGICAL, PRIVATE :: Do_Update_RCONST
   LOGICAL, PRIVATE :: Do_Update_PHOTO
@@ -25,6 +32,18 @@ MODULE KPP_ROOT_Integrator
   INTEGER, PRIVATE :: ReactionPCOCH4  = 0
   INTEGER, PRIVATE :: ReactionCOOH    = 0
   INTEGER, PRIVATE :: ReactionPCONMVOC = 0
+  REAL(dp) :: DiagnosticLossOH(5)      = 0.0_dp
+  REAL(dp) :: DiagnosticLossCl(5)      = 0.0_dp
+  REAL(dp) :: DiagnosticLossO1D(5)     = 0.0_dp
+  REAL(dp) :: DiagnosticLossSoil(5)    = 0.0_dp
+  REAL(dp) :: DiagnosticProdCOCH4      = 0.0_dp
+  REAL(dp) :: DiagnosticProdCONMVOC    = 0.0_dp
+  REAL(dp) :: DiagnosticLossCOOH       = 0.0_dp
+
+  !$OMP THREADPRIVATE( DiagnosticLossOH,   DiagnosticLossCl,              &
+  !$OMP                DiagnosticLossO1D,  DiagnosticLossSoil,            &
+  !$OMP                DiagnosticProdCOCH4, DiagnosticProdCONMVOC,        &
+  !$OMP                DiagnosticLossCOOH )
 
 CONTAINS
 
@@ -93,29 +112,30 @@ CONTAINS
     REAL(dp) :: kCO, pCOCH4, pCONMVOC, pCO, producedCO
     REAL(dp) :: lossFraction, producedLossFraction
 
+    DiagnosticLossOH     = 0.0_dp
+    DiagnosticLossCl     = 0.0_dp
+    DiagnosticLossO1D    = 0.0_dp
+    DiagnosticLossSoil   = 0.0_dp
+    DiagnosticProdCOCH4  = 0.0_dp
+    DiagnosticProdCONMVOC = 0.0_dp
+    DiagnosticLossCOOH   = 0.0_dp
+
     !---------------------------------------------------------------------
     ! CH4: exact decay and exact allocation to the four loss channels.
     !---------------------------------------------------------------------
-    CALL AdvanceMethane( dt, ind_CH4, ind_LCH4byOH, ind_LCH4byCl,        &
-                         ind_LCH4byO1D, ind_LCH4bySoil, ind_LCH4,        &
+    CALL AdvanceMethane( dt, ind_CH4, 1,                                &
                          ReactionOH(1), ReactionCl(1), ReactionO1D(1),   &
                          ReactionSoil(1) )
-    CALL AdvanceMethane( dt, ind_C12H4, ind_L12CH4byOH, ind_L12CH4byCl,  &
-                         ind_L12CH4byO1D, ind_L12CH4bySoil, ind_LC12H4, &
+    CALL AdvanceMethane( dt, ind_C12H4, 2,                              &
                          ReactionOH(2), ReactionCl(2), ReactionO1D(2),   &
                          ReactionSoil(2) )
-    CALL AdvanceMethane( dt, ind_C13H4, ind_L13CH4byOH, ind_L13CH4byCl,  &
-                         ind_L13CH4byO1D, ind_L13CH4bySoil, ind_LC13H4, &
+    CALL AdvanceMethane( dt, ind_C13H4, 3,                              &
                          ReactionOH(3), ReactionCl(3), ReactionO1D(3),   &
                          ReactionSoil(3) )
-    CALL AdvanceMethane( dt, ind_C12H3D, ind_L12CH3DbyOH,                &
-                         ind_L12CH3DbyCl, ind_L12CH3DbyO1D,              &
-                         ind_L12CH3DbySoil, ind_LC12H3D,                 &
+    CALL AdvanceMethane( dt, ind_C12H3D, 4,                             &
                          ReactionOH(4), ReactionCl(4), ReactionO1D(4),   &
                          ReactionSoil(4) )
-    CALL AdvanceMethane( dt, ind_C13H3D, ind_L13CH3DbyOH,                &
-                         ind_L13CH3DbyCl, ind_L13CH3DbyO1D,              &
-                         ind_L13CH3DbySoil, ind_LC13H3D,                 &
+    CALL AdvanceMethane( dt, ind_C13H3D, 5,                             &
                          ReactionOH(5), ReactionCl(5), ReactionO1D(5),   &
                          ReactionSoil(5) )
 
@@ -141,22 +161,18 @@ CONTAINS
 
     coRemaining = coInitial + producedCO - coLoss
     C(ind_CO)            = MAX( coRemaining, 0.0_dp )
-    C(ind_PCOfromCH4)    = C(ind_PCOfromCH4) + pCOCH4 * dt
-    C(ind_PCOfromNMVOC)  = C(ind_PCOfromNMVOC) + pCONMVOC * dt
-    C(ind_PCO)           = C(ind_PCO) + producedCO
-    C(ind_LCObyOH)       = C(ind_LCObyOH) + coLoss
-    C(ind_LCO)           = C(ind_LCO) + coLoss
+    DiagnosticProdCOCH4   = pCOCH4 * dt
+    DiagnosticProdCONMVOC = pCONMVOC * dt
+    DiagnosticLossCOOH    = coLoss
 
   END SUBROUTINE OxidantsAnalyticalStep
 
-  SUBROUTINE AdvanceMethane( dt, speciesId, lossOHId, lossClId,          &
-                             lossO1DId, lossSoilId, familyId,            &
+  SUBROUTINE AdvanceMethane( dt, speciesId, diagnosticId,               &
                              reactionOH, reactionCl, reactionO1D,        &
                              reactionSoil )
 
     REAL(dp), INTENT(IN) :: dt
-    INTEGER,  INTENT(IN) :: speciesId, lossOHId, lossClId
-    INTEGER,  INTENT(IN) :: lossO1DId, lossSoilId, familyId
+    INTEGER,  INTENT(IN) :: speciesId, diagnosticId
     INTEGER,  INTENT(IN) :: reactionOH, reactionCl, reactionO1D
     INTEGER,  INTENT(IN) :: reactionSoil
 
@@ -173,11 +189,10 @@ CONTAINS
     IF ( kTotal > 0.0_dp .and. initial > 0.0_dp ) THEN
        loss      = initial * OneMinusExpNeg( kTotal * dt )
        remaining = initial - loss
-       C(lossOHId)   = C(lossOHId)   + loss * ( kOH   / kTotal )
-       C(lossClId)   = C(lossClId)   + loss * ( kCl   / kTotal )
-       C(lossO1DId)  = C(lossO1DId)  + loss * ( kO1D  / kTotal )
-       C(lossSoilId) = C(lossSoilId) + loss * ( kSoil / kTotal )
-       C(familyId) = C(familyId) + loss
+       DiagnosticLossOH(diagnosticId) = loss * ( kOH / kTotal )
+       DiagnosticLossCl(diagnosticId) = loss * ( kCl / kTotal )
+       DiagnosticLossO1D(diagnosticId) = loss * ( kO1D / kTotal )
+       DiagnosticLossSoil(diagnosticId) = loss * ( kSoil / kTotal )
        C(speciesId) = MAX( remaining, 0.0_dp )
     ELSE
        C(speciesId) = initial
@@ -223,24 +238,11 @@ CONTAINS
     INTEGER :: N
     CHARACTER(LEN=7), PARAMETER :: MethaneName(5) = [                    &
          CHARACTER(LEN=7) :: 'CH4', 'C12H4', 'C13H4', 'C12H3D', 'C13H3D' ]
-    CHARACTER(LEN=16), PARAMETER :: LossOHName(5) = [                    &
-         CHARACTER(LEN=16) :: 'LCH4byOH', 'L12CH4byOH', 'L13CH4byOH',   &
-         'L12CH3DbyOH', 'L13CH3DbyOH' ]
-    CHARACTER(LEN=16), PARAMETER :: LossClName(5) = [                    &
-         CHARACTER(LEN=16) :: 'LCH4byCl', 'L12CH4byCl', 'L13CH4byCl',   &
-         'L12CH3DbyCl', 'L13CH3DbyCl' ]
-    CHARACTER(LEN=16), PARAMETER :: LossO1DName(5) = [                   &
-         CHARACTER(LEN=16) :: 'LCH4byO1D', 'L12CH4byO1D',               &
-         'L13CH4byO1D', 'L12CH3DbyO1D', 'L13CH3DbyO1D' ]
-    CHARACTER(LEN=16), PARAMETER :: LossSoilName(5) = [                  &
-         CHARACTER(LEN=16) :: 'LCH4bySoil', 'L12CH4bySoil',             &
-         'L13CH4bySoil', 'L12CH3DbySoil', 'L13CH3DbySoil' ]
-
     isValid = .FALSE.
     message = ''
 
-    IF ( NSPEC /= 41 .or. NVAR /= 36 .or. NVARACT /= 6 .or.              &
-         NREACT /= 23 .or. NFAM /= 7 ) THEN
+    IF ( NSPEC /= 11 .or. NVAR /= 6 .or. NVARACT /= 6 .or.               &
+         NREACT /= 23 .or. NFAM /= 1 ) THEN
        message = 'Unexpected oxidants KPP dimensions or reaction count'
        RETURN
     ENDIF
@@ -251,16 +253,6 @@ CONTAINS
          TRIM( SPC_NAMES(ind_C12H3D)       ) /= 'C12H3D'       .or.       &
          TRIM( SPC_NAMES(ind_C13H3D)       ) /= 'C13H3D'       .or.       &
          TRIM( SPC_NAMES(ind_CO)           ) /= 'CO'           .or.       &
-         TRIM( SPC_NAMES(ind_PCOfromCH4)   ) /= 'PCOfromCH4'   .or.       &
-         TRIM( SPC_NAMES(ind_PCOfromNMVOC) ) /= 'PCOfromNMVOC' .or.       &
-         TRIM( SPC_NAMES(ind_LCH4byOH)     ) /= 'LCH4byOH'     .or.       &
-         TRIM( SPC_NAMES(ind_LCH4byCl)     ) /= 'LCH4byCl'     .or.       &
-         TRIM( SPC_NAMES(ind_LCH4byO1D)    ) /= 'LCH4byO1D'    .or.       &
-         TRIM( SPC_NAMES(ind_LCH4bySoil)   ) /= 'LCH4bySoil'   .or.       &
-         TRIM( SPC_NAMES(ind_LCObyOH)      ) /= 'LCObyOH'      .or.       &
-         TRIM( SPC_NAMES(ind_PCO)          ) /= 'PCO'          .or.       &
-         TRIM( SPC_NAMES(ind_LCO)          ) /= 'LCO'          .or.       &
-         TRIM( SPC_NAMES(ind_LCH4)         ) /= 'LCH4'         .or.       &
          TRIM( SPC_NAMES(ind_FixedOH)      ) /= 'FixedOH'      .or.       &
          TRIM( SPC_NAMES(ind_FixedCl)      ) /= 'FixedCl'      .or.       &
          TRIM( SPC_NAMES(ind_FixedO1D)     ) /= 'FixedO1D'     .or.       &
@@ -270,39 +262,26 @@ CONTAINS
        RETURN
     ENDIF
 
-    IF ( TRIM( FAM_NAMES(1) ) /= 'PCO'  .or.                              &
-         TRIM( FAM_NAMES(2) ) /= 'LCO'  .or.                              &
-         TRIM( FAM_NAMES(3) ) /= 'LCH4' .or.                              &
-         TRIM( FAM_NAMES(4) ) /= 'LC12H4' .or.                            &
-         TRIM( FAM_NAMES(5) ) /= 'LC13H4' .or.                            &
-         TRIM( FAM_NAMES(6) ) /= 'LC12H3D' .or.                           &
-         TRIM( FAM_NAMES(7) ) /= 'LC13H3D' ) THEN
-       message = 'Unexpected oxidants KPP family ordering'
-       RETURN
-    ENDIF
-
     DO N = 1, 5
        CALL FindReaction( TRIM(MethaneName(N)) // ' + FixedOH',           &
-                          TRIM(LossOHName(N)), ReactionOH(N), isValid )
+                          ReactionOH(N), isValid )
        IF ( .not. isValid ) GOTO 100
        CALL FindReaction( TRIM(MethaneName(N)) // ' + FixedCl',           &
-                          TRIM(LossClName(N)), ReactionCl(N), isValid )
+                          ReactionCl(N), isValid )
        IF ( .not. isValid ) GOTO 100
        CALL FindReaction( TRIM(MethaneName(N)) // ' + FixedO1D',          &
-                          TRIM(LossO1DName(N)), ReactionO1D(N), isValid )
+                          ReactionO1D(N), isValid )
        IF ( .not. isValid ) GOTO 100
        CALL FindReaction( TRIM(MethaneName(N)) // ' -->',                 &
-                          TRIM(LossSoilName(N)), ReactionSoil(N), isValid )
+                          ReactionSoil(N), isValid )
        IF ( .not. isValid ) GOTO 100
     ENDDO
 
-    CALL FindReaction( 'DummyCH4 --> CO', 'PCOfromCH4',                  &
-                       ReactionPCOCH4, isValid )
+    CALL FindReaction( 'DummyCH4 --> CO', ReactionPCOCH4, isValid )
     IF ( .not. isValid ) GOTO 100
-    CALL FindReaction( 'CO + FixedOH', 'LCObyOH', ReactionCOOH, isValid )
+    CALL FindReaction( 'CO + FixedOH', ReactionCOOH, isValid )
     IF ( .not. isValid ) GOTO 100
-    CALL FindReaction( 'DummyNMVOC --> CO', 'PCOfromNMVOC',              &
-                       ReactionPCONMVOC, isValid )
+    CALL FindReaction( 'DummyNMVOC --> CO', ReactionPCONMVOC, isValid )
     IF ( .not. isValid ) GOTO 100
 
     isValid = .TRUE.
@@ -314,9 +293,9 @@ CONTAINS
 
   END SUBROUTINE ValidateOxidantsAnalyticalMechanism
 
-  SUBROUTINE FindReaction( reactantText, productText, reactionIndex, found )
+  SUBROUTINE FindReaction( reactantText, reactionIndex, found )
 
-    CHARACTER(LEN=*), INTENT(IN)  :: reactantText, productText
+    CHARACTER(LEN=*), INTENT(IN)  :: reactantText
     INTEGER,          INTENT(OUT) :: reactionIndex
     LOGICAL,          INTENT(OUT) :: found
 
@@ -325,8 +304,7 @@ CONTAINS
     reactionIndex = 0
     matchCount    = 0
     DO N = 1, NREACT
-       IF ( INDEX( EQN_NAMES(N), TRIM(reactantText) ) > 0 .and.           &
-            INDEX( EQN_NAMES(N), TRIM(productText)  ) > 0 ) THEN
+       IF ( INDEX( ADJUSTL(EQN_NAMES(N)), TRIM(reactantText) ) == 1 ) THEN
           reactionIndex = N
           matchCount = matchCount + 1
        ENDIF

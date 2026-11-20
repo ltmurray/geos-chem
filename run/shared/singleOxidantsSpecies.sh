@@ -411,9 +411,9 @@ function methaneIsotopologues() {
     ' "${hdiag}" > "${tmp}" || return 1
     mv "${tmp}" "${hdiag}"
 
-    # Archive isotope concentrations, aggregate chemical losses, isotope
-    # ratios, and the emission checks by default.
+    # Archive isotope concentrations, isotope ratios, and the emission
+    # checks by default.  Channel-resolved losses are computed directly by
+    # the analytical solver instead of using transported KPP accumulators.
     sed -i "/^[[:space:]]*'SpeciesConc',/a\             'Isotopologues'," "${hist}"
 
-    sed -i "/'Loss_CH4/a\                             'Loss_C12H4                    ',\n                             'Loss_C13H4                    ',\n                             'Loss_C12H3D                   ',\n                             'Loss_C13H3D                   '," "${hist}"
 }
